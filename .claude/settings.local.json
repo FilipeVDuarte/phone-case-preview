@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx \"@builder.io/dev-tools@latest\" code --url vcp://quickcopy/vcp-82d9237573aa419c8141dfbb32b4a749)",
+      "Bash(dir \"C:\\\\\\\\Users\\\\\\\\MARKETING\\\\\\\\Desktop\\\\\\\\Claude\\\\\\\\MKT\\\\\\\\Pagina Preview\")",
+      "Bash(gh api:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(dir \"C:\\\\Users\\\\MARKETING\\\\Desktop\\\\Claude\\\\MKT\\\\Pagina Preview\\\\Aparelhos_Preview\")",
+      "Bash(powershell -Command \"Get-ChildItem | Select-Object Name, Length | Format-Table -AutoSize\")",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}
