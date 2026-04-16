@@ -26,9 +26,3 @@ O projeto utiliza o estilo **Neobrutalista Suave**, caracterizado por:
 - Bordas espessas (`--border: 4px solid #000`).
 - Sombras sólidas (`--shadow: 0 8px 0 0 #000`).
 - Cores de destaque da marca Mobifans.
-
-## 📂 Como visualizar o projeto
-
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/FilipeVDuarte/phone-case-preview.git](https://github.com/FilipeVDuarte/phone-case-preview.git)
