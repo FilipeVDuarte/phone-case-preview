@@ -36,6 +36,11 @@
       --shadow: 0 8px 0 0 #000;
       --radius: 16px;
       --font: 'Plus Jakarta Sans', sans-serif;
+
+      /* ── Motion system (Emil Kowalski) ── */
+      --spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+      --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --smooth:   cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     body {
@@ -114,7 +119,7 @@
     .canvas-loading {
       position: absolute;
       inset: 0;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       background: rgba(255, 255, 255, 0.8);
@@ -124,10 +129,14 @@
       color: #64748B;
       gap: 8px;
       z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
     }
 
     .canvas-loading.visible {
-      display: flex;
+      opacity: 1;
+      pointer-events: auto;
     }
 
     /* Spinner simples */
@@ -187,16 +196,18 @@
       align-items: center;
       justify-content: center;
       color: #1a1a1a;
-      transition: background 0.12s, transform 0.08s;
+      transition: background 0.15s ease, transform 0.24s var(--spring);
     }
 
     .tool-btn:hover:not(:disabled) {
       background: #F1F5F9;
+      transform: scale(1.12);
     }
 
     .tool-btn:active:not(:disabled) {
-      transform: scale(0.88);
+      transform: scale(0.82);
       background: #E2E8F0;
+      transition: transform 0.08s ease, background 0.08s ease;
     }
 
     .tool-btn:disabled {
@@ -297,18 +308,19 @@
       justify-content: center;
       gap: 9px;
       box-shadow: 3px 3px 0 0 #000;
-      transition: all 0.12s;
+      transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring), background 0.15s ease;
     }
 
     .upload-btn:hover:not(:disabled) {
       background: #F8FAFC;
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0 0 #000;
+      transform: translate(-2px, -3px);
+      box-shadow: 5px 6px 0 0 #000;
     }
 
     .upload-btn:active:not(:disabled) {
       transform: translate(2px, 2px);
       box-shadow: 1px 1px 0 0 #000;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
     }
 
     .upload-btn:disabled {
@@ -405,17 +417,18 @@
       gap: 9px;
       box-shadow: 3px 3px 0 0 #000;
       letter-spacing: -0.2px;
-      transition: all 0.12s;
+      transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring);
     }
 
     .download-btn:hover:not(:disabled) {
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0 0 #000;
+      transform: translate(-2px, -3px);
+      box-shadow: 5px 6px 0 0 #000;
     }
 
     .download-btn:active:not(:disabled) {
       transform: translate(2px, 2px);
       box-shadow: 1px 1px 0 0 #000;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
     }
 
     .download-btn:disabled {
@@ -441,6 +454,85 @@
       #phoneCanvas {
         max-height: 380px;
       }
+    }
+
+    /* ════════════════════════════════════════════════
+       MOTION SYSTEM — Emil Kowalski principles
+       • Apenas transform + opacity (GPU-accelerated)
+       • Spring easing com overshoot natural
+       • Stagger de entrada para elementos relacionados
+       • Micro-interações proporcionais à ação
+    ════════════════════════════════════════════════ */
+
+    /* ── Keyframes ───────────────────────────────── */
+    @keyframes enter-up {
+      from { opacity: 0; transform: translateY(22px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+
+    @keyframes canvas-enter {
+      0%   { opacity: 0; transform: scale(0.94); }
+      55%  {             transform: scale(1.018); }
+      100% { opacity: 1; transform: scale(1);    }
+    }
+
+    @keyframes slide-in-down {
+      from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+
+    @keyframes pill-bump {
+      0%   { transform: scale(1);    }
+      40%  { transform: scale(1.18); }
+      100% { transform: scale(1);    }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Entrada de página (stagger 0 / 70ms) ────── */
+    .preview-card {
+      animation: enter-up 0.55s var(--expo-out) both;
+    }
+
+    .options-card {
+      animation: enter-up 0.55s var(--expo-out) 0.07s both;
+    }
+
+    .hint-text {
+      animation: enter-up 0.5s var(--expo-out) 0.1s both;
+    }
+
+    /* ── Canvas: aparece com spring ao trocar modelo  */
+    #phoneCanvas.entering {
+      animation: canvas-enter 0.4s var(--spring) both;
+    }
+
+    /* ── Empty state ─────────────────────────────── */
+    .empty-state {
+      animation: fade-in 0.3s var(--smooth) both;
+    }
+
+    /* ── Upload status slide-in ──────────────────── */
+    .upload-status.animating {
+      animation: slide-in-down 0.3s var(--spring) both;
+    }
+
+    /* ── Pill bump ao mudar valor ────────────────── */
+    .pill-bump {
+      animation: pill-bump 0.3s var(--spring);
+    }
+
+    /* ── Toolbar: aparece com leve atraso ────────── */
+    .toolbar {
+      animation: enter-up 0.5s var(--expo-out) 0.06s both;
+    }
+
+    /* ── Logo area ───────────────────────────────── */
+    .logo-area {
+      animation: enter-up 0.45s var(--expo-out) both;
     }
   </style>
 </head>
@@ -1463,6 +1555,20 @@
 
 
     /* ================================================================
+     * MOTION HELPERS
+     * ================================================================ */
+
+    /* Dispara a animação pill-bump em um elemento (spring pop). */
+    function triggerBump(el) {
+      if (!el) return;
+      el.classList.remove('pill-bump');
+      void el.offsetWidth; // force reflow para reiniciar a animação
+      el.classList.add('pill-bump');
+      el.addEventListener('animationend', () => el.classList.remove('pill-bump'), { once: true });
+    }
+
+
+    /* ================================================================
      * ZOOM — aplicar e exibir escala
      * ================================================================ */
 
@@ -1476,6 +1582,7 @@
       state.scale = Math.max(0.2, Math.min(3.0, v));
       document.getElementById('scaleLabel').textContent =
         Math.round(state.scale * 100) + '%';
+      triggerBump(document.querySelector('.scale-pill'));
       draw();
     }
 
@@ -1580,6 +1687,7 @@
       /* Exibir/ocultar o pill de rotação no painel */
       document.getElementById('rotationRow').style.display =
         state.rotation !== 0 ? 'flex' : 'none';
+      triggerBump(document.querySelector('.rotation-pill'));
       draw();
     };
 
@@ -1647,6 +1755,8 @@
       /* Inicializar canvas com dimensões conhecidas (antes do carregamento) */
       initCanvas(found);
       canvas.style.display = 'block';
+      canvas.classList.add('entering');
+      canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), { once: true });
 
       /* Carregar imagens do modelo (mockup + faca) */
       await loadModelImages(found);
@@ -1694,7 +1804,12 @@
             ? file.name.slice(0, 24) + '…'
             : file.name;
           document.getElementById('uploadName').textContent = name;
-          document.getElementById('uploadStatus').style.display = 'flex';
+          const uploadStatus = document.getElementById('uploadStatus');
+          uploadStatus.style.display = 'flex';
+          uploadStatus.classList.remove('animating');
+          void uploadStatus.offsetWidth;
+          uploadStatus.classList.add('animating');
+          uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), { once: true });
 
           draw();
           syncUI();
