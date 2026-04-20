@@ -1074,22 +1074,24 @@
   </div><!-- /.app -->
 
   <script>
+
     // Bloquear clique direito (Menu de contexto)
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    //document.addEventListener('contextmenu', event => event.preventDefault());
 
     // Bloquear atalhos de teclado para inspeção
-    document.onkeydown = function (e) {
-      // Bloqueia F12
-      if (e.keyCode == 123) { return false; }
+    //document.onkeydown = function (e) {
+    // Bloqueia F12
+    //if (e.keyCode == 123) { return false; }
 
-      // Bloqueia Ctrl+Shift+I ou Cmd+Opt+I (Inspecionar)
-      if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
-      if (e.metaKey && e.altKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+    // Bloqueia Ctrl+Shift+I ou Cmd+Opt+I (Inspecionar)
+    //if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+    //if (e.metaKey && e.altKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
 
-      // Bloqueia Ctrl+U ou Cmd+Opt+U (Ver código-fonte)
-      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
-      if (e.metaKey && e.altKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
-    };
+    // Bloqueia Ctrl+U ou Cmd+Opt+U (Ver código-fonte)
+    // if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+    // if (e.metaKey && e.altKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+    //};
+
     /* ================================================================
      * MOBIFANS — PREVIEW DE CAPINHAS
      * ================================================================
