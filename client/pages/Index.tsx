@@ -1,8 +1,8 @@
-import { useRef, useState, useCallback } from "react";
-import html2canvas from "html2canvas";
-import { PhoneModel, PHONE_MODELS } from "@/data/phoneModels";
-import { PhonePreview } from "@/components/PhonePreview";
-import { OptionsPanel } from "@/components/OptionsPanel";
+﻿import { useRef, useState, useCallback, useEffect } from 'react';
+import html2canvas from 'html2canvas';
+import { PhoneModel } from '@shared/api';
+import { PhonePreview } from '@/components/PhonePreview';
+import { OptionsPanel } from '@/components/OptionsPanel';
 
 interface ImageState {
   position: { x: number; y: number };
@@ -10,6 +10,7 @@ interface ImageState {
 }
 
 export default function Index() {
+  const [models, setModels] = useState<PhoneModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<PhoneModel | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
@@ -18,18 +19,28 @@ export default function Index() {
   const [isDownloading, setIsDownloading] = useState(false);
   const downloadableRef = useRef<HTMLDivElement>(null);
 
-  // Save state to history when image position or scale changes
+  useEffect(() => {
+    async function loadModels() {
+      try {
+        const response = await fetch('/api/models');
+        const data = await response.json();
+        setModels(data);
+      } catch (error) {
+        console.error('Error loading models:', error);
+      }
+    }
+    loadModels();
+  }, []);
+
   const saveToHistory = useCallback((position: { x: number; y: number }, scale: number) => {
     setHistory((prev) => {
       const newHistory = [...prev, { position, scale }];
-      // Keep only last 10 states
       return newHistory.slice(-10);
     });
   }, []);
 
   const handleModelChange = (model: PhoneModel) => {
     setSelectedModel(model);
-    // Reset image state when changing models
     setUploadedImage(null);
     setImagePosition({ x: 0, y: 0 });
     setImageScale(1);
@@ -53,10 +64,8 @@ export default function Index() {
 
   const handleUndo = () => {
     if (history.length === 0) return;
-
     const newHistory = [...history];
     const previousState = newHistory.pop();
-
     if (previousState) {
       setImagePosition(previousState.position);
       setImageScale(previousState.scale);
@@ -72,35 +81,31 @@ export default function Index() {
 
   const handleDownloadPreview = async () => {
     if (!downloadableRef.current || !uploadedImage) return;
-
     try {
       setIsDownloading(true);
       const canvas = await html2canvas(downloadableRef.current, {
         useCORS: true,
         scale: 2,
-        backgroundColor: "#ffffff",
+        backgroundColor: '#ffffff',
       });
-
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = `mobifans-preview-${selectedModel?.id || "phone"}-${Date.now()}.png`;
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = \mobifans-preview-\-\.png\;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error("Error downloading preview:", error);
+      console.error('Error downloading preview:', error);
     } finally {
       setIsDownloading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white font-plus-jakarta-sans">
-      <div className="container mx-auto px-4 py-6 md:py-8">
-        {/* Desktop/Tablet Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Preview Panel */}
-          <div className="order-1 lg:order-1">
+    <div className='min-h-screen bg-white font-plus-jakarta-sans'>
+      <div className='container mx-auto px-4 py-6 md:py-8'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8'>
+          <div className='order-1 lg:order-1'>
             <PhonePreview
               model={selectedModel}
               uploadedImage={uploadedImage}
@@ -120,10 +125,9 @@ export default function Index() {
               downloadableRef={downloadableRef}
             />
           </div>
-
-          {/* Options Panel */}
-          <div className="order-2 lg:order-2 flex flex-col justify-start">
+          <div className='order-2 lg:order-2 flex flex-col justify-start'>
             <OptionsPanel
+              models={models}
               selectedModel={selectedModel}
               hasUploadedImage={uploadedImage !== null}
               onModelChange={handleModelChange}

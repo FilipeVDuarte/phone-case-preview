@@ -1,7 +1,7 @@
-import { useRef, useEffect, useCallback, useState } from "react";
-import { PhoneModel } from "@/data/phoneModels";
-import { ToolBar } from "./ToolBar";
-import { MobiLogo } from "./MobiLogo";
+﻿import { useRef, useEffect, useCallback, useState } from 'react';
+import { PhoneModel } from '@shared/api';
+import { ToolBar } from './ToolBar';
+import { MobiLogo } from './MobiLogo';
 
 interface PhonePreviewProps {
   model: PhoneModel | null;
@@ -30,7 +30,27 @@ export function PhonePreview({
 }: PhonePreviewProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [maskPath, setMaskPath] = useState<string>('');
   const screenAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function fetchMaskPath() {
+      if (!model?.screenMaskPath) return;
+      try {
+        const response = await fetch(model.screenMaskPath);
+        const svgText = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgText, 'image/svg+xml');
+        const pathElement = doc.querySelector('path');
+        if (pathElement) {
+          setMaskPath(pathElement.getAttribute('d') || '');
+        }
+      } catch (error) {
+        console.error('Error fetching mask path:', error);
+      }
+    }
+    fetchMaskPath();
+  }, [model]);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -85,12 +105,10 @@ export function PhonePreview({
   }, [onImagePositionChange, onImageScaleChange, onReset]);
 
   const handleRotateReset = useCallback(() => {
-    // Reset to default state
     onImagePositionChange({ x: 0, y: 0 });
     onImageScaleChange(1);
   }, [onImagePositionChange, onImageScaleChange]);
 
-  // Touch support for mobile
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const handleTouchStart = useCallback(
@@ -126,51 +144,54 @@ export function PhonePreview({
 
   if (!model) {
     return (
-      <div className="flex items-center justify-center w-full bg-gray-100 rounded-3xl border-4 border-black text-center p-8 h-auto md:h-96">
-        <p className="text-gray-600 text-lg">Selecione um modelo para começar</p>
+      <div className='flex items-center justify-center w-full bg-gray-100 rounded-3xl border-4 border-black text-center p-8 h-auto md:h-96'>
+        <p className='text-gray-600 text-lg'>Selecione um modelo para começar</p>
+      </div>
+    );
+  }
+
+  if (!model.isAvailable) {
+    return (
+      <div className='flex items-center justify-center w-full bg-gray-100 rounded-3xl border-4 border-black text-center p-8 h-auto md:h-96'>
+        <p className='text-gray-600 text-lg'>Modelo temporariamente indisponível</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center gap-5 bg-gray-100 rounded-3xl border-4 border-black p-8 shadow-lg">
-      {/* Logo */}
-      <div className="flex justify-center">
+    <div className='flex flex-col items-center gap-5 bg-gray-100 rounded-3xl border-4 border-black p-8 shadow-lg'>
+      <div className='flex justify-center'>
         <MobiLogo />
       </div>
 
-      {/* Preview Area */}
-      <div className="flex items-end gap-3 bg-white rounded-3xl border-4 border-black p-6 relative w-full">
-        {/* Downloadable Area (for html2canvas) */}
+      <div className='flex items-end gap-3 bg-white rounded-3xl border-4 border-black p-6 relative w-full'>
         <div
           ref={downloadableRef}
-          className="flex items-center justify-center bg-white rounded-3xl p-4"
-          style={{ width: "500px", maxWidth: "100%", aspectRatio: "auto" }}
+          className='flex items-center justify-center bg-white rounded-3xl p-4'
+          style={{ width: '500px', maxWidth: '100%', aspectRatio: 'auto' }}
         >
-          {/* Phone Mockup */}
-          <div className="relative flex-shrink-0">
+          <div className='relative flex-shrink-0'>
             <img
               src={model.mockupImageUrl}
               alt={model.name}
               style={{
-                width: `${model.frameWidth}px`,
-                height: `${model.frameHeight}px`,
+                width: \\px\,
+                height: \\px\,
               }}
-              className="rounded-2xl"
+              className='rounded-2xl'
             />
 
-            {/* Screen Area with Clipped Image */}
             {uploadedImage && (
               <div
                 ref={screenAreaRef}
-                className="absolute cursor-grab active:cursor-grabbing"
+                className='absolute cursor-grab active:cursor-grabbing'
                 style={{
-                  left: `${model.screenOffsetX}px`,
-                  top: `${model.screenOffsetY}px`,
-                  width: `${model.screenWidth}px`,
-                  height: `${model.screenHeight}px`,
-                  overflow: "hidden",
-                  borderRadius: "16px",
+                  left: \\px\,
+                  top: \\px\,
+                  width: \\px\,
+                  height: \\px\,
+                  overflow: 'hidden',
+                  borderRadius: '16px',
                 }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -184,28 +205,28 @@ export function PhonePreview({
                 <svg
                   width={model.screenWidth}
                   height={model.screenHeight}
-                  style={{ position: "absolute", top: 0, left: 0 }}
+                  style={{ position: 'absolute', top: 0, left: 0 }}
                 >
                   <defs>
-                    <clipPath id="phone-mask">
-                      <path d={model.screenMaskPath} />
+                    <clipPath id='phone-mask'>
+                      <path d={maskPath} />
                     </clipPath>
                   </defs>
                 </svg>
 
                 <img
                   src={uploadedImage}
-                  alt="User uploaded"
+                  alt='User uploaded'
                   style={{
-                    position: "absolute",
-                    left: `${imagePosition.x}px`,
-                    top: `${imagePosition.y}px`,
-                    transform: `scale(${imageScale})`,
-                    transformOrigin: "0 0",
-                    width: "100%",
-                    height: "auto",
-                    minHeight: "100%",
-                    clipPath: "url(#phone-mask)",
+                    position: 'absolute',
+                    left: \\px\,
+                    top: \\px\,
+                    transform: \scale(\)\,
+                    transformOrigin: '0 0',
+                    width: '100%',
+                    height: 'auto',
+                    minHeight: '100%',
+                    clipPath: 'url(#phone-mask)',
                   }}
                 />
               </div>
@@ -213,9 +234,8 @@ export function PhonePreview({
           </div>
         </div>
 
-        {/* Toolbar */}
         {uploadedImage && (
-          <div className="flex flex-col items-center">
+          <div className='flex flex-col items-center'>
             <ToolBar
               onUndo={onUndo}
               onReset={handleReset}
@@ -228,9 +248,8 @@ export function PhonePreview({
         )}
       </div>
 
-      {/* Instruction Text */}
-      <div className="w-full bg-white border-4 border-black rounded-3xl py-4 px-6 text-center">
-        <p className="text-black font-medium text-lg">
+      <div className='w-full bg-white border-4 border-black rounded-3xl py-4 px-6 text-center'>
+        <p className='text-black font-medium text-lg'>
           Clique e arraste para ajustar
         </p>
       </div>
