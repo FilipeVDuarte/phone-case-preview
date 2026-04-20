@@ -292,6 +292,233 @@
       box-shadow: 3px 3px 0 0 #000;
     }
 
+    /* ── DROPDOWN CUSTOMIZADO ───────────────────────────────────── */
+    .dropdown-trigger {
+      width: 100%;
+      padding: 11px 14px;
+      border: 3px solid #000;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 3px 3px 0 0 #000;
+      transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring), background 0.15s ease;
+    }
+
+    .dropdown-trigger:hover:not(:disabled) {
+      background: #F8FAFC;
+      transform: translate(-2px, -3px);
+      box-shadow: 5px 6px 0 0 #000;
+    }
+
+    .dropdown-trigger:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 0 #000;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+    }
+
+    .dropdown-trigger:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .dropdown-trigger svg {
+      flex-shrink: 0;
+      transition: transform 0.3s var(--spring);
+    }
+
+    .dropdown-trigger[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    .trigger-text {
+      text-align: left;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── MENU DROPDOWN ─────────────────────────────────────────────── */
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border: 3px solid #000;
+      border-radius: 10px;
+      box-shadow: 3px 3px 0 0 #000;
+      z-index: 50;
+      max-height: 360px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: slide-in-down 0.3s var(--spring) both;
+    }
+
+    .dropdown-layer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      animation: fade-in 0.2s ease both;
+    }
+
+    .dropdown-header {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #64748B;
+      padding: 0 4px;
+    }
+
+    .dropdown-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 6px;
+      margin: -8px -6px 0 -6px;
+      border: none;
+      background: transparent;
+      color: #000;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .dropdown-back:hover {
+      background: #F1F5F9;
+    }
+
+    .dropdown-back svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ── BRANDS GRID (Marca) ─────────────────────────────────────── */
+    .brands-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .brand-chip {
+      padding: 10px 16px;
+      border: 2px solid #D1D5DB;
+      border-radius: 100px;
+      background: var(--white);
+      color: #000;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .brand-chip:hover {
+      border-color: #000;
+      background: #F1F5F9;
+    }
+
+    .brand-chip.active {
+      background: #000;
+      color: var(--white);
+      border-color: #000;
+    }
+
+    /* ── SERIES SCROLL (Série) ───────────────────────────────────── */
+    .series-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      padding: 0 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .series-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .series-chip {
+      flex-shrink: 0;
+      padding: 9px 14px;
+      border: 2px solid #D1D5DB;
+      border-radius: 8px;
+      background: var(--white);
+      color: #000;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .series-chip:hover {
+      border-color: #000;
+      background: #F1F5F9;
+    }
+
+    .series-chip.active {
+      background: #000;
+      color: var(--white);
+      border-color: #000;
+    }
+
+    /* ── MODELS LIST (Modelo) ──────────────────────────────────────── */
+    .models-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .model-item {
+      padding: 11px 12px;
+      border: none;
+      border-radius: 8px;
+      background: var(--white);
+      color: #000;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s ease;
+    }
+
+    .model-item:hover {
+      background: #F1F5F9;
+    }
+
+    .model-item.active {
+      background: #E2E8F0;
+      font-weight: 600;
+    }
+
+    /* ── POSICIONAMENTO RELATIVO DO FIELD-GROUP ────────────────────── */
+    .field-group {
+      position: relative;
+    }
+
     .upload-btn {
       width: 100%;
       padding: 13px 18px;
@@ -710,13 +937,63 @@
 
       <div class="options-title">Personaliza<br>Capinha</div>
 
-      <!-- Seletor de modelo do celular -->
+      <!-- Seletor de modelo do celular — dropdown customizado -->
       <div class="field-group">
         <div class="field-label">Modelo do celular</div>
-        <select class="model-select" id="modelSelect">
+
+        <!-- Select original (escondido — mantido para compatibilidade com JS) -->
+        <select class="model-select" id="modelSelect" style="display: none;">
           <option value="">— Seleciona o modelo —</option>
-          <!-- Opções preenchidas dinamicamente pelo JS via MODELS[] -->
         </select>
+
+        <!-- Trigger do dropdown (botão que mostra a seleção) -->
+        <button class="dropdown-trigger" id="dropdownTrigger" disabled>
+          <span class="trigger-text">— Seleciona o modelo —</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown menu (conteúdo expandível) -->
+        <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+
+          <!-- Layer 1: Seleção de Marca -->
+          <div class="dropdown-layer" id="layerBrand" style="display: flex;">
+            <div class="dropdown-header">Seleciona a Marca</div>
+            <div class="brands-grid" id="brandsGrid">
+              <!-- Chips de marca preenchidos pelo JS -->
+            </div>
+          </div>
+
+          <!-- Layer 2: Seleção de Série -->
+          <div class="dropdown-layer" id="layerSeries" style="display: none;">
+            <button class="dropdown-back" id="backFromSeries">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Voltar
+            </button>
+            <div class="dropdown-header">Seleciona a Série</div>
+            <div class="series-scroll" id="seriesScroll">
+              <!-- Chips de série preenchidos pelo JS -->
+            </div>
+          </div>
+
+          <!-- Layer 3: Seleção de Modelo -->
+          <div class="dropdown-layer" id="layerModel" style="display: none;">
+            <button class="dropdown-back" id="backFromModel">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Voltar
+            </button>
+            <div class="dropdown-header" id="modelLayerHeader">Seleciona o Modelo</div>
+            <div class="models-list" id="modelsList">
+              <!-- Itens de modelo preenchidos pelo JS -->
+            </div>
+          </div>
+
+        </div>
       </div>
 
       <!-- Upload da arte -->
@@ -914,6 +1191,49 @@
      * ================================================================ */
     const MODELS = [];
 
+    /* ================================================================
+     * DROPDOWN CUSTOMIZADO — Estruturação de dados e UI
+     * (Definido antes de MODELS ser preenchido)
+     * ================================================================ */
+
+    /**
+     * Normaliza e organiza os modelos em estrutura hierárquica.
+     */
+    function organizeModelsByBrandAndSeries() {
+      const hierarchy = {};
+
+      MODELS.forEach(m => {
+        const nameParts = m.name.split(' ');
+        const brand = nameParts[0];
+        let displayBrand = brand === 'iPhone' ? 'Apple' : brand;
+        let series = '';
+
+        if (displayBrand === 'Apple') {
+          series = nameParts[1];
+        } else {
+          series = nameParts[1].charAt(0);
+        }
+
+        if (!hierarchy[displayBrand]) {
+          hierarchy[displayBrand] = {};
+        }
+        if (!hierarchy[displayBrand][series]) {
+          hierarchy[displayBrand][series] = [];
+        }
+
+        hierarchy[displayBrand][series].push(m);
+      });
+
+      return hierarchy;
+    }
+
+    /* Estado do dropdown */
+    const dropdownState = {
+      isOpen: false,
+      selectedBrand: null,
+      selectedSeries: null,
+      hierarchy: {},
+    };
 
     /* ================================================================
      * ESTADO DA APLICAÇÃO
@@ -1690,15 +2010,184 @@
     };
 
 
+    /* Elementos do dropdown (definidos ANTES de initApp) */
+    const dropdownTrigger = document.getElementById('dropdownTrigger');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const layerBrand = document.getElementById('layerBrand');
+    const layerSeries = document.getElementById('layerSeries');
+    const layerModel = document.getElementById('layerModel');
+
+    /**
+     * Renderiza os chips de marca no layer 1.
+     */
+    function renderBrands() {
+      const brandsGrid = document.getElementById('brandsGrid');
+      brandsGrid.innerHTML = '';
+
+      const brands = Object.keys(dropdownState.hierarchy).sort();
+      brands.forEach(brand => {
+        const chip = document.createElement('button');
+        chip.className = 'brand-chip';
+        chip.textContent = brand;
+        chip.onclick = () => selectBrand(brand);
+        brandsGrid.appendChild(chip);
+      });
+    }
+
+    /**
+     * Renderiza os chips de série no layer 2.
+     */
+    function renderSeries() {
+      const seriesScroll = document.getElementById('seriesScroll');
+      seriesScroll.innerHTML = '';
+
+      if (!dropdownState.selectedBrand) return;
+
+      const series = Object.keys(dropdownState.hierarchy[dropdownState.selectedBrand])
+        .sort((a, b) => {
+          // Ordenar números numericamente, não alfabeticamente
+          const aNum = parseInt(a);
+          const bNum = parseInt(b);
+          if (!isNaN(aNum) && !isNaN(bNum)) return bNum - aNum; // decrescente (17, 16, 15...)
+          return a.localeCompare(b); // alfabético para letras (A, S)
+        });
+
+      series.forEach(s => {
+        const chip = document.createElement('button');
+        chip.className = 'series-chip';
+        chip.textContent = dropdownState.selectedBrand === 'Apple'
+          ? `Linha ${s}`
+          : `Série ${s}`;
+        chip.onclick = () => selectSeries(s);
+        seriesScroll.appendChild(chip);
+      });
+    }
+
+    /**
+     * Renderiza a lista de modelos no layer 3.
+     */
+    function renderModels() {
+      const modelsList = document.getElementById('modelsList');
+      modelsList.innerHTML = '';
+
+      if (!dropdownState.selectedBrand || !dropdownState.selectedSeries) return;
+
+      const models = dropdownState.hierarchy[dropdownState.selectedBrand][dropdownState.selectedSeries];
+      const modelLayerHeader = document.getElementById('modelLayerHeader');
+      modelLayerHeader.textContent = dropdownState.selectedBrand === 'Apple'
+        ? `Linha ${dropdownState.selectedSeries}`
+        : `Série ${dropdownState.selectedSeries}`;
+
+      models.forEach(m => {
+        const item = document.createElement('button');
+        item.className = 'model-item';
+        item.textContent = m.name;
+        item.onclick = () => selectModel(m);
+        modelsList.appendChild(item);
+      });
+    }
+
+    /**
+     * Muda para o layer de série após selecionar uma marca.
+     */
+    function selectBrand(brand) {
+      dropdownState.selectedBrand = brand;
+      dropdownState.selectedSeries = null;
+      renderSeries();
+      layerBrand.style.display = 'none';
+      layerSeries.style.display = 'flex';
+    }
+
+    /**
+     * Muda para o layer de modelo após selecionar uma série.
+     */
+    function selectSeries(series) {
+      dropdownState.selectedSeries = series;
+      renderModels();
+      layerSeries.style.display = 'none';
+      layerModel.style.display = 'flex';
+    }
+
+    /**
+     * Seleciona um modelo, atualiza o trigger e fecha o dropdown.
+     */
+    function selectModel(m) {
+      sel.value = m.id; // atualizar o select escondido (dispara change event)
+      sel.dispatchEvent(new Event('change'));
+      closeDropdown();
+    }
+
+    /**
+     * Abre o dropdown e renderiza o layer inicial.
+     */
+    function openDropdown() {
+      if (dropdownState.isOpen) return;
+      dropdownState.isOpen = true;
+      dropdownTrigger.setAttribute('aria-expanded', 'true');
+      dropdownMenu.style.display = 'flex';
+      dropdownState.selectedBrand = null;
+      dropdownState.selectedSeries = null;
+      renderBrands();
+      layerBrand.style.display = 'flex';
+      layerSeries.style.display = 'none';
+      layerModel.style.display = 'none';
+    }
+
+    /**
+     * Fecha o dropdown.
+     */
+    function closeDropdown() {
+      if (!dropdownState.isOpen) return;
+      dropdownState.isOpen = false;
+      dropdownTrigger.setAttribute('aria-expanded', 'false');
+      dropdownMenu.style.display = 'none';
+    }
+
+    /**
+     * Volta um nível no dropdown (série → marca).
+     */
+    function backTobrands() {
+      dropdownState.selectedBrand = null;
+      renderBrands();
+      layerSeries.style.display = 'none';
+      layerBrand.style.display = 'flex';
+    }
+
+    /**
+     * Volta um nível no dropdown (modelo → série).
+     */
+    function backToSeries() {
+      dropdownState.selectedSeries = null;
+      renderSeries();
+      layerModel.style.display = 'none';
+      layerSeries.style.display = 'flex';
+    }
+
+    /* Listeners do dropdown */
+    dropdownTrigger.addEventListener('click', () => {
+      if (dropdownState.isOpen) closeDropdown();
+      else openDropdown();
+    });
+
+    document.getElementById('backFromSeries').addEventListener('click', backTobrands);
+    document.getElementById('backFromModel').addEventListener('click', backToSeries);
+
+    /* Fechar dropdown ao clicar fora */
+    document.addEventListener('click', e => {
+      const isClickInsideMenu = dropdownMenu.contains(e.target);
+      const isClickOnTrigger = dropdownTrigger.contains(e.target);
+      if (!isClickInsideMenu && !isClickOnTrigger && dropdownState.isOpen) {
+        closeDropdown();
+      }
+    });
+
+
     /* ================================================================
-     * SELEÇÃO DE MODELO
+     * CARREGAMENTO E INICIALIZAÇÃO DA APP
      * ================================================================ */
 
     /**
      * Adiciona uma opção no <select> para o modelo dado.
-     * Separado para facilitar a adição de modelos via CSV.
-     *
-     * @param {object} m — modelo
      */
     function addModelOption(m) {
       const opt = document.createElement('option');
@@ -1707,7 +2196,9 @@
       sel.appendChild(opt);
     }
 
-    /* Carregar modelos do CSV e popular o select */
+    /**
+     * Carregar modelos do CSV e popular o select
+     */
     async function initApp() {
       try {
         const csvResp = await fetch('server/data/models.csv');
@@ -1750,6 +2241,12 @@
           MODELS.push(m);
           addModelOption(m);
         }
+
+        /* Reorganizar modelos para o dropdown após carregá-los */
+        dropdownState.hierarchy = organizeModelsByBrandAndSeries();
+
+        /* Habilitar dropdown trigger após carregar os modelos */
+        dropdownTrigger.disabled = false;
       } catch (err) {
         console.error('[Mobifans] Erro ao carregar modelos:', err);
       }
@@ -1766,9 +2263,13 @@
         state.model = null;
         canvas.style.display = 'none';
         document.getElementById('emptyState').style.display = 'flex';
+        dropdownTrigger.querySelector('.trigger-text').textContent = '— Seleciona o modelo —';
         syncUI();
         return;
       }
+
+      /* Atualizar texto do trigger com o modelo selecionado */
+      dropdownTrigger.querySelector('.trigger-text').textContent = found.name;
 
       /* Mostrar spinner enquanto carrega a imagem do mockup */
       loadingEl.classList.add('visible');
