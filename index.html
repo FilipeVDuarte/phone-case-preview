@@ -912,48 +912,7 @@
      *     }
      *   }
      * ================================================================ */
-    const MODELS = [
-      {
-        id: 'iphone17promax',
-        name: 'iPhone 17 Pro Max',
-        /* Camada 0: mockup AVIF (fundo transparente) */
-        mockupPath: 'Aparelhos_Preview/AP_iPhone_17_Pro_Max.avif',
-        /* Path SVG extraído de Aparelhos_Facas/Faca_17_Pro_Max.svg
-         * viewBox: 0 0 500 1000 — coordenadas 1:1 com o AVIF */
-        facaMaskPath: 'M90.34,21.24h316.57c37.85,0,68.82,31.8,68.82,70.66v811.54c0,38.86-30.97,70.66-68.82,70.66H90.34c-37.85,0-68.82-31.8-68.82-70.66V91.89c0-38.86,30.97-70.66,68.82-70.66Z',
-        /* Dimensões iniciais do canvas — auto-atualizadas ao carregar o AVIF */
-        fw: 500, fh: 1000,
-        /* Runtime — não alterar */
-        _mockupImg: null,
-      },
-      {
-        id: 'iphone17pro',
-        name: 'iPhone 17 Pro',
-        mockupPath: 'Aparelhos_Preview/AP_iPhone_17_Pro.avif',
-        /* Path SVG extraído de Aparelhos_Facas/Faca_17_Pro.svg */
-        facaMaskPath: 'M103.92,61.58h290.95c34.79,0,63.25,29.16,63.25,64.81v744.34c0,35.64-28.46,64.81-63.25,64.81H103.92c-34.79,0-63.25-29.16-63.25-64.81V126.38c0-35.64,28.46-64.81,63.25-64.81Z',
-        fw: 500, fh: 1000,
-        _mockupImg: null,
-      },
-      {
-        id: 'iphone17',
-        name: 'iPhone 17',
-        mockupPath: 'Aparelhos_Preview/AP_iPhone_17.avif',
-        /* Path SVG extraído de Aparelhos_Facas/Faca_17_base.svg */
-        facaMaskPath: 'M104.31,64.64h290.42c34.72,0,63.13,29.14,63.13,64.75v740.62c0,35.62-28.41,64.75-63.13,64.75H104.31c-34.72,0-63.13-29.14-63.13-64.75V129.39c0-35.62,28.41-64.75,63.13-64.75Z',
-        fw: 500, fh: 1000,
-        _mockupImg: null,
-      },
-      {
-        id: 'iphone17air',
-        name: 'iPhone 17 Air',
-        mockupPath: 'Aparelhos_Preview/AP_iPhone_17_Air.avif',
-        /* Path SVG extraído de Aparelhos_Facas/Faca_17_Air.svg */
-        facaMaskPath: 'M98.77,40.64h302.52c36.17,0,65.76,30.44,65.76,67.64v773.65c0,37.2-29.59,67.64-65.76,67.64H98.77c-36.17,0-65.76-30.44-65.76-67.64V108.28c0-37.2,29.59-67.64,65.76-67.64Z',
-        fw: 500, fh: 1000,
-        _mockupImg: null,
-      },
-    ];
+    const MODELS = [];
 
 
     /* ================================================================
@@ -1748,8 +1707,55 @@
       sel.appendChild(opt);
     }
 
-    /* Popular o select com os modelos iniciais */
-    MODELS.forEach(addModelOption);
+    /* Carregar modelos do CSV e popular o select */
+    async function initApp() {
+      try {
+        const csvResp = await fetch('server/data/models.csv');
+        if (!csvResp.ok) throw new Error('CSV não encontrado');
+        const csvText = await csvResp.text();
+
+        const rows = csvText.split('\n').map(l => l.trim()).filter(l => l);
+
+        for (const row of rows) {
+          const [name, mockupPath, facaSvgPath] = row.split(',').map(s => s.trim());
+          if (!name || !mockupPath) continue;
+
+          /* Extrair nome do arquivo para montar a URL pública */
+          const mockupFile = mockupPath.split('/').pop();
+          const facaFile = facaSvgPath ? facaSvgPath.split('/').pop() : null;
+
+          let facaMaskPath = null;
+          if (facaFile) {
+            try {
+              const svgResp = await fetch(`public/assets/facas/${facaFile}`);
+              if (svgResp.ok) {
+                const svgText = await svgResp.text();
+                const dMatch = svgText.match(/\sd="([^"]+)"/);
+                facaMaskPath = dMatch ? dMatch[1] : null;
+              }
+            } catch (e) {
+              console.warn('[Mobifans] SVG não encontrado:', facaFile);
+            }
+          }
+
+          const m = {
+            id: name.toLowerCase().replace(/\s+/g, '-'),
+            name,
+            mockupPath: `public/assets/previews/${mockupFile}`,
+            facaMaskPath,
+            fw: 500, fh: 1000,
+            _mockupImg: null,
+          };
+
+          MODELS.push(m);
+          addModelOption(m);
+        }
+      } catch (err) {
+        console.error('[Mobifans] Erro ao carregar modelos:', err);
+      }
+    }
+
+    initApp();
 
     /* Handler de mudança de modelo */
     sel.addEventListener('change', async () => {

@@ -8,7 +8,9 @@
       "WebFetch(domain:api.github.com)",
       "Bash(dir \"C:\\\\Users\\\\MARKETING\\\\Desktop\\\\Claude\\\\MKT\\\\Pagina Preview\\\\Aparelhos_Preview\")",
       "Bash(powershell -Command \"Get-ChildItem | Select-Object Name, Length | Format-Table -AutoSize\")",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx tsx *)",
+      "Bash(curl -s http://localhost:3000/api/models)"
     ]
   }
 }

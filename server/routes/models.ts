@@ -10,19 +10,21 @@ export const handleGetModels: RequestHandler = (req, res) => {
     const lines = csvData.split("\n").filter(line => line.trim());
 
     const models: any[] = lines.map(line => {
-      const [name, mockup, faca] = line.split(",");
-      
-      const mockupPath = path.join(process.cwd(), "public", "assets", "previews", mockup);
-      const facaPath = path.join(process.cwd(), "public", "assets", "facas", faca);
-      
-      const hasMockup = fs.existsSync(mockupPath);
-      const hasFaca = fs.existsSync(facaPath);
+      const [name, mockup, faca] = line.split(",").map(s => s.trim());
+
+      const mockupFile = path.basename(mockup);
+      const facaFile = path.basename(faca);
+      const mockupFullPath = path.join(process.cwd(), "public", "assets", "previews", mockupFile);
+      const facaFullPath = path.join(process.cwd(), "public", "assets", "facas", facaFile);
+
+      const hasMockup = fs.existsSync(mockupFullPath);
+      const hasFaca = fs.existsSync(facaFullPath);
 
       return {
         id: name.toLowerCase().replace(/\s+/g, "-"),
         name,
-        mockupImageUrl: `/assets/previews/${mockup}`,
-        screenMaskPath: `/assets/facas/${faca}`,
+        mockupImageUrl: `/assets/previews/${mockupFile}`,
+        screenMaskPath: `/assets/facas/${facaFile}`,
         // Standardized dimensions 500x1000
         screenOffsetX: 50,
         screenOffsetY: 50,
