@@ -10,7 +10,13 @@
       "Bash(powershell -Command \"Get-ChildItem | Select-Object Name, Length | Format-Table -AutoSize\")",
       "mcp__Claude_Preview__preview_start",
       "Bash(npx tsx *)",
-      "Bash(curl -s http://localhost:3000/api/models)"
+      "Bash(curl -s http://localhost:3000/api/models)",
+      "Bash(git push *)",
+      "Bash(gh pr *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5500)",
+      "Bash(cd /home)",
+      "Bash(claude plugin *)"
     ]
   }
 }
