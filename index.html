@@ -1,13 +1,258 @@
 ﻿<!DOCTYPE html>
 <html lang='pt-BR'>
-  <head>
-    <meta charset='UTF-8' />
-    <link rel='icon' type='image/svg+xml' href='/favicon.ico' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Mobifans — Preview de Capinhas</title>
-  </head>
-  <body>
-    <div id='root'></div>
-    <script type='module' src='/client/App.tsx'></script>
-  </body>
+    <script src='https://cdn.tailwindcss.com'></script>
+    <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .cursor-grab { cursor: grab; }
+        .cursor-grabbing { cursor: grabbing; }
+    </style>
+</head>
+<body class='min-h-screen bg-white'>
+    <div class='container mx-auto px-4 py-6 md:py-8'>
+        <div class='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8'>
+            
+            <!-- Painel de Preview -->
+            <div class='order-1 lg:order-1'>
+                <div class='flex flex-col items-center gap-5 bg-gray-100 rounded-3xl border-4 border-black p-8 shadow-lg'>
+                    <div class='flex justify-center'>
+                        <img src='/assets/svg/Logo_Preview.svg' alt='Mobifans' style='height: 50px;'>
+                    </div>
+
+                    <div class='flex items-end gap-3 bg-white rounded-3xl border-4 border-black p-6 relative w-full'>
+                        <div id='downloadableArea' class='flex items-center justify-center bg-white rounded-3xl p-4' style='width: 500px; max-width: 100%;'>
+                            <div class='relative flex-shrink-0' id='phoneContainer'>
+                                <img id='mockupImg' src='' alt='' class='rounded-2xl' style='display: none;'>
+                                <div id='screenArea' class='absolute overflow-hidden rounded-lg cursor-grab' style='display: none;'>
+                                    <svg id='maskSvg' style='position: absolute; top: 0; left: 0; pointer-events: none;'>
+                                        <defs>
+                                            <clipPath id='phone-mask'>
+                                                <path id='maskPath' d='' />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                    <img id='userImg' src='' alt='User Upload' class='absolute' style='transform-origin: 0 0;'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id='toolbar' class='flex flex-col items-center gap-2' style='display: none;'>
+                            <button id='btnUndo' class='w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100 disabled:opacity-30' title='Desfazer'>
+                                <svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='9 14 4 9 9 4'><path d='M20 20v-7a4 4 0 0 0-4-4H4' /></polyline></svg>
+                            </button>
+                            <div class='w-5 h-px bg-gray-300'></div>
+                            <button id='btnReset' class='w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100' title='Resetar'>
+                                <svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M3 12a9 9 0 1 0 .5-3M3 3v6h6' /></svg>
+                            </button>
+                            <button id='btnZoomIn' class='w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100' title='Zoom +'>
+                                <svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='8' /><line x1='21' y1='21' x2='16.65' y2='16.65' /><line x1='11' y1='8' x2='11' y2='14' /><line x1='8' y1='11' x2='14' y2='11' /></svg>
+                            </button>
+                            <button id='btnZoomOut' class='w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100' title='Zoom -'>
+                                <svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='8' /><line x1='21' y1='21' x2='16.65' y2='16.65' /><line x1='8' y1='11' x2='14' y2='11' /></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class='w-full bg-white border-4 border-black rounded-3xl py-4 px-6 text-center'>
+                        <p class='text-black font-medium text-lg'>Clique e arraste para ajustar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel de Opções -->
+            <div class='order-2 lg:order-2 flex flex-col justify-start'>
+                <div class='flex flex-col items-center gap-5 bg-white rounded-3xl border-4 border-black p-8 shadow-lg w-full md:w-auto'>
+                    <div class='w-full max-w-xs'>
+                        <label class='block text-gray-700 font-medium text-sm mb-2'>Modelo</label>
+                        <select id='modelSelect' class='w-full px-4 py-3 border-4 border-black rounded-lg bg-white text-gray-700 font-medium focus:outline-none cursor-pointer appearance-none' style='background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'black\' stroke-width=\'2\'%3e%3cpath d=\'M6 9l6 6 6-6\'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px; padding-right: 40px;'>
+                            <option value=''>Qual o celular?</option>
+                        </select>
+                    </div>
+
+                    <input type='file' id='fileInput' accept='image/*' class='hidden'>
+                    <button id='uploadBtn' disabled class='w-full max-w-xs px-6 py-3 border-4 border-black rounded-xl font-medium text-lg transition-all bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'>
+                        Faça upload aqui
+                    </button>
+
+                    <button id='downloadBtn' disabled class='w-full max-w-xs px-6 py-3 border-4 border-black rounded-xl font-medium text-lg transition-all bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'>
+                        Baixar Preview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'></script>
+    <script>
+        let state = {
+            models: [],
+            selectedModel: null,
+            uploadedImage: null,
+            imagePosition: { x: 0, y: 0 },
+            imageScale: 1,
+            history: []
+        };
+
+        const elements = {
+            modelSelect: document.getElementById('modelSelect'),
+            uploadBtn: document.getElementById('uploadBtn'),
+            fileInput: document.getElementById('fileInput'),
+            downloadBtn: document.getElementById('downloadBtn'),
+            mockupImg: document.getElementById('mockupImg'),
+            screenArea: document.getElementById('screenArea'),
+            userImg: document.getElementById('userImg'),
+            maskPath: document.getElementById('maskPath'),
+            maskSvg: document.getElementById('maskSvg'),
+            toolbar: document.getElementById('toolbar'),
+            btnUndo: document.getElementById('btnUndo'),
+            btnReset: document.getElementById('btnReset'),
+            btnZoomIn: document.getElementById('btnZoomIn'),
+            btnZoomOut: document.getElementById('btnZoomOut')
+        };
+
+        async function init() {
+            try {
+                const resp = await fetch('/api/models');
+                state.models = await resp.json();
+                state.models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.textContent = m.name + (m.isAvailable ? '' : ' (Indisponível)');
+                    opt.disabled = !m.isAvailable;
+                    elements.modelSelect.appendChild(opt);
+                });
+            } catch (e) { console.error('Erro ao carregar modelos', e); }
+        }
+
+        elements.modelSelect.onchange = async (e) => {
+            const model = state.models.find(m => m.id === e.target.value);
+            state.selectedModel = model;
+            if (!model) {
+                elements.mockupImg.style.display = 'none';
+                elements.screenArea.style.display = 'none';
+                elements.uploadBtn.disabled = true;
+                elements.uploadBtn.className = 'w-full max-w-xs px-6 py-3 border-4 border-black rounded-xl font-medium text-lg transition-all bg-gray-100 text-gray-400 cursor-not-allowed opacity-50';
+                return;
+            }
+            
+            elements.mockupImg.src = model.mockupImageUrl;
+            elements.mockupImg.style.display = 'block';
+            elements.mockupImg.style.width = model.frameWidth + 'px';
+            elements.mockupImg.style.height = model.frameHeight + 'px';
+            
+            elements.screenArea.style.display = 'block';
+            elements.screenArea.style.left = model.screenOffsetX + 'px';
+            elements.screenArea.style.top = model.screenOffsetY + 'px';
+            elements.screenArea.style.width = model.screenWidth + 'px';
+            elements.screenArea.style.height = model.screenHeight + 'px';
+            
+            elements.maskSvg.setAttribute('width', model.screenWidth);
+            elements.maskSvg.setAttribute('height', model.screenHeight);
+
+            const svgResp = await fetch(model.screenMaskPath);
+            const svgText = await svgResp.text();
+            const dMatch = svgText.match(/d="([^"]+)"/);
+            elements.maskPath.setAttribute('d', dMatch ? dMatch[1] : '');
+            elements.userImg.style.clipPath = 'url(#phone-mask)';
+
+            elements.uploadBtn.disabled = false;
+            elements.uploadBtn.className = 'w-full max-w-xs px-6 py-3 border-4 border-black rounded-xl font-medium text-lg transition-all bg-white text-black hover:bg-gray-50 active:bg-gray-100 cursor-pointer';
+        };
+
+        elements.uploadBtn.onclick = () => elements.fileInput.click();
+
+        elements.fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                state.uploadedImage = event.target.result;
+                elements.userImg.src = state.uploadedImage;
+                elements.userImg.style.display = 'block';
+                elements.toolbar.style.display = 'flex';
+                elements.downloadBtn.disabled = false;
+                elements.downloadBtn.className = 'w-full max-w-xs px-6 py-3 border-4 border-black rounded-xl font-medium text-lg transition-all bg-white text-black hover:bg-gray-50 active:bg-gray-100 cursor-pointer';
+                resetImage();
+            };
+            reader.readAsDataURL(file);
+        };
+
+        function resetImage() {
+            state.imagePosition = { x: 0, y: 0 };
+            state.imageScale = 1;
+            state.history = [];
+            updateImageTransform();
+        }
+
+        function updateImageTransform() {
+            elements.userImg.style.left = state.imagePosition.x + 'px';
+            elements.userImg.style.top = state.imagePosition.y + 'px';
+            elements.userImg.style.transform = \scale(\)\;
+            elements.btnUndo.disabled = state.history.length === 0;
+        }
+
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+
+        elements.screenArea.onmousedown = (e) => {
+            isDragging = true;
+            dragStart = { x: e.clientX - state.imagePosition.x, y: e.clientY - state.imagePosition.y };
+            elements.screenArea.classList.replace('cursor-grab', 'cursor-grabbing');
+        };
+
+        window.onmousemove = (e) => {
+            if (!isDragging) return;
+            state.history.push({...state.imagePosition, scale: state.imageScale});
+            if (state.history.length > 10) state.history.shift();
+            state.imagePosition = { x: e.clientX - dragStart.x, y: e.clientY - dragStart.y };
+            updateImageTransform();
+        };
+
+        window.onmouseup = () => {
+            isDragging = false;
+            elements.screenArea.classList.replace('cursor-grabbing', 'cursor-grab');
+        };
+
+        elements.btnZoomIn.onclick = () => {
+            state.history.push({...state.imagePosition, scale: state.imageScale});
+            state.imageScale = Math.min(3, state.imageScale + 0.1);
+            updateImageTransform();
+        };
+
+        elements.btnZoomOut.onclick = () => {
+            state.history.push({...state.imagePosition, scale: state.imageScale});
+            state.imageScale = Math.max(0.3, state.imageScale - 0.1);
+            updateImageTransform();
+        };
+
+        elements.btnReset.onclick = () => {
+            state.history.push({...state.imagePosition, scale: state.imageScale});
+            resetImage();
+        };
+
+        elements.btnUndo.onclick = () => {
+            const prev = state.history.pop();
+            if (prev) {
+                state.imagePosition = { x: prev.x, y: prev.y };
+                state.imageScale = prev.scale;
+                updateImageTransform();
+            }
+        };
+
+        elements.downloadBtn.onclick = async () => {
+            const area = document.getElementById('downloadableArea');
+            const canvas = await html2canvas(area, { scale: 2, backgroundColor: '#ffffff' });
+            const link = document.createElement('a');
+            link.download = \mobifans-preview-\.png\;
+            link.href = canvas.toDataURL();
+            link.click();
+        };
+
+        init();
+    </script>
+</body>
 </html>
