@@ -33,7 +33,7 @@
 
     body {
       font-family: var(--font);
-      background: var(--dark);
+      background: #FFFFFF;
       height: 100vh;
       overflow: hidden;
       -webkit-user-select: none;
@@ -44,7 +44,7 @@
     .workspace {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       height: 100%;
       width: 100%;
@@ -60,7 +60,7 @@
       flex-shrink: 0;
       background: var(--white);
       border-radius: 16px;
-      padding: 24px;
+      padding: 32px;
       border: 4px solid #000;
       box-shadow: 0 8px 0 0 #000;
       display: flex;
@@ -102,8 +102,8 @@
       width: 488px;
       height: 736px;
       flex-shrink: 0;
-      background: var(--gray-bg);
-      border-radius: 16px;
+      background: #FFFFFF;
+      border-radius: 50px;
       border: 4px solid #000;
       box-shadow: 0 8px 0 0 #000;
       display: flex;
@@ -120,7 +120,7 @@
       align-items: center;
       width: 100%;
       padding: 18px 28px;
-      border-bottom: 2px solid #E2E8F0;
+      border-top: 2px solid #E2E8F0;
       flex-shrink: 0;
     }
 
@@ -162,8 +162,8 @@
       transition: background 0.25s ease;
     }
 
-    .step-item.active .step-num  { background: var(--ocean); color: #fff; }
-    .step-item.active .step-label { color: var(--ocean); font-weight: 700; }
+    .step-item.active .step-num  { background: #000000; color: #fff; }
+    .step-item.active .step-label { color: #000000; font-weight: 700; }
     .step-item.completed .step-num { background: #22C55E; color: #fff; }
     .step-item.completed ~ .step-connector { background: #22C55E; }
 
@@ -256,7 +256,7 @@
       flex-shrink: 0;
       background: var(--white);
       border-radius: 16px;
-      padding: 24px;
+      padding: 32px;
       border: 4px solid #000;
       box-shadow: 0 8px 0 0 #000;
       display: flex;
@@ -319,7 +319,7 @@
     }
 
     .brand-chip:hover { border-color: #000; background: #F1F5F9; }
-    .brand-chip.active { background: #000; color: var(--white); border-color: #000; }
+    .brand-chip.active { background: var(--white); color: #000000; border-color: #000000; font-weight: 600; }
 
     /* Series grid */
     .series-scroll {
@@ -583,19 +583,19 @@
 
     .nav-prev {
       background: white;
-      border: 2px solid #E2E8F0;
+      border: 1.5px solid #D1D5DB;
       color: #64748B;
     }
 
-    .nav-prev:hover:not(:disabled) { background: #F8FAFC; border-color: #CBD5E1; }
+    .nav-prev:hover:not(:disabled) { background: #F8FAFC; border-color: #9CA3AF; }
 
     .nav-next {
-      background: var(--ocean);
-      border: 2px solid var(--ocean);
+      background: #000000;
+      border: 2px solid #000000;
       color: white;
     }
 
-    .nav-next:hover:not(:disabled) { background: #252880; }
+    .nav-next:hover:not(:disabled) { background: #1a1a1a; }
     .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* ── LOGO ── */
@@ -679,29 +679,6 @@
     ══════════════════════════════════════ -->
     <main class="panel-center">
 
-      <!-- Stepper -->
-      <div class="stepper" id="stepper">
-        <div class="step-item active" id="stepItem1">
-          <div class="step-num">1</div>
-          <div class="step-label">Modelo</div>
-        </div>
-        <div class="step-connector" id="stepConn1"></div>
-        <div class="step-item" id="stepItem2">
-          <div class="step-num">2</div>
-          <div class="step-label">Foto</div>
-        </div>
-        <div class="step-connector" id="stepConn2"></div>
-        <div class="step-item" id="stepItem3">
-          <div class="step-num">3</div>
-          <div class="step-label">Ajuste</div>
-        </div>
-        <div class="step-connector" id="stepConn3"></div>
-        <div class="step-item" id="stepItem4">
-          <div class="step-num">4</div>
-          <div class="step-label">Finalizar</div>
-        </div>
-      </div>
-
       <!-- Canvas area -->
       <div class="canvas-area" id="canvasWrapper">
 
@@ -729,6 +706,29 @@
 
       <!-- Floating hint -->
       <div class="canvas-float-hint" id="canvasHint">Clique e Arraste para ajustar</div>
+
+      <!-- Stepper (inferior) -->
+      <div class="stepper" id="stepper">
+        <div class="step-item active" id="stepItem1">
+          <div class="step-num">1</div>
+          <div class="step-label">Modelo</div>
+        </div>
+        <div class="step-connector" id="stepConn1"></div>
+        <div class="step-item" id="stepItem2">
+          <div class="step-num">2</div>
+          <div class="step-label">Foto</div>
+        </div>
+        <div class="step-connector" id="stepConn2"></div>
+        <div class="step-item" id="stepItem3">
+          <div class="step-num">3</div>
+          <div class="step-label">Ajuste</div>
+        </div>
+        <div class="step-connector" id="stepConn3"></div>
+        <div class="step-item" id="stepItem4">
+          <div class="step-num">4</div>
+          <div class="step-label">Finalizar</div>
+        </div>
+      </div>
 
     </main>
 
