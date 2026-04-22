@@ -826,6 +826,99 @@
       text-transform: uppercase;
       margin: 0;
     }
+
+    /* ══════════════════════════════════════
+       MOBILE LAYOUT  (≤ 1024px)
+       Base medidas: Mobile_Anatomy.svg 430w
+    ══════════════════════════════════════ */
+    @media (max-width: 1024px) {
+
+      body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+
+      .workspace {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 16px 36px;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      /* Painéis laterais — #3 e #35 do anatomy */
+      .panel-left,
+      .panel-right {
+        width: 318.58px;
+        max-width: calc(100vw - 32px);
+        box-sizing: border-box;
+        border: 2.61px solid #000000;
+        box-shadow: 0px 5.22px 0px 0px #000000;
+        border-radius: 15.22px;
+        padding: 20px 22px;
+      }
+
+      .panel-left {
+        flex-shrink: 0;
+      }
+
+      .panel-right {
+        flex-shrink: 0;
+        overflow-y: visible;
+      }
+
+      /* Painel Central / Simulador — #11 do anatomy */
+      .panel-center {
+        width: 318.58px;
+        max-width: calc(100vw - 32px);
+        height: 537.58px;
+        box-sizing: border-box;
+        border-radius: 32.64px;
+        border: 2.61px solid #000000;
+        box-shadow: 0px 5.22px 0px 0px #000000;
+        flex-shrink: 0;
+      }
+
+      /* Stepper — #16 do anatomy */
+      .stepper {
+        padding: 12px 14px;
+      }
+
+      .step-num {
+        width: 18.28px;
+        height: 18.28px;
+        font-size: 9px;
+      }
+
+      .step-label {
+        font-size: 9.5px;
+        white-space: nowrap;
+      }
+
+      .step-connector {
+        min-width: 8px;
+        margin: 0 4px;
+      }
+
+      /* Título do app — compacto */
+      .app-title {
+        font-size: 20px;
+      }
+
+      /* Painel direito — garantir que painéis de step sejam flex */
+      .step-panel {
+        gap: 12px;
+      }
+
+      /* Wizard nav */
+      .wizard-nav {
+        padding-top: 12px;
+        margin-top: 12px;
+      }
+
+    }
   </style>
 </head>
 
