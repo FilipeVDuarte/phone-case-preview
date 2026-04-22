@@ -779,16 +779,17 @@
     /* ── Loader / Splash Screen ── */
     #loader-screen {
       position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: #fff;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 999999;
+      background: #ffffff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 20px;
-      font-family: var(--font);
-      transition: opacity 0.45s var(--smooth), visibility 0.45s var(--smooth);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
     #loader-screen.loader-hidden {
@@ -797,30 +798,33 @@
       pointer-events: none;
     }
 
+    #loader-screen .loader-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 40px 48px;
+      border: 4px solid #000;
+      box-shadow: 6px 6px 0 0 #000;
+      background: #fff;
+    }
+
     #loader-screen .loader-icon {
-      animation: loader-pulse 1.6s var(--smooth) infinite;
+      animation: loader-pulse 1.6s ease-in-out infinite;
     }
 
     @keyframes loader-pulse {
-
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-
-      50% {
-        transform: scale(.9);
-        opacity: 0.55;
-      }
+      0%, 100% { transform: scale(1);    opacity: 1;    }
+      50%       { transform: scale(0.9); opacity: 0.5;  }
     }
 
     #loader-screen p {
-      color: var(--black);
+      color: #000;
       font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+      font-weight: 800;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      margin: 0;
     }
   </style>
 </head>
@@ -829,12 +833,14 @@
 
   <!-- Splash Screen -->
   <div id="loader-screen">
-    <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
-      <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5" />
-      <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
-      <circle cx="32" cy="53" r="2.5" fill="#000" />
-    </svg>
-    <p>Carregando capinhas...</p>
+    <div class="loader-card">
+      <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5"/>
+        <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0"/>
+        <circle cx="32" cy="53" r="2.5" fill="#000"/>
+      </svg>
+      <p>Carregando modelos...</p>
+    </div>
   </div>
 
   <!-- Hidden elements for JS compatibility -->
@@ -1837,6 +1843,8 @@
 
       } catch (err) {
         console.error('[Mobifans] Erro ao carregar modelos:', err);
+      } finally {
+        finishLoading();
       }
     }
 
@@ -1956,12 +1964,12 @@
      * INICIALIZAÇÃO
      * ================================================================ */
 
-    function esconderLoader() {
+    function finishLoading() {
       const loader = document.getElementById('loader-screen');
-      if (loader) loader.classList.add('loader-hidden');
+      if (!loader) return;
+      loader.classList.add('loader-hidden');
+      loader.addEventListener('transitionend', () => loader.remove(), { once: true });
     }
-
-    window.addEventListener('load', esconderLoader);
 
     syncUI();
     showStep(1);
