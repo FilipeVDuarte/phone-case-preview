@@ -1231,7 +1231,7 @@
      * ARQUITETURA DO CANVAS: 3 camadas sobrepostas
      *   CAMADA 0 → Mockup AVIF (aparelho)
      *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
-     *   CAMADA 2 → Linha de corte (stroke do path SVG)
+     *   CAMADA 2 → Linha de corte (stroke do path SVGs)
      * ================================================================ */
 
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -1962,7 +1962,7 @@
                   return {
                     cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
                     cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
-                    r:  parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
+                    r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
                   };
                 }).filter(c => c.r > 0);
               }
