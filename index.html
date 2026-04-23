@@ -1234,7 +1234,6 @@
      *   CAMADA 2 → Linha de corte (stroke do path SVG)
      * ================================================================ */
 
-    const MOCKUP_ON_TOP = false;
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
     const DISPLAY_H = 520;
     const FACA_SVG_W = 500;
@@ -1451,11 +1450,25 @@
       if (!d) return null;
       const sx = m.fw / FACA_SVG_W;
       const sy = m.fh / FACA_SVG_H;
-      if (sx === 1 && sy === 1) return new Path2D(d);
+
+      // Build combined path: outer case boundary + camera/sensor circles.
+      // When filled with evenodd, the circles become transparent holes so
+      // camera hardware shows through the user art on Layer 1 and remains
+      // visible in the Layer 2 overlay.
+      const base = new Path2D();
+      base.addPath(new Path2D(d));
+      if (m.facaCircles) {
+        for (const { cx, cy, r } of m.facaCircles) {
+          base.moveTo(cx + r, cy);
+          base.arc(cx, cy, r, 0, Math.PI * 2);
+        }
+      }
+
+      if (sx === 1 && sy === 1) return base;
       const matrix = new DOMMatrix().scale(sx, sy);
-      const p = new Path2D();
-      p.addPath(new Path2D(d), matrix);
-      return p;
+      const scaled = new Path2D();
+      scaled.addPath(base, matrix);
+      return scaled;
     }
 
     function initCanvas(m) {
@@ -1548,7 +1561,7 @@
       const maskPath = getFacaPath(m);
       if (maskPath) {
         tc.fillStyle = '#fff';
-        tc.fill(maskPath);
+        tc.fill(maskPath, 'evenodd');
       }
       tc.globalCompositeOperation = 'source-over';
 
@@ -1560,7 +1573,7 @@
       const path = getFacaPath(m);
       if (!path) return;
       c.save();
-      c.clip(path);
+      c.clip(path, 'evenodd');
       c.fillStyle = 'rgba(0,0,0,0.06)';
       c.fillRect(0, 0, m.fw, m.fh);
       const cx = m._facaCenter ? m._facaCenter.x : m.fw / 2;
@@ -1575,20 +1588,45 @@
 
 
     /* ================================================================
-     * CAMADA 2 — LINHA DE CORTE (stroke overlay)
+     * CAMADA 2 — OVERLAY DO MOCKUP (máscara inversa da faca)
+     * Renderiza o AVIF novamente, apagando a área da faca via
+     * destination-out, deixando visível apenas bordas/botões/câmeras.
      * ================================================================ */
 
     function drawLayer2(mainCtx, m, sc) {
-      const p = getFacaPath(m);
-      if (!p) return;
-      mainCtx.save();
-      mainCtx.setTransform(sc, 0, 0, sc, 0, 0);
-      mainCtx.strokeStyle = 'rgba(35, 31, 32, 0.55)';
-      mainCtx.lineWidth = 1.2;
-      mainCtx.setLineDash([]);
-      mainCtx.stroke(p);
-      mainCtx.restore();
+      const path = getFacaPath(m);
+      if (!path) return;
+
+      if (!m._mockupImg) {
+        // Fallback: traço do contorno quando o AVIF ainda não carregou
+        mainCtx.save();
+        mainCtx.setTransform(sc, 0, 0, sc, 0, 0);
+        mainCtx.strokeStyle = 'rgba(35, 31, 32, 0.55)';
+        mainCtx.lineWidth = 1.2;
+        mainCtx.setLineDash([]);
+        mainCtx.stroke(path);
+        mainCtx.restore();
+        mainCtx.setTransform(1, 0, 0, 1, 0, 0);
+        return;
+      }
+
+      const tmp = document.createElement('canvas');
+      tmp.width = m.fw * sc;
+      tmp.height = m.fh * sc;
+      const tc = tmp.getContext('2d');
+      tc.setTransform(sc, 0, 0, sc, 0, 0);
+
+      // Desenha o mockup completo no buffer temporário
+      tc.drawImage(m._mockupImg, 0, 0, m.fw, m.fh);
+
+      // Apaga a área da faca → sobra a parte externa (bordas, botões) + furos das câmeras
+      tc.globalCompositeOperation = 'destination-out';
+      tc.fillStyle = '#fff';
+      tc.fill(path, 'evenodd');
+      tc.globalCompositeOperation = 'source-over';
+
       mainCtx.setTransform(1, 0, 0, 1, 0, 0);
+      mainCtx.drawImage(tmp, 0, 0);
     }
 
 
@@ -1608,24 +1646,18 @@
       c.fillRect(0, 0, m.fw * sc, m.fh * sc);
       c.setTransform(sc, 0, 0, sc, 0, 0);
 
-      if (MOCKUP_ON_TOP) {
-        if (s.img) {
-          drawLayer1(c, m, s, sc);
-          c.setTransform(sc, 0, 0, sc, 0, 0);
-        } else {
-          drawLayer1Empty(c, m);
-        }
-        drawLayer0(c, m);
+      // Camada 0: mockup AVIF completo (fundo do aparelho)
+      drawLayer0(c, m);
+
+      // Camada 1: arte do usuário recortada pela faca
+      if (s.img) {
+        drawLayer1(c, m, s, sc);
+        c.setTransform(sc, 0, 0, sc, 0, 0);
       } else {
-        drawLayer0(c, m);
-        if (s.img) {
-          drawLayer1(c, m, s, sc);
-          c.setTransform(sc, 0, 0, sc, 0, 0);
-        } else {
-          drawLayer1Empty(c, m);
-        }
+        drawLayer1Empty(c, m);
       }
 
+      // Camada 2: mockup AVIF com máscara inversa (bordas, botões, câmeras)
       drawLayer2(c, m, sc);
     }
 
@@ -1916,12 +1948,23 @@
           const facaFile = facaSvgPath ? facaSvgPath.split('/').pop() : null;
 
           let facaMaskPath = null;
+          let facaCircles = [];
           if (facaFile) {
             try {
               const svgResp = await fetch(`public/assets/facas/${facaFile}`);
               if (svgResp.ok) {
-                const dMatch = (await svgResp.text()).match(/\sd="([^"]+)"/);
+                const svgText = await svgResp.text();
+                const dMatch = svgText.match(/\sd="([^"]+)"/);
                 facaMaskPath = dMatch ? dMatch[1] : null;
+                const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
+                facaCircles = circleMatches.map(cm => {
+                  const a = cm[1];
+                  return {
+                    cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
+                    cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
+                    r:  parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
+                  };
+                }).filter(c => c.r > 0);
               }
             } catch (e) {
               console.warn('[Mobifans] SVG não encontrado:', facaFile);
@@ -1933,6 +1976,7 @@
             name,
             mockupPath: `public/assets/previews/${mockupFile}`,
             facaMaskPath,
+            facaCircles,
             fw: 500, fh: 1000,
             _mockupImg: null,
           };
