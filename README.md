@@ -28,7 +28,7 @@ Um personalizador interativo de capinhas de smartphone desenvolvido para a **Mob
 
 ---
 
-## 📊 Versionamento por Commits
+## 📊 Versões Lançadas
 
 ## **v1.5** — Suporte a Câmeras & Máscaras Avançadas | Lançamento Oficial
 **Data:** 23 de Abril de 2026  
@@ -200,12 +200,61 @@ Um personalizador interativo de capinhas de smartphone desenvolvido para a **Mob
 - ✅ Implementação do `OptionsPanel` com seleção de modelos de telefone
 - ✅ Arquitetura base em React com componentes funcionais
 
-#### Tecnologias estabelecidas:
-- React 18.3.1
-- TypeScript
-- Vite como bundler
-- Tailwind CSS para estilos
+## Atualizações Futuras:
 
+### **v1.6**— Motor Canvas & Sistema de Grids
+**Previsão:** Final de Abril / Início de Maio de 2026
+
+**Foco:** Estabelecer a base para manipulação avançada e colagens.
+
+### O que será feito:
+- 🔲 Substituição de posicionamento CSS pelo motor HTML5 Canvas (ou Fabric.js) para garantir exportação perfeita.
+- 🔲 Suporte ao upload de múltiplas imagens simultâneas.
+- 🔲 Implementação dos layouts de Grid (colagens de 2 a 6 espaços, conforme design Figma). 
+- 🔲 **Implementação de Aviso de Qualidade (DPI):** alerta visual caso o cliente suba uma imagem de baixa resolução que possa comprometer a impressão física.
+
+### Status:
+- Desenvolvimento do core visual.
+
+### **v1.7**— Ferramentas Criativas & Interação
+**Previsão:** Maio de 2026
+
+**Foco:** Entregar autonomia criativa ao usuário com menor atrito possível.
+
+### O que será feito:
+- 🔲 **Tipografia Dinâmica:** Inserção de textos com opções de 3 a 5 fontes curadas (ex: manuscrita, serifada, Neo-Brutalista) para manter a performance e a estética.
+- 🔲 **Botão "Shuffle" (Embaralhar):** Ação rápida que troca as imagens de posição aleatoriamente dentro do grid ativo.
+- 🔲 Controles de edição refinados no painel direito (zoom por pinça/slider, rotação, alinhamento).
+
+### Melhorias:
+- Acelera o tempo de criação no quiosque.
+- Reduz a complexidade de arrastar elementos manualmente.
+
+### **v1.8**— Operação Quiosque & Segurança (Retail UX)
+**Previsão:** Maio/Junho de 2026
+
+**Foco:** Adaptar a aplicação web para o ambiente de varejo físico com segurança e praticidade.
+
+### O que será feito:
+- 🔲 **Upload Sem Toque (QR Code):** Geração de QR code dinâmico na tela para que o cliente abra uma página web leve no próprio celular e envie as fotos direto para o canvas do quiosque.
+- 🔲 **Reset de Sessão (Auto-Clear):** Lógica de timeout. Após "X" segundos sem interação na tela, o sistema limpa todos os uploads e reseta o canvas para garantir a privacidade do cliente anterior
+- 🔲 **Modo Atração (Screensaver):** Quando o sistema entra em timeout, inicia um carrossel animado de mockups com artes vibrantes para atrair quem passa pela loja.
+
+### Impacto no Negócio:
+- Resolve a dor de transferência de arquivos em loja física.
+- Garante conformidade com privacidade de dados (LGPD básica visual).
+
+### **v2.0**— Ecossistema & E-commerce (Longo Prazo)
+**Previsão:** +5 meses (Após consolidação e testes nos quiosques)
+
+**Foco:** Aumento de Ticket Médio e engajamento com a marca.
+
+### Backlog:
+- 🔲 **Cross-sell Interativo:** Adicionar botões no preview para testar acessórios virtuais (ex: PopSockets, Carteiras MagSafe) sobre a capinha e adicioná-los em combo ao carrinho.
+- 🔲 **Biblioteca de Assets Mobifans:** Aba com stickers, selos e grafismos oficiais da marca para customização avançada.
+- 🔲 **Assets Dinâmicos para Carrinho:** O gerador exporta um thumbnail fiel da capinha recém-criada para acompanhar o pedido no checkout e nos e-mails transacionais.
+
+---
 
 ## 🎯 Funcionalidades Implementadas
 
