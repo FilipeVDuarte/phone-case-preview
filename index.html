@@ -668,13 +668,6 @@
       color: #fff;
     }
 
-    /* ── SHAPE BUTTONS ── */
-    .shape-btn.active-shape {
-      border-color: #313590 !important;
-      background: #313590 !important;
-      color: #fff !important;
-    }
-
     /* ── DPI TOAST ── */
     .dpi-toast {
       position: fixed;
@@ -1228,11 +1221,10 @@
         <!-- Layout selector -->
         <div class="field-label">Layout da Capinha</div>
         <div class="layout-grid" id="layoutGrid">
-          <button class="layout-btn active" data-layout="RETRATO-CENTER">Retrato</button>
-          <button class="layout-btn" data-layout="GRANDE-RETRATO">Grande</button>
-          <button class="layout-btn" data-layout="DIVISOR-HORIZONTAL">2 Fotos</button>
-          <button class="layout-btn" data-layout="3-FOTOS-OFFSET">3 Offset</button>
-          <button class="layout-btn" data-layout="DIVISOR-DINAMICO">4 Dinâm.</button>
+          <button class="layout-btn" data-layout="3-FOTOS-OFFSET">3 Fotos</button>
+          <button class="layout-btn active" data-layout="RETRATO-FOCADO">Retrato</button>
+          <button class="layout-btn" data-layout="GRANDE-VERTICAL">Grande</button>
+          <button class="layout-btn" data-layout="DIVISOR-V">Divisor</button>
           <button class="layout-btn" data-layout="MODO-LIVRE">Livre</button>
         </div>
 
@@ -1332,43 +1324,6 @@
           <div class="slot-dots" id="slotDotsStep3"></div>
         </div>
 
-        <!-- Formato do slot -->
-        <div class="field-label">Formato</div>
-        <div class="wizard-toolbar">
-          <button class="wizard-tool-btn shape-btn active-shape" id="btnShapeRect" title="Retângulo" disabled>
-            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-              <rect x="1.5" y="1.5" width="14" height="14" rx="1" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-          <button class="wizard-tool-btn shape-btn" id="btnShapeRound" title="Arredondado" disabled>
-            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-              <rect x="1.5" y="1.5" width="14" height="14" rx="5" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-          <button class="wizard-tool-btn shape-btn" id="btnShapeCircle" title="Círculo" disabled>
-            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-              <circle cx="8.5" cy="8.5" r="7" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Z-index (Trazer / Recuar) -->
-        <div class="field-label">Ordem das Fotos</div>
-        <div class="wizard-toolbar">
-          <button class="wizard-tool-btn" id="btnZUp" title="Trazer para Frente" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="8" width="13" height="13" rx="2"/><rect x="8" y="3" width="13" height="13" rx="2" fill="currentColor" fill-opacity=".15"/>
-              <polyline points="12 6 12 2 16 2"/>
-            </svg>
-          </button>
-          <button class="wizard-tool-btn" id="btnZDown" title="Recuar" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="8" y="8" width="13" height="13" rx="2"/><rect x="3" y="3" width="13" height="13" rx="2" fill="currentColor" fill-opacity=".15"/>
-              <polyline points="12 18 12 22 8 22"/>
-            </svg>
-          </button>
-        </div>
-
         <!-- Indicators -->
         <div class="indicators-row">
           <div class="scale-pill">
@@ -1440,22 +1395,20 @@
 
     /* ── GRIDS CUSTOMIZADOS — coordenadas normalizadas (0–1) no espaço da faca ── */
     const CUSTOM_GRIDS = {
-      'RETRATO-CENTER':     [{ x: 0,   y: 0,    w: 1,   h: 1    }],
-      'GRANDE-RETRATO':     [{ x: 0,   y: 0,    w: 1,   h: 1    }],
-      'DIVISOR-HORIZONTAL': [
-        { x: 0,   y: 0,    w: 1,   h: 0.5  },
-        { x: 0,   y: 0.5,  w: 1,   h: 0.5  },
-      ],
       '3-FOTOS-OFFSET': [
-        { x: 0,   y: 0,    w: 1,   h: 0.5  },
-        { x: 0,   y: 0.5,  w: 0.5, h: 0.5  },
-        { x: 0.5, y: 0.5,  w: 0.5, h: 0.5  },
+        { x: 0.55, y: 0.15, w: 0.3, h: 0.3 },
+        { x: 0.35, y: 0.40, w: 0.3, h: 0.3 },
+        { x: 0.15, y: 0.65, w: 0.3, h: 0.3 },
       ],
-      'DIVISOR-DINAMICO': [
-        { x: 0,   y: 0,    w: 0.5, h: 0.5  },
-        { x: 0.5, y: 0,    w: 0.5, h: 0.5  },
-        { x: 0,   y: 0.5,  w: 0.5, h: 0.5  },
-        { x: 0.5, y: 0.5,  w: 0.5, h: 0.5  },
+      'RETRATO-FOCADO': [
+        { x: 0.25, y: 0.25, w: 0.5, h: 0.5 },
+      ],
+      'GRANDE-VERTICAL': [
+        { x: 0.2, y: 0.05, w: 0.6, h: 0.9 },
+      ],
+      'DIVISOR-V': [
+        { x: 0,   y: 0, w: 0.5, h: 1 },
+        { x: 0.5, y: 0, w: 0.5, h: 1 },
       ],
       'MODO-LIVRE': [],
     };
@@ -1466,8 +1419,8 @@
     /* ── ESTADO v1.6 ── */
     const state = {
       model:      null,
-      layout:     'RETRATO-CENTER',
-      slots:      [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0, shape: 'rect' }],
+      layout:     'RETRATO-FOCADO',
+      slots:      [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0 }],
       activeSlot: 0,
       freeRects:  [],
       history:    [],
@@ -1680,7 +1633,7 @@
       const H  = fc.h;
 
       if (layout === 'MODO-LIVRE') {
-        if (!state.freeRects.length) return [{ x: x0, y: y0, w: W, h: H }];
+        if (!state.freeRects.length) return [];
         return state.freeRects.map(nr => ({
           x: x0 + nr.x * W,
           y: y0 + nr.y * H,
@@ -1712,19 +1665,9 @@
       };
     }
 
-    /* Aplica clip ao ctx no formato correto (rect / rounded / circle) */
-    function clipToShape(ctx, rect, shape) {
-      const cx = rect.x + rect.w / 2;
-      const cy = rect.y + rect.h / 2;
+    function clipToShape(ctx, rect) {
       ctx.beginPath();
-      if (shape === 'circle') {
-        ctx.arc(cx, cy, Math.min(rect.w, rect.h) / 2, 0, Math.PI * 2);
-      } else if (shape === 'rounded') {
-        const rad = Math.min(12, rect.w * 0.1, rect.h * 0.1);
-        ctx.roundRect(rect.x, rect.y, rect.w, rect.h, rad);
-      } else {
-        ctx.rect(rect.x, rect.y, rect.w, rect.h);
-      }
+      ctx.rect(rect.x, rect.y, rect.w, rect.h);
     }
 
 
@@ -1832,7 +1775,6 @@
         if (!s.img) return;
         const rect       = slotRects[i];
         if (!rect) return;
-        const shape      = s.shape || 'rect';
         const cx         = rect.x + rect.w / 2;
         const cy         = rect.y + rect.h / 2;
         const rotated90  = Math.round(s.rotation / 90) % 2 !== 0;
@@ -1840,11 +1782,14 @@
         const ih         = rotated90 ? s.img.naturalWidth  : s.img.naturalHeight;
         const baseScale  = Math.max(rect.w / iw, rect.h / ih);
         const totalScale = baseScale * s.scale;
+        const isFreeMode = state.layout === 'MODO-LIVRE';
 
         tc.save();
         tc.globalAlpha = exportMode ? 1.0 : (i === state.activeSlot ? 1.0 : 0.4);
-        clipToShape(tc, rect, shape);
-        tc.clip();
+        if (!isFreeMode) {
+          clipToShape(tc, rect);
+          tc.clip();
+        }
         tc.translate(cx + s.x, cy + s.y);
         tc.rotate(s.rotation * Math.PI / 180);
         tc.scale(totalScale, totalScale);
@@ -1901,35 +1846,23 @@
         if (i === activeSlot || !slots[i] || !slots[i].img) return;
         c.strokeStyle = 'rgba(255,255,255,0.35)';
         c.lineWidth = 1;
-        clipToShape(c, rect, slots[i].shape || 'rect');
+        clipToShape(c, rect);
         c.stroke();
       });
 
       // Active slot: ocean border
       const r = slotRects[activeSlot];
       if (!r) { c.restore(); return; }
-      const shape = (slots[activeSlot] && slots[activeSlot].shape) || 'rect';
 
       c.strokeStyle = OCEAN;
       c.lineWidth = 3;
-      clipToShape(c, r, shape);
+      clipToShape(c, r);
       c.stroke();
 
-      // Corner / perimeter handles
+      // Corner handles
       c.fillStyle = OCEAN;
-      if (shape === 'circle') {
-        const cx = r.x + r.w / 2;
-        const cy = r.y + r.h / 2;
-        const radius = Math.min(r.w, r.h) / 2;
-        [[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy]) => {
-          c.beginPath();
-          c.arc(cx + dx * radius, cy + dy * radius, H_SIZE / 2, 0, Math.PI * 2);
-          c.fill();
-        });
-      } else {
-        [[r.x, r.y], [r.x + r.w, r.y], [r.x, r.y + r.h], [r.x + r.w, r.y + r.h]]
-          .forEach(([hx, hy]) => c.fillRect(hx - H_SIZE / 2, hy - H_SIZE / 2, H_SIZE, H_SIZE));
-      }
+      [[r.x, r.y], [r.x + r.w, r.y], [r.x, r.y + r.h], [r.x + r.w, r.y + r.h]]
+        .forEach(([hx, hy]) => c.fillRect(hx - H_SIZE / 2, hy - H_SIZE / 2, H_SIZE, H_SIZE));
 
       c.restore();
     }
@@ -1994,7 +1927,7 @@
       c.fillRect(0, 0, m.fw * sc, m.fh * sc);
       c.setTransform(sc, 0, 0, sc, 0, 0);
 
-      const layout      = s.layout || 'RETRATO-CENTER';
+      const layout      = s.layout || 'RETRATO-FOCADO';
       const slotRects   = getSlotRects(m, layout);
       const hasAnyImage = s.slots.some(sl => sl.img);
       const active      = s.activeSlot || 0;
@@ -2265,7 +2198,7 @@
         freeRects:  JSON.parse(JSON.stringify(state.freeRects)),
         slots: state.slots.map(s => ({
           x: s.x, y: s.y, scale: s.scale,
-          rotation: s.rotation, shape: s.shape,
+          rotation: s.rotation,
         })),
       });
       if (state.history.length > 20) state.history.shift();
@@ -2284,7 +2217,6 @@
         state.slots[i].y        = ss.y;
         state.slots[i].scale    = ss.scale;
         state.slots[i].rotation = ss.rotation;
-        state.slots[i].shape    = ss.shape;
       });
       updateLayoutUI();
       updateSlotDotsUI();
@@ -2314,22 +2246,6 @@
       document.getElementById('btnRotate').disabled   = !hasCurImg;
       document.getElementById('btnZoomIn').disabled   = !hasCurImg;
       document.getElementById('btnZoomOut').disabled  = !hasCurImg;
-
-      // Shape buttons
-      const shape = currentSlot().shape || 'rect';
-      const shapeMap = { Rect: 'rect', Round: 'rounded', Circle: 'circle' };
-      Object.entries(shapeMap).forEach(([key, val]) => {
-        const btn = document.getElementById(`btnShape${key}`);
-        if (!btn) return;
-        btn.disabled = !hasCurImg;
-        btn.classList.toggle('active-shape', shape === val);
-      });
-
-      // Z-index buttons
-      const btnZUp   = document.getElementById('btnZUp');
-      const btnZDown = document.getElementById('btnZDown');
-      if (btnZUp)   btnZUp.disabled   = !hasCurImg || !multiSlot;
-      if (btnZDown) btnZDown.disabled = !hasCurImg || !multiSlot;
 
       // MODO-LIVRE slot controls
       const modoLivreControls = document.getElementById('modoLivreControls');
@@ -2392,7 +2308,7 @@
     function setLayout(name) {
       const oldSlots = state.slots;
       const grid  = CUSTOM_GRIDS[name];
-      const count = name === 'MODO-LIVRE' ? Math.max(1, oldSlots.length) : (grid ? grid.length : 1);
+      const count = name === 'MODO-LIVRE' ? 1 : (grid ? grid.length : 1);
 
       // Revoke URLs for slots beyond new count
       for (let i = count; i < oldSlots.length; i++) {
@@ -2401,15 +2317,12 @@
 
       state.layout    = name;
       state.history   = [];
-      state.freeRects = name === 'MODO-LIVRE'
-        ? Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count))
-        : [];
+      state.freeRects = [];  // MODO-LIVRE starts clean; freeRects added via addFreeSlot
 
       state.slots = Array.from({ length: count }, (_, i) => ({
         img:      oldSlots[i] ? oldSlots[i].img    : null,
         imgUrl:   oldSlots[i] ? oldSlots[i].imgUrl : null,
         x: 0, y: 0, scale: 1, rotation: 0,
-        shape:    oldSlots[i] ? (oldSlots[i].shape || 'rect') : 'rect',
       }));
       state.activeSlot = Math.min(state.activeSlot, count - 1);
 
@@ -2506,58 +2419,11 @@
       const y0 = fc.y - fc.h / 2;
       const normX = (rect.x - x0) / fc.w;
       const normY = (rect.y - y0) / fc.h;
-      // Camera zone: top-left quadrant (x < 0.35 AND y < 0.25 in faca space)
-      if (normX < 0.35 && normY < 0.25) {
+      // Camera zone: top portion of faca space (y < 0.20)
+      if (normY < 0.20) {
         showToast('⚠️ Foto pode sobrepor a câmera traseira neste layout.');
       }
     }
-
-
-    /* ================================================================
-     * SHAPE — formato do clip por slot
-     * ================================================================ */
-
-    function setSlotShape(shape) {
-      if (!currentSlot().img) return;
-      pushHistory();
-      currentSlot().shape = shape;
-      draw();
-      syncUI();
-    }
-
-    document.getElementById('btnShapeRect').onclick   = () => setSlotShape('rect');
-    document.getElementById('btnShapeRound').onclick  = () => setSlotShape('rounded');
-    document.getElementById('btnShapeCircle').onclick = () => setSlotShape('circle');
-
-
-    /* ================================================================
-     * Z-INDEX — reordenar slots
-     * ================================================================ */
-
-    function moveSlotForward() {
-      const i = state.activeSlot;
-      if (i >= state.slots.length - 1) return;
-      pushHistory();
-      [state.slots[i], state.slots[i + 1]] = [state.slots[i + 1], state.slots[i]];
-      state.activeSlot = i + 1;
-      updateSlotDotsUI();
-      draw();
-      syncUI();
-    }
-
-    function moveSlotBackward() {
-      const i = state.activeSlot;
-      if (i <= 0) return;
-      pushHistory();
-      [state.slots[i], state.slots[i - 1]] = [state.slots[i - 1], state.slots[i]];
-      state.activeSlot = i - 1;
-      updateSlotDotsUI();
-      draw();
-      syncUI();
-    }
-
-    document.getElementById('btnZUp').onclick   = moveSlotForward;
-    document.getElementById('btnZDown').onclick = moveSlotBackward;
 
 
     /* ================================================================
@@ -2567,22 +2433,33 @@
     function addFreeSlot() {
       if (state.slots.length >= 6) return;
       pushHistory();
-      const count = state.slots.length + 1;
-      state.freeRects = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
-      state.slots.push({ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0, shape: 'rect' });
+      if (!state.freeRects.length) {
+        // First activation: reveal the existing single slot
+        state.freeRects = [getDefaultFreeRect(0, 1)];
+      } else {
+        const count = state.slots.length + 1;
+        state.freeRects = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
+        state.slots.push({ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0 });
+      }
       updateSlotDotsUI();
       draw();
       syncUI();
     }
 
     function removeFreeSlot() {
-      if (state.slots.length <= 1) return;
+      if (!state.freeRects.length) return;
       pushHistory();
-      const removed = state.slots.pop();
-      if (removed.imgUrl) URL.revokeObjectURL(removed.imgUrl);
-      const count = state.slots.length;
-      state.freeRects  = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
-      state.activeSlot = Math.min(state.activeSlot, count - 1);
+      if (state.slots.length <= 1) {
+        // Collapse back to clean state
+        state.freeRects = [];
+        state.activeSlot = 0;
+      } else {
+        const removed = state.slots.pop();
+        if (removed.imgUrl) URL.revokeObjectURL(removed.imgUrl);
+        const count = state.slots.length;
+        state.freeRects  = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
+        state.activeSlot = Math.min(state.activeSlot, count - 1);
+      }
       updateSlotDotsUI();
       draw();
       syncUI();
@@ -2689,8 +2566,8 @@
       document.getElementById('emptyState').style.display = 'none';
 
       state.model      = found;
-      state.layout     = 'RETRATO-CENTER';
-      state.slots      = [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0, shape: 'rect' }];
+      state.layout     = 'RETRATO-FOCADO';
+      state.slots      = [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0 }];
       state.activeSlot = 0;
       state.freeRects  = [];
       state.history    = [];
