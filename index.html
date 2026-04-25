@@ -1221,19 +1221,9 @@
         <!-- Layout selector -->
         <div class="field-label">Layout da Capinha</div>
         <div class="layout-grid" id="layoutGrid">
-          <button class="layout-btn" data-layout="3-FOTOS-OFFSET">3 Fotos</button>
-          <button class="layout-btn active" data-layout="RETRATO-FOCADO">Retrato</button>
-          <button class="layout-btn" data-layout="GRANDE-VERTICAL">Grande</button>
-          <button class="layout-btn" data-layout="DIVISOR-V">Divisor</button>
-          <button class="layout-btn" data-layout="MODO-LIVRE">Livre</button>
-        </div>
-
-        <!-- MODO-LIVRE: botões de gestão de slots -->
-        <div id="modoLivreControls" style="display:none;">
-          <div class="wizard-toolbar" style="gap:8px;">
-            <button class="wizard-tool-btn" id="btnAddSlot" title="Adicionar foto" style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">+ Foto</button>
-            <button class="wizard-tool-btn" id="btnRemoveSlot" title="Remover foto ativa" style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">− Remover</button>
-          </div>
+          <button class="layout-btn active" data-layout="RETRATO">Retrato</button>
+          <button class="layout-btn" data-layout="3-FOTOS">3 Fotos</button>
+          <button class="layout-btn" data-layout="DIVISOR-2">Divisor</button>
         </div>
 
         <!-- Slot indicator (visível quando layout > 1) -->
@@ -1324,6 +1314,28 @@
           <div class="slot-dots" id="slotDotsStep3"></div>
         </div>
 
+        <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+        <div id="divisorControls" style="display:none;">
+          <div class="field-label">Slots do Divisor</div>
+          <div class="wizard-toolbar" style="gap:8px;">
+            <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos" style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+            <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos" style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
+          </div>
+        </div>
+
+        <!-- Ajuste Fino (nudge) -->
+        <div id="nudgePanel" style="display:none;">
+          <div class="field-label">Ajuste Fino</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
+            <div></div>
+            <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
+            <div></div>
+            <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda" disabled>←</button>
+            <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
+            <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita" disabled>→</button>
+          </div>
+        </div>
+
         <!-- Indicators -->
         <div class="indicators-row">
           <div class="scale-pill">
@@ -1395,34 +1407,40 @@
 
     /* ── GRIDS CUSTOMIZADOS — coordenadas normalizadas (0–1) no espaço da faca ── */
     const CUSTOM_GRIDS = {
-      '3-FOTOS-OFFSET': [
+      'RETRATO': [
+        { x: 0.25, y: 0.25, w: 0.5, h: 0.5 },
+      ],
+      '3-FOTOS': [
         { x: 0.55, y: 0.15, w: 0.3, h: 0.3 },
         { x: 0.35, y: 0.40, w: 0.3, h: 0.3 },
         { x: 0.15, y: 0.65, w: 0.3, h: 0.3 },
       ],
-      'RETRATO-FOCADO': [
-        { x: 0.25, y: 0.25, w: 0.5, h: 0.5 },
+      'DIVISOR-2': [
+        { x: 0, y: 0,   w: 1, h: 0.5 },
+        { x: 0, y: 0.5, w: 1, h: 0.5 },
       ],
-      'GRANDE-VERTICAL': [
-        { x: 0.2, y: 0.05, w: 0.6, h: 0.9 },
+      'DIVISOR-4': [
+        { x: 0,   y: 0,   w: 0.5, h: 0.5 }, { x: 0.5, y: 0,   w: 0.5, h: 0.5 },
+        { x: 0,   y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 },
       ],
-      'DIVISOR-V': [
-        { x: 0,   y: 0, w: 0.5, h: 1 },
-        { x: 0.5, y: 0, w: 0.5, h: 1 },
+      'DIVISOR-6': [
+        { x: 0,   y: 0,    w: 0.5, h: 0.33 }, { x: 0.5, y: 0,    w: 0.5, h: 0.33 },
+        { x: 0,   y: 0.33, w: 0.5, h: 0.34 }, { x: 0.5, y: 0.33, w: 0.5, h: 0.34 },
+        { x: 0,   y: 0.67, w: 0.5, h: 0.33 }, { x: 0.5, y: 0.67, w: 0.5, h: 0.33 },
       ],
-      'MODO-LIVRE': [],
     };
+
+    const DIVISOR_SEQUENCE = ['DIVISOR-2', 'DIVISOR-4', 'DIVISOR-6'];
 
     /* ── MODELOS ── */
     const MODELS = [];
 
-    /* ── ESTADO v1.6 ── */
+    /* ── ESTADO v1.6.3 ── */
     const state = {
       model:      null,
-      layout:     'RETRATO-FOCADO',
+      layout:     'RETRATO',
       slots:      [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0 }],
       activeSlot: 0,
-      freeRects:  [],
       history:    [],
     };
 
@@ -1632,16 +1650,6 @@
       const W  = fc.w;
       const H  = fc.h;
 
-      if (layout === 'MODO-LIVRE') {
-        if (!state.freeRects.length) return [];
-        return state.freeRects.map(nr => ({
-          x: x0 + nr.x * W,
-          y: y0 + nr.y * H,
-          w: nr.w * W,
-          h: nr.h * H,
-        }));
-      }
-
       const grid = CUSTOM_GRIDS[layout];
       if (!grid || !grid.length) return [{ x: x0, y: y0, w: W, h: H }];
       return grid.map(nr => ({
@@ -1650,19 +1658,6 @@
         w: nr.w * W,
         h: nr.h * H,
       }));
-    }
-
-    /* Rect normalizado padrão para MODO-LIVRE quando count slots */
-    function getDefaultFreeRect(index, count) {
-      if (count <= 1) return { x: 0, y: 0, w: 1, h: 1 };
-      const cols = count <= 2 ? 1 : 2;
-      const rows = Math.ceil(count / cols);
-      return {
-        x: (index % cols) / cols,
-        y: Math.floor(index / cols) / rows,
-        w: 1 / cols,
-        h: 1 / rows,
-      };
     }
 
     function clipToShape(ctx, rect) {
@@ -1782,14 +1777,11 @@
         const ih         = rotated90 ? s.img.naturalWidth  : s.img.naturalHeight;
         const baseScale  = Math.max(rect.w / iw, rect.h / ih);
         const totalScale = baseScale * s.scale;
-        const isFreeMode = state.layout === 'MODO-LIVRE';
 
         tc.save();
         tc.globalAlpha = exportMode ? 1.0 : (i === state.activeSlot ? 1.0 : 0.4);
-        if (!isFreeMode) {
-          clipToShape(tc, rect);
-          tc.clip();
-        }
+        clipToShape(tc, rect);
+        tc.clip();
         tc.translate(cx + s.x, cy + s.y);
         tc.rotate(s.rotation * Math.PI / 180);
         tc.scale(totalScale, totalScale);
@@ -1927,7 +1919,7 @@
       c.fillRect(0, 0, m.fw * sc, m.fh * sc);
       c.setTransform(sc, 0, 0, sc, 0, 0);
 
-      const layout      = s.layout || 'RETRATO-FOCADO';
+      const layout      = s.layout || 'RETRATO';
       const slotRects   = getSlotRects(m, layout);
       const hasAnyImage = s.slots.some(sl => sl.img);
       const active      = s.activeSlot || 0;
@@ -2195,10 +2187,9 @@
       state.history.push({
         layout:     state.layout,
         activeSlot: state.activeSlot,
-        freeRects:  JSON.parse(JSON.stringify(state.freeRects)),
         slots: state.slots.map(s => ({
-          x: s.x, y: s.y, scale: s.scale,
-          rotation: s.rotation,
+          img: s.img, imgUrl: s.imgUrl,
+          x: s.x, y: s.y, scale: s.scale, rotation: s.rotation,
         })),
       });
       if (state.history.length > 20) state.history.shift();
@@ -2208,16 +2199,13 @@
     function undo() {
       if (!state.history.length) return;
       const snap = state.history.pop();
+      // Revoke URLs for slots that will be removed
+      for (let i = snap.slots.length; i < state.slots.length; i++) {
+        if (state.slots[i].imgUrl) URL.revokeObjectURL(state.slots[i].imgUrl);
+      }
       state.layout     = snap.layout;
       state.activeSlot = snap.activeSlot;
-      state.freeRects  = snap.freeRects;
-      snap.slots.forEach((ss, i) => {
-        if (!state.slots[i]) return;
-        state.slots[i].x        = ss.x;
-        state.slots[i].y        = ss.y;
-        state.slots[i].scale    = ss.scale;
-        state.slots[i].rotation = ss.rotation;
-      });
+      state.slots      = snap.slots.map(ss => ({ ...ss }));
       updateLayoutUI();
       updateSlotDotsUI();
       updateIndicators();
@@ -2231,12 +2219,12 @@
      * ================================================================ */
 
     function syncUI() {
-      const hasModel    = !!state.model;
-      const hasAnyImg   = state.slots.some(s => s.img);
-      const hasCurImg   = !!currentSlot().img;
-      const hasHist     = state.history.length > 0;
-      const multiSlot   = state.slots.length > 1;
-      const isModoLivre = state.layout === 'MODO-LIVRE';
+      const hasModel   = !!state.model;
+      const hasAnyImg  = state.slots.some(s => s.img);
+      const hasCurImg  = !!currentSlot().img;
+      const hasHist    = state.history.length > 0;
+      const multiSlot  = state.slots.length > 1;
+      const isDivisor  = state.layout.startsWith('DIVISOR');
 
       document.getElementById('uploadBtn').disabled   = !hasModel;
       document.getElementById('downloadBtn').disabled = !hasAnyImg;
@@ -2247,13 +2235,22 @@
       document.getElementById('btnZoomIn').disabled   = !hasCurImg;
       document.getElementById('btnZoomOut').disabled  = !hasCurImg;
 
-      // MODO-LIVRE slot controls
-      const modoLivreControls = document.getElementById('modoLivreControls');
-      if (modoLivreControls) modoLivreControls.style.display = isModoLivre ? 'flex' : 'none';
-      const btnAdd = document.getElementById('btnAddSlot');
-      const btnRem = document.getElementById('btnRemoveSlot');
-      if (btnAdd) btnAdd.disabled = state.slots.length >= 6;
-      if (btnRem) btnRem.disabled = state.slots.length <= 1;
+      // Divisor dinâmico
+      const divisorControls = document.getElementById('divisorControls');
+      if (divisorControls) divisorControls.style.display = isDivisor ? 'flex' : 'none';
+      const divisorIdx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      const btnDA = document.getElementById('btnDivisorAdd');
+      const btnDR = document.getElementById('btnDivisorRemove');
+      if (btnDA) btnDA.disabled = divisorIdx >= DIVISOR_SEQUENCE.length - 1;
+      if (btnDR) btnDR.disabled = divisorIdx <= 0;
+
+      // Nudge panel (só no Step 3)
+      const nudgePanel = document.getElementById('nudgePanel');
+      if (nudgePanel) nudgePanel.style.display = currentStep === 3 ? 'flex' : 'none';
+      ['btnNudgeUp','btnNudgeDown','btnNudgeLeft','btnNudgeRight'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.disabled = !hasCurImg;
+      });
 
       // Slot indicator visibility
       const ind  = document.getElementById('slotIndicator');
@@ -2308,20 +2305,18 @@
     function setLayout(name) {
       const oldSlots = state.slots;
       const grid  = CUSTOM_GRIDS[name];
-      const count = name === 'MODO-LIVRE' ? 1 : (grid ? grid.length : 1);
+      const count = grid ? grid.length : 1;
 
       // Revoke URLs for slots beyond new count
       for (let i = count; i < oldSlots.length; i++) {
         if (oldSlots[i] && oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
       }
 
-      state.layout    = name;
-      state.history   = [];
-      state.freeRects = [];  // MODO-LIVRE starts clean; freeRects added via addFreeSlot
-
-      state.slots = Array.from({ length: count }, (_, i) => ({
-        img:      oldSlots[i] ? oldSlots[i].img    : null,
-        imgUrl:   oldSlots[i] ? oldSlots[i].imgUrl : null,
+      state.layout     = name;
+      state.history    = [];
+      state.slots      = Array.from({ length: count }, (_, i) => ({
+        img:    oldSlots[i] ? oldSlots[i].img    : null,
+        imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
         x: 0, y: 0, scale: 1, rotation: 0,
       }));
       state.activeSlot = Math.min(state.activeSlot, count - 1);
@@ -2334,7 +2329,9 @@
 
     function updateLayoutUI() {
       document.querySelectorAll('.layout-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.layout === state.layout);
+        const match = btn.dataset.layout === state.layout ||
+          (btn.dataset.layout === 'DIVISOR-2' && state.layout.startsWith('DIVISOR'));
+        btn.classList.toggle('active', match);
       });
     }
 
@@ -2427,46 +2424,76 @@
 
 
     /* ================================================================
-     * MODO-LIVRE — adicionar / remover slots dinamicamente
+     * DIVISOR DINÂMICO — ciclar entre 2 / 4 / 6 slots
      * ================================================================ */
 
-    function addFreeSlot() {
-      if (state.slots.length >= 6) return;
+    function addDivisorSlots() {
+      const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      if (idx < 0 || idx >= DIVISOR_SEQUENCE.length - 1) return;
       pushHistory();
-      if (!state.freeRects.length) {
-        // First activation: reveal the existing single slot
-        state.freeRects = [getDefaultFreeRect(0, 1)];
-      } else {
-        const count = state.slots.length + 1;
-        state.freeRects = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
-        state.slots.push({ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0 });
-      }
+      const nextLayout = DIVISOR_SEQUENCE[idx + 1];
+      const oldSlots   = state.slots;
+      const count      = CUSTOM_GRIDS[nextLayout].length;
+      state.layout     = nextLayout;
+      state.slots      = Array.from({ length: count }, (_, i) => ({
+        img:    oldSlots[i] ? oldSlots[i].img    : null,
+        imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+        x: 0, y: 0, scale: 1, rotation: 0,
+      }));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+      updateLayoutUI();
       updateSlotDotsUI();
       draw();
       syncUI();
     }
 
-    function removeFreeSlot() {
-      if (!state.freeRects.length) return;
+    function removeDivisorSlots() {
+      const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      if (idx <= 0) return;
       pushHistory();
-      if (state.slots.length <= 1) {
-        // Collapse back to clean state
-        state.freeRects = [];
-        state.activeSlot = 0;
-      } else {
-        const removed = state.slots.pop();
-        if (removed.imgUrl) URL.revokeObjectURL(removed.imgUrl);
-        const count = state.slots.length;
-        state.freeRects  = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
-        state.activeSlot = Math.min(state.activeSlot, count - 1);
+      const prevLayout = DIVISOR_SEQUENCE[idx - 1];
+      const oldSlots   = state.slots;
+      const count      = CUSTOM_GRIDS[prevLayout].length;
+      // Revoke URLs for removed slots
+      for (let i = count; i < oldSlots.length; i++) {
+        if (oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
       }
+      state.layout     = prevLayout;
+      state.slots      = Array.from({ length: count }, (_, i) => ({
+        img:    oldSlots[i] ? oldSlots[i].img    : null,
+        imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+        x: oldSlots[i] ? oldSlots[i].x : 0,
+        y: oldSlots[i] ? oldSlots[i].y : 0,
+        scale:    oldSlots[i] ? oldSlots[i].scale    : 1,
+        rotation: oldSlots[i] ? oldSlots[i].rotation : 0,
+      }));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+      updateLayoutUI();
       updateSlotDotsUI();
       draw();
       syncUI();
     }
 
-    document.getElementById('btnAddSlot').onclick    = addFreeSlot;
-    document.getElementById('btnRemoveSlot').onclick = removeFreeSlot;
+    document.getElementById('btnDivisorAdd').onclick    = addDivisorSlots;
+    document.getElementById('btnDivisorRemove').onclick = removeDivisorSlots;
+
+    /* ================================================================
+     * NUDGE — micro-ajuste de posição (1% da área da faca por clique)
+     * ================================================================ */
+
+    function nudgeImage(dx, dy) {
+      const s = currentSlot();
+      if (!s || !s.img) return;
+      pushHistory();
+      s.x += dx;
+      s.y += dy;
+      draw();
+    }
+
+    document.getElementById('btnNudgeUp').onclick    = () => nudgeImage(0, -0.01);
+    document.getElementById('btnNudgeDown').onclick  = () => nudgeImage(0,  0.01);
+    document.getElementById('btnNudgeLeft').onclick  = () => nudgeImage(-0.01, 0);
+    document.getElementById('btnNudgeRight').onclick = () => nudgeImage( 0.01, 0);
 
 
     /* ================================================================
@@ -2566,10 +2593,9 @@
       document.getElementById('emptyState').style.display = 'none';
 
       state.model      = found;
-      state.layout     = 'RETRATO-FOCADO';
+      state.layout     = 'RETRATO';
       state.slots      = [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0 }];
       state.activeSlot = 0;
-      state.freeRects  = [];
       state.history    = [];
 
       updateIndicators();
