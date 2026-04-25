@@ -2244,9 +2244,10 @@
       if (btnDA) btnDA.disabled = divisorIdx >= DIVISOR_SEQUENCE.length - 1;
       if (btnDR) btnDR.disabled = divisorIdx <= 0;
 
-      // Nudge panel (só no Step 3)
+      // Nudge panel: visível no Step 3 apenas para Retrato e 3-Fotos
       const nudgePanel = document.getElementById('nudgePanel');
-      if (nudgePanel) nudgePanel.style.display = currentStep === 3 ? 'flex' : 'none';
+      const showNudge  = currentStep === 3 && !isDivisor;
+      if (nudgePanel) nudgePanel.style.display = showNudge ? 'flex' : 'none';
       ['btnNudgeUp','btnNudgeDown','btnNudgeLeft','btnNudgeRight'].forEach(id => {
         const b = document.getElementById(id);
         if (b) b.disabled = !hasCurImg;
@@ -2490,10 +2491,10 @@
       draw();
     }
 
-    document.getElementById('btnNudgeUp').onclick    = () => nudgeImage(0, -0.01);
-    document.getElementById('btnNudgeDown').onclick  = () => nudgeImage(0,  0.01);
-    document.getElementById('btnNudgeLeft').onclick  = () => nudgeImage(-0.01, 0);
-    document.getElementById('btnNudgeRight').onclick = () => nudgeImage( 0.01, 0);
+    document.getElementById('btnNudgeUp').onclick    = () => nudgeImage(0, -0.05);
+    document.getElementById('btnNudgeDown').onclick  = () => nudgeImage(0,  0.05);
+    document.getElementById('btnNudgeLeft').onclick  = () => nudgeImage(-0.05, 0);
+    document.getElementById('btnNudgeRight').onclick = () => nudgeImage( 0.05, 0);
 
 
     /* ================================================================
