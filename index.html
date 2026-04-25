@@ -577,12 +577,16 @@
     /* ── LAYOUT SELECTOR (Step 2) ── */
     .layout-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
 
     .layout-btn {
-      aspect-ratio: 1;
+      aspect-ratio: unset;
+      padding: 8px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font);
       border: 2px solid #D1D5DB;
       border-radius: 10px;
       background: white;
@@ -662,6 +666,13 @@
       border-color: #313590;
       background: #313590;
       color: #fff;
+    }
+
+    /* ── SHAPE BUTTONS ── */
+    .shape-btn.active-shape {
+      border-color: #313590 !important;
+      background: #313590 !important;
+      color: #fff !important;
     }
 
     /* ── DPI TOAST ── */
@@ -1217,40 +1228,20 @@
         <!-- Layout selector -->
         <div class="field-label">Layout da Capinha</div>
         <div class="layout-grid" id="layoutGrid">
+          <button class="layout-btn active" data-layout="RETRATO-CENTER">Retrato</button>
+          <button class="layout-btn" data-layout="GRANDE-RETRATO">Grande</button>
+          <button class="layout-btn" data-layout="DIVISOR-HORIZONTAL">2 Fotos</button>
+          <button class="layout-btn" data-layout="3-FOTOS-OFFSET">3 Offset</button>
+          <button class="layout-btn" data-layout="DIVISOR-DINAMICO">4 Dinâm.</button>
+          <button class="layout-btn" data-layout="MODO-LIVRE">Livre</button>
+        </div>
 
-          <button class="layout-btn active" data-layout="1" title="1 foto">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <rect x="2" y="2" width="18" height="18" rx="2.5" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-
-          <button class="layout-btn" data-layout="2" title="2 fotos">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <rect x="2" y="2"  width="18" height="7.5" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
-              <rect x="2" y="12.5" width="18" height="7.5" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
-            </svg>
-          </button>
-
-          <button class="layout-btn" data-layout="4" title="4 fotos">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <rect x="2"  y="2"  width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
-              <rect x="12" y="2"  width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
-              <rect x="2"  y="12" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
-              <rect x="12" y="12" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
-            </svg>
-          </button>
-
-          <button class="layout-btn" data-layout="6" title="6 fotos">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <rect x="2"  y="2"    width="8" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/>
-              <rect x="12" y="2"    width="8" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/>
-              <rect x="2"  y="8.5"  width="8" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/>
-              <rect x="12" y="8.5"  width="8" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/>
-              <rect x="2"  y="15"   width="8" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/>
-              <rect x="12" y="15"   width="8" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/>
-            </svg>
-          </button>
-
+        <!-- MODO-LIVRE: botões de gestão de slots -->
+        <div id="modoLivreControls" style="display:none;">
+          <div class="wizard-toolbar" style="gap:8px;">
+            <button class="wizard-tool-btn" id="btnAddSlot" title="Adicionar foto" style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">+ Foto</button>
+            <button class="wizard-tool-btn" id="btnRemoveSlot" title="Remover foto ativa" style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">− Remover</button>
+          </div>
         </div>
 
         <!-- Slot indicator (visível quando layout > 1) -->
@@ -1341,6 +1332,43 @@
           <div class="slot-dots" id="slotDotsStep3"></div>
         </div>
 
+        <!-- Formato do slot -->
+        <div class="field-label">Formato</div>
+        <div class="wizard-toolbar">
+          <button class="wizard-tool-btn shape-btn active-shape" id="btnShapeRect" title="Retângulo" disabled>
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <rect x="1.5" y="1.5" width="14" height="14" rx="1" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+          <button class="wizard-tool-btn shape-btn" id="btnShapeRound" title="Arredondado" disabled>
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <rect x="1.5" y="1.5" width="14" height="14" rx="5" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+          <button class="wizard-tool-btn shape-btn" id="btnShapeCircle" title="Círculo" disabled>
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <circle cx="8.5" cy="8.5" r="7" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Z-index (Trazer / Recuar) -->
+        <div class="field-label">Ordem das Fotos</div>
+        <div class="wizard-toolbar">
+          <button class="wizard-tool-btn" id="btnZUp" title="Trazer para Frente" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="13" height="13" rx="2"/><rect x="8" y="3" width="13" height="13" rx="2" fill="currentColor" fill-opacity=".15"/>
+              <polyline points="12 6 12 2 16 2"/>
+            </svg>
+          </button>
+          <button class="wizard-tool-btn" id="btnZDown" title="Recuar" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="8" width="13" height="13" rx="2"/><rect x="3" y="3" width="13" height="13" rx="2" fill="currentColor" fill-opacity=".15"/>
+              <polyline points="12 18 12 22 8 22"/>
+            </svg>
+          </button>
+        </div>
+
         <!-- Indicators -->
         <div class="indicators-row">
           <div class="scale-pill">
@@ -1397,13 +1425,12 @@
   <script>
 
     /* ================================================================
-     * MOBIFANS — PREVIEW DE CAPINHAS
+     * MOBIFANS — PREVIEW DE CAPINHAS  v1.6
      * ================================================================
-     *
      * ARQUITETURA DO CANVAS: 3 camadas sobrepostas
      *   CAMADA 0 → Mockup AVIF (aparelho)
      *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
-     *   CAMADA 2 → Linha de corte (stroke do path SVGs)
+     *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
 
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -1411,19 +1438,41 @@
     const FACA_SVG_W = 500;
     const FACA_SVG_H = 1000;
 
+    /* ── GRIDS CUSTOMIZADOS — coordenadas normalizadas (0–1) no espaço da faca ── */
+    const CUSTOM_GRIDS = {
+      'RETRATO-CENTER':     [{ x: 0,   y: 0,    w: 1,   h: 1    }],
+      'GRANDE-RETRATO':     [{ x: 0,   y: 0,    w: 1,   h: 1    }],
+      'DIVISOR-HORIZONTAL': [
+        { x: 0,   y: 0,    w: 1,   h: 0.5  },
+        { x: 0,   y: 0.5,  w: 1,   h: 0.5  },
+      ],
+      '3-FOTOS-OFFSET': [
+        { x: 0,   y: 0,    w: 1,   h: 0.5  },
+        { x: 0,   y: 0.5,  w: 0.5, h: 0.5  },
+        { x: 0.5, y: 0.5,  w: 0.5, h: 0.5  },
+      ],
+      'DIVISOR-DINAMICO': [
+        { x: 0,   y: 0,    w: 0.5, h: 0.5  },
+        { x: 0.5, y: 0,    w: 0.5, h: 0.5  },
+        { x: 0,   y: 0.5,  w: 0.5, h: 0.5  },
+        { x: 0.5, y: 0.5,  w: 0.5, h: 0.5  },
+      ],
+      'MODO-LIVRE': [],
+    };
+
     /* ── MODELOS ── */
     const MODELS = [];
 
-    /* ── ESTADO v1.6 — suporte a múltiplos slots ── */
+    /* ── ESTADO v1.6 ── */
     const state = {
-      model: null,
-      layout: 1,      // 1 | 2 | 4 | 6 slots
-      slots: [{ img: null, x: 0, y: 0, scale: 1, rotation: 0 }],
+      model:      null,
+      layout:     'RETRATO-CENTER',
+      slots:      [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0, shape: 'rect' }],
       activeSlot: 0,
-      history: [],
+      freeRects:  [],
+      history:    [],
     };
 
-    /* Atalho para o slot atualmente ativo */
     function currentSlot() {
       return state.slots[state.activeSlot] || state.slots[0];
     }
@@ -1619,6 +1668,7 @@
 
     /* ================================================================
      * GRID — geometria dos slots no espaço da faca
+     * Coordenadas normalizadas (0–1) × dimensões da faca = pixels do modelo
      * ================================================================ */
 
     function getSlotRects(m, layout) {
@@ -1628,25 +1678,53 @@
       const y0 = fc.y - fc.h / 2;
       const W  = fc.w;
       const H  = fc.h;
-      if (layout === 2) return [
-        { x: x0,         y: y0,         w: W,     h: H / 2 },
-        { x: x0,         y: y0 + H / 2, w: W,     h: H / 2 },
-      ];
-      if (layout === 4) return [
-        { x: x0,         y: y0,         w: W / 2, h: H / 2 },
-        { x: x0 + W / 2, y: y0,         w: W / 2, h: H / 2 },
-        { x: x0,         y: y0 + H / 2, w: W / 2, h: H / 2 },
-        { x: x0 + W / 2, y: y0 + H / 2, w: W / 2, h: H / 2 },
-      ];
-      if (layout === 6) {
-        return Array.from({ length: 6 }, (_, i) => ({
-          x: x0 + (i % 2)         * (W / 2),
-          y: y0 + Math.floor(i / 2) * (H / 3),
-          w: W / 2,
-          h: H / 3,
+
+      if (layout === 'MODO-LIVRE') {
+        if (!state.freeRects.length) return [{ x: x0, y: y0, w: W, h: H }];
+        return state.freeRects.map(nr => ({
+          x: x0 + nr.x * W,
+          y: y0 + nr.y * H,
+          w: nr.w * W,
+          h: nr.h * H,
         }));
       }
-      return [{ x: x0, y: y0, w: W, h: H }];
+
+      const grid = CUSTOM_GRIDS[layout];
+      if (!grid || !grid.length) return [{ x: x0, y: y0, w: W, h: H }];
+      return grid.map(nr => ({
+        x: x0 + nr.x * W,
+        y: y0 + nr.y * H,
+        w: nr.w * W,
+        h: nr.h * H,
+      }));
+    }
+
+    /* Rect normalizado padrão para MODO-LIVRE quando count slots */
+    function getDefaultFreeRect(index, count) {
+      if (count <= 1) return { x: 0, y: 0, w: 1, h: 1 };
+      const cols = count <= 2 ? 1 : 2;
+      const rows = Math.ceil(count / cols);
+      return {
+        x: (index % cols) / cols,
+        y: Math.floor(index / cols) / rows,
+        w: 1 / cols,
+        h: 1 / rows,
+      };
+    }
+
+    /* Aplica clip ao ctx no formato correto (rect / rounded / circle) */
+    function clipToShape(ctx, rect, shape) {
+      const cx = rect.x + rect.w / 2;
+      const cy = rect.y + rect.h / 2;
+      ctx.beginPath();
+      if (shape === 'circle') {
+        ctx.arc(cx, cy, Math.min(rect.w, rect.h) / 2, 0, Math.PI * 2);
+      } else if (shape === 'rounded') {
+        const rad = Math.min(12, rect.w * 0.1, rect.h * 0.1);
+        ctx.roundRect(rect.x, rect.y, rect.w, rect.h, rad);
+      } else {
+        ctx.rect(rect.x, rect.y, rect.w, rect.h);
+      }
     }
 
 
@@ -1743,7 +1821,7 @@
      * uma única vez no buffer temporário, cobrindo todos os slots.
      * ================================================================ */
 
-    function drawLayer1(mainCtx, m, slots, slotRects, sc) {
+    function drawLayer1(mainCtx, m, slots, slotRects, sc, exportMode) {
       const tmp = document.createElement('canvas');
       tmp.width  = m.fw * sc;
       tmp.height = m.fh * sc;
@@ -1753,6 +1831,8 @@
       slots.forEach((s, i) => {
         if (!s.img) return;
         const rect       = slotRects[i];
+        if (!rect) return;
+        const shape      = s.shape || 'rect';
         const cx         = rect.x + rect.w / 2;
         const cy         = rect.y + rect.h / 2;
         const rotated90  = Math.round(s.rotation / 90) % 2 !== 0;
@@ -1762,8 +1842,8 @@
         const totalScale = baseScale * s.scale;
 
         tc.save();
-        tc.beginPath();
-        tc.rect(rect.x, rect.y, rect.w, rect.h);
+        tc.globalAlpha = exportMode ? 1.0 : (i === state.activeSlot ? 1.0 : 0.4);
+        clipToShape(tc, rect, shape);
         tc.clip();
         tc.translate(cx + s.x, cy + s.y);
         tc.rotate(s.rotation * Math.PI / 180);
@@ -1773,6 +1853,7 @@
       });
 
       // Máscara da faca aplicada uma vez para todos os slots
+      tc.globalAlpha = 1;
       tc.globalCompositeOperation = 'destination-in';
       const maskPath = getFacaPath(m);
       if (maskPath) {
@@ -1806,20 +1887,50 @@
       c.restore();
     }
 
-    function drawSlotDividers(c, m, slotRects, activeSlot) {
-      if (slotRects.length <= 1) return;
+    function drawActiveSlotOverlay(c, m, slotRects, slots, activeSlot, exportMode) {
+      if (exportMode) return;
       const path = getFacaPath(m);
+      const OCEAN = 'rgba(49,53,144,0.9)';
+      const H_SIZE = 8;
+
       c.save();
       if (path) c.clip(path, 'evenodd');
-      // Linhas divisórias entre slots
-      c.strokeStyle = 'rgba(255,255,255,0.55)';
-      c.lineWidth = 1.5;
-      slotRects.forEach(r => c.strokeRect(r.x + 0.75, r.y + 0.75, r.w - 1.5, r.h - 1.5));
-      // Destaque do slot ativo
+
+      // Thin outline on inactive filled slots
+      slotRects.forEach((rect, i) => {
+        if (i === activeSlot || !slots[i] || !slots[i].img) return;
+        c.strokeStyle = 'rgba(255,255,255,0.35)';
+        c.lineWidth = 1;
+        clipToShape(c, rect, slots[i].shape || 'rect');
+        c.stroke();
+      });
+
+      // Active slot: ocean border
       const r = slotRects[activeSlot];
-      c.strokeStyle = 'rgba(49,53,144,0.85)';
+      if (!r) { c.restore(); return; }
+      const shape = (slots[activeSlot] && slots[activeSlot].shape) || 'rect';
+
+      c.strokeStyle = OCEAN;
       c.lineWidth = 3;
-      c.strokeRect(r.x + 1.5, r.y + 1.5, r.w - 3, r.h - 3);
+      clipToShape(c, r, shape);
+      c.stroke();
+
+      // Corner / perimeter handles
+      c.fillStyle = OCEAN;
+      if (shape === 'circle') {
+        const cx = r.x + r.w / 2;
+        const cy = r.y + r.h / 2;
+        const radius = Math.min(r.w, r.h) / 2;
+        [[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy]) => {
+          c.beginPath();
+          c.arc(cx + dx * radius, cy + dy * radius, H_SIZE / 2, 0, Math.PI * 2);
+          c.fill();
+        });
+      } else {
+        [[r.x, r.y], [r.x + r.w, r.y], [r.x, r.y + r.h], [r.x + r.w, r.y + r.h]]
+          .forEach(([hx, hy]) => c.fillRect(hx - H_SIZE / 2, hy - H_SIZE / 2, H_SIZE, H_SIZE));
+      }
+
       c.restore();
     }
 
@@ -1873,37 +1984,33 @@
 
     function draw() {
       if (!state.model) return;
-      renderAllLayers(ctx, state.model, state, DPR);
+      renderAllLayers(ctx, state.model, state, DPR, false);
     }
 
-    function renderAllLayers(c, m, s, sc) {
+    function renderAllLayers(c, m, s, sc, exportMode) {
       c.setTransform(1, 0, 0, 1, 0, 0);
       c.clearRect(0, 0, m.fw * sc, m.fh * sc);
       c.fillStyle = '#ffffff';
       c.fillRect(0, 0, m.fw * sc, m.fh * sc);
       c.setTransform(sc, 0, 0, sc, 0, 0);
 
-      const layout      = s.layout || 1;
+      const layout      = s.layout || 'RETRATO-CENTER';
       const slotRects   = getSlotRects(m, layout);
       const hasAnyImage = s.slots.some(sl => sl.img);
       const active      = s.activeSlot || 0;
 
-      // Camada 0: mockup AVIF completo (fundo do aparelho)
       drawLayer0(c, m);
 
-      // Camada 1: arte do usuário recortada pela faca
       if (hasAnyImage) {
-        drawLayer1(c, m, s.slots, slotRects, sc);
+        drawLayer1(c, m, s.slots, slotRects, sc, exportMode);
         c.setTransform(sc, 0, 0, sc, 0, 0);
       } else {
         drawLayer1Empty(c, m, slotRects, active);
       }
 
-      // Divisórias + destaque do slot ativo (antes da camada 2)
       c.setTransform(sc, 0, 0, sc, 0, 0);
-      drawSlotDividers(c, m, slotRects, active);
+      drawActiveSlotOverlay(c, m, slotRects, s.slots, active, exportMode);
 
-      // Camada 2: mockup AVIF com máscara inversa (bordas, botões, câmeras)
       drawLayer2(c, m, sc);
     }
 
@@ -2148,16 +2255,18 @@
 
 
     /* ================================================================
-     * HISTÓRICO — pilha de undo
+     * HISTÓRICO — snapshot completo do estado
      * ================================================================ */
 
     function pushHistory() {
-      const s = currentSlot();
       state.history.push({
-        slot: state.activeSlot,
-        x: s.x, y: s.y,
-        scale: s.scale,
-        rotation: s.rotation,
+        layout:     state.layout,
+        activeSlot: state.activeSlot,
+        freeRects:  JSON.parse(JSON.stringify(state.freeRects)),
+        slots: state.slots.map(s => ({
+          x: s.x, y: s.y, scale: s.scale,
+          rotation: s.rotation, shape: s.shape,
+        })),
       });
       if (state.history.length > 20) state.history.shift();
       syncUI();
@@ -2166,12 +2275,20 @@
     function undo() {
       if (!state.history.length) return;
       const snap = state.history.pop();
-      const slot = state.slots[snap.slot];
-      if (slot) {
-        slot.x = snap.x; slot.y = snap.y;
-        slot.scale = snap.scale; slot.rotation = snap.rotation;
-      }
-      if (snap.slot === state.activeSlot) updateIndicators();
+      state.layout     = snap.layout;
+      state.activeSlot = snap.activeSlot;
+      state.freeRects  = snap.freeRects;
+      snap.slots.forEach((ss, i) => {
+        if (!state.slots[i]) return;
+        state.slots[i].x        = ss.x;
+        state.slots[i].y        = ss.y;
+        state.slots[i].scale    = ss.scale;
+        state.slots[i].rotation = ss.rotation;
+        state.slots[i].shape    = ss.shape;
+      });
+      updateLayoutUI();
+      updateSlotDotsUI();
+      updateIndicators();
       draw();
       syncUI();
     }
@@ -2182,27 +2299,58 @@
      * ================================================================ */
 
     function syncUI() {
-      const hasModel  = !!state.model;
-      const hasAnyImg = state.slots.some(s => s.img);
-      const hasCurImg = !!currentSlot().img;
-      const hasHist   = state.history.length > 0;
+      const hasModel    = !!state.model;
+      const hasAnyImg   = state.slots.some(s => s.img);
+      const hasCurImg   = !!currentSlot().img;
+      const hasHist     = state.history.length > 0;
+      const multiSlot   = state.slots.length > 1;
+      const isModoLivre = state.layout === 'MODO-LIVRE';
 
       document.getElementById('uploadBtn').disabled   = !hasModel;
       document.getElementById('downloadBtn').disabled = !hasAnyImg;
-      document.getElementById('btnUndo').disabled     = !hasCurImg || !hasHist;
+      document.getElementById('btnUndo').disabled     = !hasHist;
       document.getElementById('btnFit').disabled      = !hasCurImg;
       document.getElementById('btnReset').disabled    = !hasCurImg;
       document.getElementById('btnRotate').disabled   = !hasCurImg;
       document.getElementById('btnZoomIn').disabled   = !hasCurImg;
       document.getElementById('btnZoomOut').disabled  = !hasCurImg;
 
-      // Label do botão de upload
+      // Shape buttons
+      const shape = currentSlot().shape || 'rect';
+      const shapeMap = { Rect: 'rect', Round: 'rounded', Circle: 'circle' };
+      Object.entries(shapeMap).forEach(([key, val]) => {
+        const btn = document.getElementById(`btnShape${key}`);
+        if (!btn) return;
+        btn.disabled = !hasCurImg;
+        btn.classList.toggle('active-shape', shape === val);
+      });
+
+      // Z-index buttons
+      const btnZUp   = document.getElementById('btnZUp');
+      const btnZDown = document.getElementById('btnZDown');
+      if (btnZUp)   btnZUp.disabled   = !hasCurImg || !multiSlot;
+      if (btnZDown) btnZDown.disabled = !hasCurImg || !multiSlot;
+
+      // MODO-LIVRE slot controls
+      const modoLivreControls = document.getElementById('modoLivreControls');
+      if (modoLivreControls) modoLivreControls.style.display = isModoLivre ? 'flex' : 'none';
+      const btnAdd = document.getElementById('btnAddSlot');
+      const btnRem = document.getElementById('btnRemoveSlot');
+      if (btnAdd) btnAdd.disabled = state.slots.length >= 6;
+      if (btnRem) btnRem.disabled = state.slots.length <= 1;
+
+      // Slot indicator visibility
+      const ind  = document.getElementById('slotIndicator');
+      const sel3 = document.getElementById('slotSelectorStep3');
+      if (ind)  ind.style.display  = multiSlot ? 'flex' : 'none';
+      if (sel3) sel3.style.display = multiSlot ? 'flex' : 'none';
+
+      // Upload label
       const emptyIdx = state.slots.findIndex(s => !s.img);
-      const label = state.layout > 1 && emptyIdx !== -1
-        ? `Foto ${emptyIdx + 1} de ${state.layout}`
-        : 'Faça upload aqui';
       const lbl = document.getElementById('uploadBtnLabel');
-      if (lbl) lbl.textContent = label;
+      if (lbl) lbl.textContent = multiSlot && emptyIdx !== -1
+        ? `Foto ${emptyIdx + 1} de ${state.slots.length}`
+        : 'Faça upload aqui';
 
       const hint = document.getElementById('canvasHint');
       hint.style.display = (currentStep === 3 && hasCurImg) ? 'block' : 'none';
@@ -2241,15 +2389,30 @@
      * LAYOUT — seletor de grid
      * ================================================================ */
 
-    function setLayout(n) {
-      state.layout = n;
-      // Garante que o array de slots tem o tamanho correto
-      while (state.slots.length < n) {
-        state.slots.push({ img: null, x: 0, y: 0, scale: 1, rotation: 0 });
+    function setLayout(name) {
+      const oldSlots = state.slots;
+      const grid  = CUSTOM_GRIDS[name];
+      const count = name === 'MODO-LIVRE' ? Math.max(1, oldSlots.length) : (grid ? grid.length : 1);
+
+      // Revoke URLs for slots beyond new count
+      for (let i = count; i < oldSlots.length; i++) {
+        if (oldSlots[i] && oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
       }
-      if (state.slots.length > n) state.slots.length = n;
-      state.activeSlot = Math.min(state.activeSlot, n - 1);
-      state.history = [];
+
+      state.layout    = name;
+      state.history   = [];
+      state.freeRects = name === 'MODO-LIVRE'
+        ? Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count))
+        : [];
+
+      state.slots = Array.from({ length: count }, (_, i) => ({
+        img:      oldSlots[i] ? oldSlots[i].img    : null,
+        imgUrl:   oldSlots[i] ? oldSlots[i].imgUrl : null,
+        x: 0, y: 0, scale: 1, rotation: 0,
+        shape:    oldSlots[i] ? (oldSlots[i].shape || 'rect') : 'rect',
+      }));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+
       updateLayoutUI();
       updateSlotDotsUI();
       draw();
@@ -2258,18 +2421,14 @@
 
     function updateLayoutUI() {
       document.querySelectorAll('.layout-btn').forEach(btn => {
-        btn.classList.toggle('active', parseInt(btn.dataset.layout) === state.layout);
+        btn.classList.toggle('active', btn.dataset.layout === state.layout);
       });
-      const ind = document.getElementById('slotIndicator');
-      if (ind) ind.style.display = state.layout > 1 ? 'flex' : 'none';
-      const sel3 = document.getElementById('slotSelectorStep3');
-      if (sel3) sel3.style.display = state.layout > 1 ? 'flex' : 'none';
     }
 
     document.getElementById('layoutGrid').addEventListener('click', e => {
       const btn = e.target.closest('.layout-btn');
       if (!btn) return;
-      setLayout(parseInt(btn.dataset.layout));
+      setLayout(btn.dataset.layout);
     });
 
 
@@ -2303,32 +2462,134 @@
 
 
     /* ================================================================
-     * DPI — verificação de qualidade de impressão
+     * TOAST — notificação genérica
      * ================================================================ */
 
-    let _dpiTimer = null;
+    let _toastTimer = null;
 
-    function showDpiToast(msg) {
+    function showToast(msg) {
       let toast = document.getElementById('dpiToast');
       if (!toast) {
         toast = document.createElement('div');
         toast.id        = 'dpiToast';
         toast.className = 'dpi-toast';
-        toast.innerHTML = '<span>⚠️</span><span id="dpiToastMsg"></span>';
+        toast.innerHTML = '<span id="dpiToastMsg"></span>';
         document.body.appendChild(toast);
       }
       document.getElementById('dpiToastMsg').textContent = msg;
       toast.classList.add('visible');
-      clearTimeout(_dpiTimer);
-      _dpiTimer = setTimeout(() => toast.classList.remove('visible'), 5500);
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => toast.classList.remove('visible'), 5500);
     }
 
-    function checkDpi(img, slotW, slotH) {
-      // Heurística: imagem deve ter ≥ 1.5× o tamanho lógico do slot para impressão razoável
-      if (img.naturalWidth < slotW * 1.5 || img.naturalHeight < slotH * 1.5) {
-        showDpiToast('Imagem pequena — pode ficar borrada na impressão.');
+
+    /* ================================================================
+     * DPI — verificação 300 DPI para impressão
+     * ================================================================ */
+
+    function checkDpi(img, rect) {
+      // Para impressão a 300 DPI, a imagem precisa de ~4× os pixels lógicos do slot
+      if (img.naturalWidth < rect.w * 4 || img.naturalHeight < rect.h * 4) {
+        showToast('⚠️ Resolução baixa — pode ficar pixelado na impressão a 300 DPI.');
       }
     }
+
+
+    /* ================================================================
+     * CÂMERA — aviso de sobreposição com zona da câmera traseira
+     * ================================================================ */
+
+    function checkCameraOverlap(rect, m) {
+      const fc = m._facaCenter;
+      if (!fc) return;
+      const x0 = fc.x - fc.w / 2;
+      const y0 = fc.y - fc.h / 2;
+      const normX = (rect.x - x0) / fc.w;
+      const normY = (rect.y - y0) / fc.h;
+      // Camera zone: top-left quadrant (x < 0.35 AND y < 0.25 in faca space)
+      if (normX < 0.35 && normY < 0.25) {
+        showToast('⚠️ Foto pode sobrepor a câmera traseira neste layout.');
+      }
+    }
+
+
+    /* ================================================================
+     * SHAPE — formato do clip por slot
+     * ================================================================ */
+
+    function setSlotShape(shape) {
+      if (!currentSlot().img) return;
+      pushHistory();
+      currentSlot().shape = shape;
+      draw();
+      syncUI();
+    }
+
+    document.getElementById('btnShapeRect').onclick   = () => setSlotShape('rect');
+    document.getElementById('btnShapeRound').onclick  = () => setSlotShape('rounded');
+    document.getElementById('btnShapeCircle').onclick = () => setSlotShape('circle');
+
+
+    /* ================================================================
+     * Z-INDEX — reordenar slots
+     * ================================================================ */
+
+    function moveSlotForward() {
+      const i = state.activeSlot;
+      if (i >= state.slots.length - 1) return;
+      pushHistory();
+      [state.slots[i], state.slots[i + 1]] = [state.slots[i + 1], state.slots[i]];
+      state.activeSlot = i + 1;
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    function moveSlotBackward() {
+      const i = state.activeSlot;
+      if (i <= 0) return;
+      pushHistory();
+      [state.slots[i], state.slots[i - 1]] = [state.slots[i - 1], state.slots[i]];
+      state.activeSlot = i - 1;
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    document.getElementById('btnZUp').onclick   = moveSlotForward;
+    document.getElementById('btnZDown').onclick = moveSlotBackward;
+
+
+    /* ================================================================
+     * MODO-LIVRE — adicionar / remover slots dinamicamente
+     * ================================================================ */
+
+    function addFreeSlot() {
+      if (state.slots.length >= 6) return;
+      pushHistory();
+      const count = state.slots.length + 1;
+      state.freeRects = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
+      state.slots.push({ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0, shape: 'rect' });
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    function removeFreeSlot() {
+      if (state.slots.length <= 1) return;
+      pushHistory();
+      const removed = state.slots.pop();
+      if (removed.imgUrl) URL.revokeObjectURL(removed.imgUrl);
+      const count = state.slots.length;
+      state.freeRects  = Array.from({ length: count }, (_, i) => getDefaultFreeRect(i, count));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    document.getElementById('btnAddSlot').onclick    = addFreeSlot;
+    document.getElementById('btnRemoveSlot').onclick = removeFreeSlot;
 
 
     /* ================================================================
@@ -2411,6 +2672,9 @@
      * ================================================================ */
 
     sel.addEventListener('change', async () => {
+      // Revoke all existing image object URLs before switching model
+      state.slots.forEach(s => { if (s.imgUrl) URL.revokeObjectURL(s.imgUrl); });
+
       const found = MODELS.find(m => m.id === sel.value);
 
       if (!found) {
@@ -2424,11 +2688,12 @@
       loadingEl.classList.add('visible');
       document.getElementById('emptyState').style.display = 'none';
 
-      state.model = found;
-      state.layout = 1;
-      state.slots  = [{ img: null, x: 0, y: 0, scale: 1, rotation: 0 }];
+      state.model      = found;
+      state.layout     = 'RETRATO-CENTER';
+      state.slots      = [{ img: null, imgUrl: null, x: 0, y: 0, scale: 1, rotation: 0, shape: 'rect' }];
       state.activeSlot = 0;
-      state.history = [];
+      state.freeRects  = [];
+      state.history    = [];
 
       updateIndicators();
       updateLayoutUI();
@@ -2462,43 +2727,53 @@
       let targetIdx = state.slots.findIndex(s => !s.img);
       if (targetIdx === -1) targetIdx = state.activeSlot;
 
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          const slot   = state.slots[targetIdx];
-          slot.img     = img;
-          slot.x       = 0; slot.y = 0;
-          slot.scale   = 1; slot.rotation = 0;
+      const slot = state.slots[targetIdx];
 
-          state.activeSlot = targetIdx;
-          state.history    = [];
+      // Revoke previous URL for this slot
+      if (slot.imgUrl) {
+        URL.revokeObjectURL(slot.imgUrl);
+        slot.imgUrl = null;
+      }
 
-          updateIndicators();
-          updateSlotDotsUI();
+      const imgUrl = URL.createObjectURL(file);
+      const img    = new Image();
 
-          // Verificação de DPI
-          if (state.model && state.model._facaCenter) {
-            const rects = getSlotRects(state.model, state.layout);
-            const r     = rects[targetIdx];
-            checkDpi(img, r.w, r.h);
+      img.onload = () => {
+        slot.img      = img;
+        slot.imgUrl   = imgUrl;
+        slot.x        = 0; slot.y = 0;
+        slot.scale    = 1; slot.rotation = 0;
+
+        state.activeSlot = targetIdx;
+        state.history    = [];
+
+        updateIndicators();
+        updateSlotDotsUI();
+
+        if (state.model && state.model._facaCenter) {
+          const rects = getSlotRects(state.model, state.layout);
+          const r     = rects[targetIdx];
+          if (r) {
+            checkDpi(img, r);
+            checkCameraOverlap(r, state.model);
           }
+        }
 
-          const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
-          document.getElementById('uploadName').textContent = name;
-          const uploadStatus = document.getElementById('uploadStatus');
-          uploadStatus.style.display = 'flex';
-          uploadStatus.classList.remove('animating');
-          void uploadStatus.offsetWidth;
-          uploadStatus.classList.add('animating');
-          uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), { once: true });
+        const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
+        document.getElementById('uploadName').textContent = name;
+        const uploadStatus = document.getElementById('uploadStatus');
+        uploadStatus.style.display = 'flex';
+        uploadStatus.classList.remove('animating');
+        void uploadStatus.offsetWidth;
+        uploadStatus.classList.add('animating');
+        uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), { once: true });
 
-          draw();
-          syncUI();
-        };
-        img.src = ev.target.result;
+        draw();
+        syncUI();
       };
-      reader.readAsDataURL(file);
+
+      img.onerror = () => URL.revokeObjectURL(imgUrl);
+      img.src = imgUrl;
       e.target.value = '';
     });
 
@@ -2512,10 +2787,10 @@
       const m = state.model;
       const SC = 4;
       const dlCanvas = document.createElement('canvas');
-      dlCanvas.width = m.fw * SC;
+      dlCanvas.width  = m.fw * SC;
       dlCanvas.height = m.fh * SC;
       const dlCtx = dlCanvas.getContext('2d');
-      renderAllLayers(dlCtx, m, state, SC);
+      renderAllLayers(dlCtx, m, state, SC, true); // exportMode=true: all slots at 100% opacity
       dlCanvas.toBlob(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
