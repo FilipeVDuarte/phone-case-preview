@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "tsx dev-server.ts & vite --port 5173",
+    "dev:vite": "vite",
+    "dev:server": "tsx dev-server.ts",
     "build": "vite build",
     "start": "node dist/server/node-build.mjs",
     "format.fix": "prettier --write ."

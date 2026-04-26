@@ -34,7 +34,13 @@
       "Bash(node -e \"import express from 'express'; console.log\\('express imported ok'\\)\")",
       "Bash(awk 'NR>1 {print $2}')",
       "Bash(xargs -r kill -9)",
-      "Bash(git commit -m 'Fix Vite server startup and path-to-regexp error *)"
+      "Bash(git commit -m 'Fix Vite server startup and path-to-regexp error *)",
+      "Bash(curl -s http://localhost:8088)",
+      "Bash(curl -s http://localhost:8088/api/models)",
+      "Bash(pkill -f \"npm run dev\")",
+      "Bash(curl -s http://localhost:8080/api/models)",
+      "Bash(curl -s http://localhost:8096/api/models)",
+      "Bash(git commit -m 'WIP: Simplify Vite config and add dev server script *)"
     ]
   }
 }
