@@ -3141,8 +3141,9 @@
                 qrWs = new WebSocket(wsUrl);
 
                 qrWs.onmessage = (e) => {
-                    const msg = JSON.parse(e.data);
-                    if (msg.type !== 'image') return;
+                    let parsed;
+                    try { parsed = JSON.parse(e.data); } catch { return; }
+                    if (parsed.type !== 'image') return;
 
                     const img = new Image();
                     img.onload = () => {
@@ -3157,10 +3158,15 @@
                         if (typeof checkCameraOverlap === 'function') checkCameraOverlap();
                         draw();
                         syncUI();
+                        closeQrPanel();
                         showToast('Foto recebida do celular!');
                     };
-                    img.src = msg.data;
-                    closeQrPanel();
+                    img.onerror = () => {
+                        console.error('[QR] Falha ao carregar imagem recebida via WebSocket');
+                        closeQrPanel();
+                        showToast('Erro ao carregar a foto. Tenta novamente.');
+                    };
+                    img.src = parsed.data;
                 };
 
                 qrWs.onerror = () => {
