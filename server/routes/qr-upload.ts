@@ -3,7 +3,7 @@ import multer from 'multer';
 import QRCode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
 import type { WebSocket } from 'ws';
-import { getLanIp } from '../utils/lan-ip.js';
+import { getLanIp } from '../utils/lan-ip';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
@@ -40,6 +40,7 @@ export function registerWebSocket(sessionId: string, ws: WebSocket) {
 }
 
 // POST /api/session — quiosque cria uma sessão e recebe o QR SVG
+console.log("Registering POST /session route...");
 router.post('/session', async (req, res) => {
   const sessionId = uuidv4();
   sessions.set(sessionId, { ws: null, expiry: Date.now() + SESSION_TTL });
@@ -58,6 +59,7 @@ router.post('/session', async (req, res) => {
 });
 
 // POST /api/upload/:sessionId — celular envia a foto
+console.log("Registering POST /upload/:sessionId route...");
 router.post('/upload/:sessionId', upload.single('photo'), (req, res) => {
   const { sessionId } = req.params;
   const session = sessions.get(sessionId);

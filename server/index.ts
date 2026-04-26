@@ -15,17 +15,23 @@ export function createServer() {
   app.use(express.urlencoded({ extended: true }));
 
   // Serve static files from root and public
+  console.log("Setting up static middleware...");
   app.use(express.static(process.cwd()));
+  console.log("Setting up /assets middleware...");
   app.use("/assets", express.static(path.join(process.cwd(), "public/assets")));
 
+  console.log("Setting up /api/ping route...");
   app.get("/api/ping", (_req, res) => {
     res.json({ message: "ping" });
   });
 
+  console.log("Setting up /api/demo route...");
   app.get("/api/demo", handleDemo);
+  console.log("Setting up /api/models route...");
   app.get("/api/models", handleGetModels);
 
   // QR upload routes
+  console.log("Setting up QR router...");
   app.use("/api", qrRouter);
 
   // Mobile upload page — served for any /mobile/:sessionId path
