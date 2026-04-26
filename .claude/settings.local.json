@@ -30,7 +30,11 @@
       "Bash(tee build-output.txt)",
       "Bash(pnpm build *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(node -e \"import express from 'express'; console.log\\('express imported ok'\\)\")",
+      "Bash(awk 'NR>1 {print $2}')",
+      "Bash(xargs -r kill -9)",
+      "Bash(git commit -m 'Fix Vite server startup and path-to-regexp error *)"
     ]
   }
 }
