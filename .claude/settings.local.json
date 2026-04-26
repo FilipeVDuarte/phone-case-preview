@@ -24,7 +24,13 @@
       "Bash(gh repo *)",
       "Bash(xargs grep *)",
       "Bash(grep -n \"#[0-9A-Fa-f]\\\\{3,6\\\\}\\\\b\" index.html)",
-      "Bash(python -c \"print\\('ok'\\)\")"
+      "Bash(python -c \"print\\('ok'\\)\")",
+      "Bash(pnpm install *)",
+      "Bash(vite build *)",
+      "Bash(tee build-output.txt)",
+      "Bash(pnpm build *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

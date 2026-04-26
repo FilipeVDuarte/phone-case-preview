@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mobifans — Enviar Foto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean: #313590;
+      --black: #000;
+      --green: #22C55E;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-500: #64748B;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #fff;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px 40px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 0 20px;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: 32px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--black);
+    }
+
+    .logo-text span {
+      color: var(--ocean);
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .headline {
+      text-align: center;
+    }
+
+    .headline h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      color: var(--black);
+    }
+
+    .headline p {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* ── UPLOAD AREA ── */
+    .upload-area {
+      width: 100%;
+      border: 3px dashed var(--gray-200);
+      border-radius: 16px;
+      padding: 36px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: var(--gray-100);
+    }
+
+    .upload-area.has-file {
+      border-style: solid;
+      border-color: var(--ocean);
+      background: #f0f1ff;
+      padding: 12px;
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      line-height: 1;
+    }
+
+    .upload-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--black);
+      text-align: center;
+    }
+
+    .upload-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      text-align: center;
+    }
+
+    #fileInput { display: none; }
+
+    /* ── PREVIEW ── */
+    #preview {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .upload-area.has-file #preview { display: block; }
+    .upload-area.has-file .upload-icon,
+    .upload-area.has-file .upload-label,
+    .upload-area.has-file .upload-sub { display: none; }
+
+    .change-btn {
+      font-size: 12px;
+      color: var(--ocean);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      display: none;
+    }
+
+    .upload-area.has-file + .change-btn { display: block; }
+
+    /* ── SEND BUTTON ── */
+    .send-btn {
+      width: 100%;
+      padding: 18px;
+      border: 3px solid var(--black);
+      border-radius: 14px;
+      background: var(--ocean);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 6px 0 0 var(--black);
+      transition: transform 0.1s, box-shadow 0.1s;
+      display: none;
+    }
+
+    .send-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 0 var(--black);
+    }
+
+    .send-btn:disabled {
+      background: var(--gray-200);
+      color: var(--gray-500);
+      border-color: var(--gray-200);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* ── SUCCESS STATE ── */
+    .success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--green);
+      border: 3px solid var(--black);
+      box-shadow: 0 6px 0 0 var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    .success h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .success p {
+      font-size: 14px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+
+    /* ── ERROR ── */
+    .error-msg {
+      font-size: 13px;
+      color: #DC2626;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+
+    /* ── LOADING SPINNER ── */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-text">Mobi<span>fans</span></div>
+  </div>
+
+  <div class="content" id="mainContent">
+    <div class="headline">
+      <h1>Envia a tua foto para o quiosque</h1>
+      <p>Escolhe a imagem que queres usar na tua capinha. Ela vai aparecer na tela do quiosque.</p>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" capture="environment">
+
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📷</div>
+      <div class="upload-label">Toca para escolher foto</div>
+      <div class="upload-sub">JPG, PNG ou HEIC · máx. 20 MB</div>
+      <img id="preview" alt="Preview da foto">
+    </div>
+
+    <button class="change-btn" onclick="document.getElementById('fileInput').click()">
+      Trocar foto
+    </button>
+
+    <button class="send-btn" id="sendBtn" onclick="sendPhoto()">
+      Enviar para o Quiosque
+    </button>
+
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="success" id="successState">
+    <div class="success-icon">✓</div>
+    <h2>Foto enviada!</h2>
+    <p>A tua imagem já apareceu no quiosque.<br>Volta para ajustar e finalizar a tua capinha.</p>
+  </div>
+
+  <script>
+    const sessionId = location.pathname.split('/').pop();
+
+    const fileInput = document.getElementById('fileInput');
+    const uploadArea = document.getElementById('uploadArea');
+    const preview = document.getElementById('preview');
+    const sendBtn = document.getElementById('sendBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      uploadArea.classList.add('has-file');
+      sendBtn.style.display = 'block';
+      errorMsg.style.display = 'none';
+    });
+
+    async function sendPhoto() {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<span class="spinner"></span>Enviando…';
+      errorMsg.style.display = 'none';
+
+      try {
+        const form = new FormData();
+        form.append('photo', file);
+
+        const res = await fetch(`/api/upload/${sessionId}`, {
+          method: 'POST',
+          body: form,
+        });
+
+        if (!res.ok) {
+          const { error } = await res.json().catch(() => ({ error: 'Erro ao enviar' }));
+          throw new Error(error || 'Erro ao enviar');
+        }
+
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('successState').style.display = 'flex';
+
+      } catch (err) {
+        errorMsg.textContent = err.message || 'Erro ao enviar. Tenta novamente.';
+        errorMsg.style.display = 'block';
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = 'Enviar para o Quiosque';
+      }
+    }
+  </script>
+</body>
+</html>
