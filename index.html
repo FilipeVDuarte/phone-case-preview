@@ -3150,8 +3150,8 @@
                         pushHistory();
                         slot.img = img;
                         slot.scale = 1;
-                        slot.x = state.model.fw / 2;
-                        slot.y = state.model.fh / 2;
+                        slot.x = 0;
+                        slot.y = 0;
                         slot.rotation = 0;
                         if (typeof checkDpi === 'function') checkDpi(img, state.model);
                         if (typeof checkCameraOverlap === 'function') checkCameraOverlap();
