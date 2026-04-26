@@ -40,7 +40,6 @@ export function registerWebSocket(sessionId: string, ws: WebSocket) {
 }
 
 // POST /api/session — quiosque cria uma sessão e recebe o QR SVG
-console.log("Registering POST /session route...");
 router.post('/session', async (req, res) => {
   const sessionId = uuidv4();
   sessions.set(sessionId, { ws: null, expiry: Date.now() + SESSION_TTL });
@@ -59,7 +58,6 @@ router.post('/session', async (req, res) => {
 });
 
 // POST /api/upload/:sessionId — celular envia a foto
-console.log("Registering POST /upload/:sessionId route...");
 router.post('/upload/:sessionId', upload.single('photo'), (req, res) => {
   const { sessionId } = req.params;
   const session = sessions.get(sessionId);
