@@ -2194,6 +2194,58 @@
             drawActiveSlotOverlay(c, m, slotRects, s.slots, active, exportMode);
 
             drawLayer2(c, m, sc);
+
+            // ── DEBUG VISUAL (remover depois) ── ativado via window.DEBUG_LAYOUTS = true
+            if (window.DEBUG_LAYOUTS) {
+                c.setTransform(sc, 0, 0, sc, 0, 0);
+
+                // 1. Contorno vermelho em cada slotRect
+                slotRects.forEach((rect, i) => {
+                    c.save();
+                    c.strokeStyle = '#FF0055';
+                    c.lineWidth = 3;
+                    c.setLineDash([6, 3]);
+                    c.strokeRect(rect.x, rect.y, rect.w, rect.h);
+                    c.fillStyle = 'rgba(255,0,85,0.85)';
+                    c.font = 'bold 13px monospace';
+                    c.textBaseline = 'top';
+                    c.fillText(
+                        `#${i} (${Math.round(rect.x)},${Math.round(rect.y)}) ${Math.round(rect.w)}×${Math.round(rect.h)}`,
+                        rect.x + 4, rect.y + 4
+                    );
+                    c.restore();
+                });
+
+                // 2. Marcador azul no _facaCenter (cx, cy e bounding box)
+                const fc = m._facaCenter;
+                if (fc) {
+                    c.save();
+                    const bx = fc.x - fc.w / 2;
+                    const by = fc.y - fc.h / 2;
+                    // bounding box verde
+                    c.strokeStyle = '#00CC66';
+                    c.lineWidth = 2;
+                    c.setLineDash([4, 4]);
+                    c.strokeRect(bx, by, fc.w, fc.h);
+                    // centro azul
+                    c.setLineDash([]);
+                    c.fillStyle = '#0066FF';
+                    c.fillRect(fc.x - 5, fc.y - 5, 10, 10);
+                    c.strokeStyle = '#fff';
+                    c.lineWidth = 1.5;
+                    c.strokeRect(fc.x - 5, fc.y - 5, 10, 10);
+                    // label
+                    c.fillStyle = 'rgba(0,102,255,0.9)';
+                    c.font = 'bold 11px monospace';
+                    c.textBaseline = 'top';
+                    c.fillText(
+                        `fc (${Math.round(fc.x)},${Math.round(fc.y)}) ${Math.round(fc.w)}×${Math.round(fc.h)}`,
+                        bx + 4, by + 4
+                    );
+                    c.restore();
+                }
+            }
+            // ── FIM DEBUG ──
         }
 
 
@@ -2854,19 +2906,23 @@
                         id: m.id,
                         name: m.name,
                         mockupPath: m.mockupImageUrl,
-                        facaMaskPath: m.screenMaskPath,
+                        facaMaskPath: null,
                         facaCircles: [],
                         fw: m.frameWidth,
                         fh: m.frameHeight,
                         _mockupImg: null,
                     };
 
-                    // Carregar SVG da máscara para extrair circles
+                    // Carregar SVG da máscara para extrair path outline + circles
                     if (m.screenMaskPath) {
                         try {
                             const svgResp = await fetch(m.screenMaskPath);
                             if (svgResp.ok) {
                                 const svgText = await svgResp.text();
+                                // Extrair o d="" do <path> principal (outline da capinha)
+                                const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
+                                if (pathMatch) model.facaMaskPath = pathMatch[1];
+
                                 const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
                                 model.facaCircles = circleMatches.map(cm => {
                                     const a = cm[1];
