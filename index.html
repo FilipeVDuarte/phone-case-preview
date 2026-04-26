@@ -2878,18 +2878,17 @@
          * ================================================================ */
 
         function nudgeImage(dx, dy) {
-            const s = currentSlot();
-            if (!s || !s.img) return;
+            const hasAny = state.slots.some(s => s && s.img);
+            if (!hasAny) return;
             pushHistory();
-            s.x += dx;
-            s.y += dy;
+            state.slots.forEach(s => { if (s && s.img) { s.x += dx; s.y += dy; } });
             draw();
         }
 
-        document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -0.1);
-        document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 0.1);
-        document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-0.1, 0);
-        document.getElementById('btnNudgeRight').onclick = () => nudgeImage(0.1, 0);
+        document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -0.5);
+        document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 0.5);
+        document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-0.5, 0);
+        document.getElementById('btnNudgeRight').onclick = () => nudgeImage(0.5, 0);
 
 
         /* ================================================================
@@ -3211,6 +3210,21 @@
         updateLayoutUI();
         updateSlotDotsUI();
     </script>
+
+    <div id="versionBadge" style="
+        position: fixed;
+        bottom: 10px;
+        right: 12px;
+        font-family: monospace;
+        font-size: 11px;
+        color: rgba(255,255,255,0.45);
+        background: rgba(0,0,0,0.35);
+        padding: 3px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 9999;
+        letter-spacing: 0.03em;
+    ">Versão atual: v1.6</div>
 </body>
 
 </html>
