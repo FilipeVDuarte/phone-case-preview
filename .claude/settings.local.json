@@ -47,7 +47,8 @@
       "Bash(curl -s http://localhost:8080/mobile/test-session-id)",
       "Bash(ipconfig)",
       "Bash(taskkill /F /IM node.exe)",
-      "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)"
+      "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)",
+      "Bash(dir \"C:\\\\Users\\\\MARKETING\\\\Desktop\\\\Claude\\\\MKT\\\\phone-case-preview\" /b /a)"
     ]
   }
 }

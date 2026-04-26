@@ -548,7 +548,12 @@
             gap: 6px;
         }
 
-        /* ── QR UPLOAD (Step 2) ── */
+        /* ═══════════════════════════════════════════════════════════════════════
+           FEATURE PAUSED — QR Upload / Conexão Mobile via QR Code (v1.8)
+           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
+           Para reativar: descomente este bloco completo (CSS + HTML + JS abaixo).
+        ════════════════════════════════════════════════════════════════════════ */
+        /*
         .qr-divider {
             display: flex;
             align-items: center;
@@ -662,6 +667,7 @@
             text-decoration: underline;
             padding: 0;
         }
+        */
 
         /* ── WIZARD TOOLBAR (Step 3) ── */
         .wizard-toolbar {
@@ -1393,7 +1399,8 @@
                     <span id="uploadName">Imagem carregada</span>
                 </div>
 
-                <!-- ── QR Upload ── -->
+                <!-- ═══ FEATURE PAUSED: QR Upload / Conexão Mobile v1.8 ═══
+                     Para reativar: descomente este bloco HTML (+ CSS e JS correspondentes).
                 <div class="qr-divider">ou</div>
 
                 <button class="qr-trigger-btn" id="qrTriggerBtn" disabled>
@@ -1411,6 +1418,7 @@
                     <div class="qr-waiting">Aguardando foto…</div>
                     <button class="qr-cancel-btn" onclick="closeQrPanel()">Cancelar</button>
                 </div>
+                ═══ END FEATURE PAUSED ═══ -->
 
             </div>
 
@@ -2600,8 +2608,8 @@
             const isDivisor = state.layout.startsWith('DIVISOR');
 
             document.getElementById('uploadBtn').disabled = !hasModel;
-            const qrTriggerBtn = document.getElementById('qrTriggerBtn');
-            if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
+            // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
+            // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
             document.getElementById('downloadBtn').disabled = !hasAnyImg;
             document.getElementById('btnUndo').disabled = !hasHist;
             document.getElementById('btnFit').disabled = !hasCurImg;
@@ -3119,7 +3127,13 @@
             });
         }
 
-        // ── QR UPLOAD ──────────────────────────────────────────────────────────
+        /* ═══════════════════════════════════════════════════════════════════════
+           FEATURE PAUSED — QR Upload / WebSocket Client (v1.8)
+           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
+           Para reativar: descomente este bloco (+ CSS e HTML correspondentes acima).
+           Também reativar: server/index.ts → qrRouter, WebSocket upgrade handler.
+        ════════════════════════════════════════════════════════════════════════
+
         let qrWs = null;
 
         document.getElementById('qrTriggerBtn').onclick = async () => {
@@ -3189,7 +3203,8 @@
             if (qrWs && qrWs.readyState <= 1) { qrWs.close(); }
             qrWs = null;
         }
-        // ───────────────────────────────────────────────────────────────────────
+
+        ═══ END FEATURE PAUSED ═══ */
 
         syncUI();
         showStep(1);
