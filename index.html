@@ -1670,10 +1670,14 @@
         /* ── MODELOS ── */
         const MODELS = [];
 
-        /* ── ESTADO v1.6.3 ── */
+        /* ── ESTADO v1.6.4 ── */
         const state = {
             model: null,
             layout: 'RETRATO',
+            layoutOffset: {
+                x: 0,
+                y: 0
+            },
             slots: [{
                 img: null,
                 imgUrl: null,
@@ -2185,7 +2189,15 @@
             c.setTransform(sc, 0, 0, sc, 0, 0);
 
             const layout = s.layout || 'RETRATO';
-            const slotRects = getSlotRects(m, layout);
+            const off = s.layoutOffset || {
+                x: 0,
+                y: 0
+            };
+            const slotRects = getSlotRects(m, layout).map(r => ({
+                ...r,
+                x: r.x + off.x,
+                y: r.y + off.y
+            }));
             const hasAnyImage = s.slots.some(sl => sl.img);
             const active = s.activeSlot || 0;
 
@@ -2357,7 +2369,15 @@
         /* Retorna o índice do slot onde o ponto (mx,my) cai */
         function slotAtModel(mx, my) {
             if (!state.model) return 0;
-            const rects = getSlotRects(state.model, state.layout);
+            const off = state.layoutOffset || {
+                x: 0,
+                y: 0
+            };
+            const rects = getSlotRects(state.model, state.layout).map(r => ({
+                ...r,
+                x: r.x + off.x,
+                y: r.y + off.y
+            }));
             for (let i = 0; i < rects.length; i++) {
                 const r = rects[i];
                 if (mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h) return i;
@@ -2561,6 +2581,9 @@
         function pushHistory() {
             state.history.push({
                 layout: state.layout,
+                layoutOffset: {
+                    ...state.layoutOffset
+                },
                 activeSlot: state.activeSlot,
                 slots: state.slots.map(s => ({
                     img: s.img,
@@ -2583,6 +2606,12 @@
                 if (state.slots[i].imgUrl) URL.revokeObjectURL(state.slots[i].imgUrl);
             }
             state.layout = snap.layout;
+            state.layoutOffset = snap.layoutOffset ? {
+                ...snap.layoutOffset
+            } : {
+                x: 0,
+                y: 0
+            };
             state.activeSlot = snap.activeSlot;
             state.slots = snap.slots.map(ss => ({
                 ...ss
@@ -2697,6 +2726,10 @@
             }
 
             state.layout = name;
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
             state.history = [];
             state.slots = Array.from({
                 length: count
@@ -2824,6 +2857,10 @@
             const oldSlots = state.slots;
             const count = CUSTOM_GRIDS[nextLayout].length;
             state.layout = nextLayout;
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
             state.slots = Array.from({
                 length: count
             }, (_, i) => ({
@@ -2853,6 +2890,10 @@
                 if (oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
             }
             state.layout = prevLayout;
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
             state.slots = Array.from({
                 length: count
             }, (_, i) => ({
@@ -2874,21 +2915,21 @@
         document.getElementById('btnDivisorRemove').onclick = removeDivisorSlots;
 
         /* ================================================================
-         * NUDGE — micro-ajuste de posição (1% da área da faca por clique)
+         * NUDGE — micro-ajuste de posição (1px por clique)
          * ================================================================ */
 
         function nudgeImage(dx, dy) {
-            const hasAny = state.slots.some(s => s && s.img);
-            if (!hasAny) return;
+            if (!state.model) return;
             pushHistory();
-            state.slots.forEach(s => { if (s && s.img) { s.x += dx; s.y += dy; } });
+            state.layoutOffset.x += dx;
+            state.layoutOffset.y += dy;
             draw();
         }
 
-        document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -0.5);
-        document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 0.5);
-        document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-0.5, 0);
-        document.getElementById('btnNudgeRight').onclick = () => nudgeImage(0.5, 0);
+        document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -1);
+        document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 1);
+        document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-1, 0);
+        document.getElementById('btnNudgeRight').onclick = () => nudgeImage(1, 0);
 
 
         /* ================================================================
@@ -2934,9 +2975,9 @@
                                 model.facaCircles = circleMatches.map(cm => {
                                     const a = cm[1];
                                     return {
-                                        cx: parseFloat(a.match(/cx="([^"]+)"/) ?.[1] || 0),
-                                        cy: parseFloat(a.match(/cy="([^"]+)"/) ?.[1] || 0),
-                                        r: parseFloat(a.match(/\br="([^"]+)"/) ?.[1] || 0),
+                                        cx: parseFloat(a.match(/cx="([^"]+)"/) ? . [1] || 0),
+                                        cy: parseFloat(a.match(/cy="([^"]+)"/) ? . [1] || 0),
+                                        r: parseFloat(a.match(/\br="([^"]+)"/) ? . [1] || 0),
                                     };
                                 }).filter(c => c.r > 0);
                             }
@@ -2987,6 +3028,7 @@
 
             state.model = found;
             state.layout = 'RETRATO';
+            state.layoutOffset = { x: 0, y: 0 };
             state.slots = [{
                 img: null,
                 imgUrl: null,
@@ -3224,7 +3266,7 @@
         pointer-events: none;
         z-index: 9999;
         letter-spacing: 0.03em;
-    ">Versão atual: v1.6</div>
+    ">Versão atual: v1.6.4</div>
 </body>
 
 </html>

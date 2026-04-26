@@ -52,6 +52,21 @@ Um personalizador interativo de capinhas de smartphone desenvolvido para a **Mob
 
 ## 📊 Versões Lançadas
 
+## **v1.6.5** — Polimento & Correções (Conclusão da v1.6)
+**Data:** 26 de Abril de 2026
+
+#### O que foi feito:
+- ✅ **Bug fix:** `layoutOffset` agora é resetado ao trocar de modelo — evitava que o nudge de uma sessão anterior vazasse para o próximo modelo selecionado
+- ✅ **Nudge refinado:** Passo do ajuste fino alterado de 0.5px → 1px por clique (resposta mais direta)
+- ✅ Comentário interno do `nudgeImage` corrigido para refletir o valor real do step
+
+#### Status Atual:
+- **v1.6 concluída e estável**
+- Motor canvas produção-ready
+- Todos os bugs conhecidos corrigidos antes de iniciar v1.7
+
+---
+
 ## **v1.6** — Motor Canvas Completo & Layouts Dinâmicos
 **Data:** 25 de Abril de 2026
 **Commits:** `cecd314` → `f8cd011`
@@ -284,10 +299,10 @@ Um personalizador interativo de capinhas de smartphone desenvolvido para a **Mob
 
 ## 📈 Estatísticas do Projeto
 
-- **Total de Commits:** 56+
-- **Período de Desenvolvimento:** 14 de Abril - 25 de Abril de 2026 (12 dias)
+- **Total de Commits:** 60+
+- **Período de Desenvolvimento:** 14 de Abril - 26 de Abril de 2026 (13 dias)
 - **PRs Mergeadas:** 9+
-- **Versões Lançadas:** 6 (v0.1 → v1.6)
+- **Versões Lançadas:** 7 (v0.1 → v1.6.5)
 - **Arquivos Principais:**
   - `index.html` (UI + Canvas + Lógica)
   - `public/models.csv` (Dados de modelos)
@@ -314,5 +329,5 @@ Um personalizador interativo de capinhas de smartphone desenvolvido para a **Mob
 
 ---
 
-**Última Atualização:** 25 de Abril de 2026
+**Última Atualização:** 26 de Abril de 2026
 **Responsável:** Filipe Duarte
