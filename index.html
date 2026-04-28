@@ -1936,16 +1936,15 @@
 
     async function initApp() {
       try {
-        const csvResp = await fetch('/api/models');
-        if (!csvResp.ok) throw new Error('CSV não encontrado');
-        const csvText = await csvResp.text();
+        const resp = await fetch('/api/models');
+        if (!resp.ok) throw new Error('Falha ao carregar modelos');
+        const modelsData = await resp.json();
 
-        for (const row of csvText.split('\n').map(l => l.trim()).filter(l => l)) {
-          const [name, mockupPath, facaSvgPath] = row.split(',').map(s => s.trim());
-          if (!name || !mockupPath) continue;
+        for (const data of modelsData) {
+          const { name, mockupImageUrl, screenMaskPath } = data;
+          if (!name || !mockupImageUrl) continue;
 
-          const mockupFile = mockupPath.split('/').pop();
-          const facaFile = facaSvgPath ? facaSvgPath.split('/').pop() : null;
+          const facaFile = screenMaskPath ? screenMaskPath.split('/').pop() : null;
 
           let facaMaskPath = null;
           let facaCircles = [];
@@ -1974,7 +1973,7 @@
           const m = {
             id: name.toLowerCase().replace(/\s+/g, '-'),
             name,
-            mockupPath: `public/assets/previews/${mockupFile}`,
+            mockupPath: mockupImageUrl,
             facaMaskPath,
             facaCircles,
             fw: 500, fh: 1000,
