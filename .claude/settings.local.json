@@ -16,7 +16,13 @@
       "Bash(npm run *)",
       "Bash(curl -s http://localhost:5500)",
       "Bash(cd /home)",
-      "Bash(claude plugin *)"
+      "Bash(claude plugin *)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__get_page_text",
+      "mcp__Claude_in_Chrome__read_page",
+      "Bash(gh repo *)",
+      "Bash(xargs grep *)"
     ]
   }
 }
