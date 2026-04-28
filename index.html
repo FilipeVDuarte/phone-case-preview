@@ -1936,7 +1936,7 @@
 
     async function initApp() {
       try {
-        const csvResp = await fetch('server/data/models.csv');
+        const csvResp = await fetch('/api/models');
         if (!csvResp.ok) throw new Error('CSV não encontrado');
         const csvText = await csvResp.text();
 
@@ -1951,7 +1951,7 @@
           let facaCircles = [];
           if (facaFile) {
             try {
-              const svgResp = await fetch(`public/assets/facas/${facaFile}`);
+              const svgResp = await fetch(`/assets/facas/${facaFile}`);
               if (svgResp.ok) {
                 const svgText = await svgResp.text();
                 const dMatch = svgText.match(/\sd="([^"]+)"/);
