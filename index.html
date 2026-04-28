@@ -1936,7 +1936,7 @@
 
     async function initApp() {
       try {
-        const resp = await fetch('/api/models');
+        const resp = await fetch('/models.json');
         if (!resp.ok) throw new Error('Falha ao carregar modelos');
         const modelsData = await resp.json();
 
