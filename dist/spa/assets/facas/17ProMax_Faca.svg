@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 1000">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: red;
+        stroke-miterlimit: 22.93;
+        stroke-width: 2.83px;
+      }
+    </style>
+  </defs>
+  <path id="_17ProMax" data-name="17ProMax" class="cls-1" d="M91.3,23.63h316.57c37.85,0,68.82,31.8,68.82,70.66v811.54c0,38.86-30.97,70.66-68.82,70.66H91.3c-37.85,0-68.82-31.8-68.82-70.66V94.28c0-38.86,30.97-70.66,68.82-70.66h0Z"/>
+  <circle class="cls-1" cx="104.87" cy="103.89" r="55.15"/>
+  <circle class="cls-1" cx="210.57" cy="161.09" r="55.15"/>
+  <circle class="cls-1" cx="105.89" cy="218.79" r="55.15"/>
+  <circle class="cls-1" cx="396.45" cy="99.81" r="26.55"/>
+  <circle class="cls-1" cx="395.94" cy="159.55" r="10.21"/>
+  <circle class="cls-1" cx="395.94" cy="219.81" r="25.53"/>
+</svg>
