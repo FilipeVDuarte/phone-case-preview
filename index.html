@@ -1377,13 +1377,24 @@
                 <div class="layout-grid" id="layoutGrid">
                     <button class="layout-btn active" data-layout="RETRATO">Retrato</button>
                     <button class="layout-btn" data-layout="3-FOTOS">3 Fotos</button>
-                    <button class="layout-btn" data-layout="DIVISOR-2">Divisor</button>
+                    <button class="layout-btn" data-layout="DIVISOR-1">Divisor</button>
                 </div>
 
                 <!-- Slot indicator (visível quando layout > 1) -->
                 <div class="slot-indicator" id="slotIndicator" style="display:none;">
                     <div class="field-label">Foto ativa</div>
                     <div class="slot-dots" id="slotDots"></div>
+                </div>
+
+                <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+                <div id="divisorControls" style="display:none;">
+                    <div class="field-label">Número de fotos</div>
+                    <div class="wizard-toolbar" style="gap:8px;">
+                        <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
+                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+                        <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
+                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
+                    </div>
                 </div>
 
                 <div class="field-label">Tua imagem</div>
@@ -1488,17 +1499,6 @@
                 <div class="slot-selector-step3" id="slotSelectorStep3" style="display:none;">
                     <div class="field-label">Foto ativa</div>
                     <div class="slot-dots" id="slotDotsStep3"></div>
-                </div>
-
-                <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
-                <div id="divisorControls" style="display:none;">
-                    <div class="field-label">Slots do Divisor</div>
-                    <div class="wizard-toolbar" style="gap:8px;">
-                        <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
-                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
-                        <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
-                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
-                    </div>
                 </div>
 
                 <!-- Ajuste Fino (nudge) -->
@@ -1613,6 +1613,12 @@
                 h: 0.3
             },
             ],
+            'DIVISOR-1': [{
+                x: 0,
+                y: 0,
+                w: 1,
+                h: 1
+            }],
             'DIVISOR-2': [{
                 x: 0,
                 y: 0,
@@ -1685,7 +1691,7 @@
             ],
         };
 
-        const DIVISOR_SEQUENCE = ['DIVISOR-2', 'DIVISOR-4', 'DIVISOR-6'];
+        const DIVISOR_SEQUENCE = ['DIVISOR-1', 'DIVISOR-2', 'DIVISOR-4', 'DIVISOR-6'];
 
         /* ── MODELOS ── */
         const MODELS = [];
@@ -2772,7 +2778,7 @@
         function updateLayoutUI() {
             document.querySelectorAll('.layout-btn').forEach(btn => {
                 const match = btn.dataset.layout === state.layout ||
-                    (btn.dataset.layout === 'DIVISOR-2' && state.layout.startsWith('DIVISOR'));
+                    (btn.dataset.layout === 'DIVISOR-1' && state.layout.startsWith('DIVISOR'));
                 btn.classList.toggle('active', match);
             });
         }
