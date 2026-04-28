@@ -2,2126 +2,3299 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mobifans — Preview de Capinhas</title>
-
-  <link rel="icon" type="image/svg+xml" sizes="16x16" href="favicon/favicon-Mobifans_16x16.svg">
-  <link rel="icon" type="image/svg+xml" sizes="32x32" href="favicon/favicon-Mobifans_32x32.svg">
-  <link rel="icon" type="image/svg+xml" sizes="48x48" href="favicon/favicon-Mobifans_48x48.svg">
-  <link rel="icon" type="image/svg+xml" sizes="96x96" href="favicon/favicon-Mobifans_96x96.svg">
-  <link rel="apple-touch-icon" sizes="180x180" href="favicon/favicon-Mobifans_180x180.svg">
-  <link rel="icon" type="image/svg+xml" sizes="192x192" href="favicon/favicon-Mobifans_192x192.svg">
-  <link rel="icon" type="image/svg+xml" sizes="512x512" href="favicon/favicon-Mobifans_512x512.svg">
-
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
-
-  <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --ocean: #313590;
-      --black: #000;
-      --bg: #E5EAF1;
-      --bgpanel: #FFFFFF;
-      --font: 'Plus Jakarta Sans', sans-serif;
-      --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --smooth: cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    body {
-      font-family: var(--font);
-      background: #FFFFFF;
-      height: 100vh;
-      overflow: hidden;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    /* ── WORKSPACE (3 painéis) ── */
-    .workspace {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      width: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 24px 24px 36px 24px;
-      gap: 32px;
-    }
-
-    /* ── PAINEL ESQUERDO ── */
-    .panel-left {
-      width: 286px;
-      flex-shrink: 0;
-      background: var(--white);
-      border-radius: 16px;
-      padding: 32px;
-      border: 4px solid #000;
-      box-shadow: 0 8px 0 0 #000;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      animation: enter-up 0.5s var(--expo-out) both;
-    }
-
-    .app-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--black);
-      letter-spacing: -0.5px;
-      line-height: 1.15;
-    }
-
-    .how-to-use {
-      background: #F8FAFC;
-      border: 1.5px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 14px 16px;
-      font-size: 13px;
-      color: #64748B;
-      line-height: 1.9;
-      margin-top: auto;
-    }
-
-    .how-to-use strong {
-      color: var(--black);
-      display: block;
-      margin-bottom: 6px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    /* ── PAINEL CENTRAL DESKTOP ── */
-    .panel-center {
-      width: 80vh;
-      height: 90vh;
-      flex-shrink: 0;
-      background: #FFFFFF;
-      border-radius: 36px;
-      border: 4px solid #000;
-      box-shadow: 0 8px 0 0 #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-      animation: enter-up 0.5s var(--expo-out) 0.04s both;
-    }
-
-    /* ── STEPPER ── */
-    .stepper {
-      display: flex;
-      align-items: center;
-      width: 80vh;
-      padding: 18px 28px;
-      border-top: 2px solid #E2E8F0;
-      flex-shrink: 0;
-    }
-
-    .step-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .step-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #E2E8F0;
-      color: #94A3B8;
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.25s ease, color 0.25s ease;
-    }
-
-    .step-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #94A3B8;
-      white-space: nowrap;
-      transition: color 0.25s ease;
-    }
-
-    .step-connector {
-      flex: 1;
-      height: 1.5px;
-      background: #E2E8F0;
-      margin: 0 10px;
-      min-width: 20px;
-      transition: background 0.25s ease;
-    }
-
-    .step-item.active .step-num {
-      background: #000000;
-      color: #fff;
-    }
-
-    .step-item.active .step-label {
-      color: #000000;
-      font-weight: 700;
-    }
-
-    .step-item.completed .step-num {
-      background: #22C55E;
-      color: #fff;
-    }
-
-    .step-item.completed~.step-connector {
-      background: #22C55E;
-    }
-
-    /* ── ÁREA DO CANVAS ── */
-    .canvas-area {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 48px 32px;
-      color: #94A3B8;
-      text-align: center;
-      animation: fade-in 0.3s var(--smooth) both;
-    }
-
-    .empty-state p {
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.5;
-    }
-
-    .canvas-loading {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.8);
-      font-size: 13px;
-      font-weight: 600;
-      color: #64748B;
-      gap: 8px;
-      z-index: 30;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-
-    .canvas-loading.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid #E2E8F0;
-      border-top-color: #000;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-
-    #phoneCanvas {
-      display: none;
-      cursor: grab;
-      max-width: 100%;
-      max-height: 100%;
-    }
-
-    #phoneCanvas.dragging {
-      cursor: grabbing;
-    }
-
-    /* Floating hint label */
-    .canvas-float-hint {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      padding: 8px 18px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      white-space: nowrap;
-      pointer-events: none;
-      display: none;
-    }
-
-    /* ── PAINEL DIREITO ── */
-    .panel-right {
-      width: 286px;
-      flex-shrink: 0;
-      background: var(--white);
-      border-radius: 16px;
-      padding: 32px;
-      border: 4px solid #000;
-      box-shadow: 0 8px 0 0 #000;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      animation: enter-up 0.5s var(--expo-out) 0.08s both;
-    }
-
-    .panel-right-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: #1a1a1a;
-      letter-spacing: -0.3px;
-      margin-bottom: 16px;
-    }
-
-    /* Step panels */
-    .step-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      flex: 1;
-    }
-
-    /* ── INLINE DROPDOWN LAYERS (Step 1) ── */
-    .inline-layer {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .field-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: #64748B;
-    }
-
-    /* Brands grid */
-    .brands-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .brand-chip {
-      width: 100%;
-      padding: 12px 8px;
-      border: 2px solid #D1D5DB;
-      border-radius: 12px;
-      background: var(--white);
-      color: #000;
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .brand-chip:hover {
-      border-color: #000;
-      background: #F1F5F9;
-    }
-
-    .brand-chip.active {
-      background: var(--white);
-      color: #000000;
-      border-color: #000000;
-      font-weight: 600;
-    }
-
-    /* Series grid */
-    .series-scroll {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .series-chip {
-      width: 100%;
-      padding: 12px 10px;
-      border: 2px solid #D1D5DB;
-      border-radius: 12px;
-      background: var(--white);
-      color: #000;
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-      word-break: break-word;
-    }
-
-    .series-chip:hover {
-      border-color: #000;
-      background: #F1F5F9;
-    }
-
-    .series-chip.active {
-      background: #000;
-      color: var(--white);
-      border-color: #000;
-    }
-
-    /* Models grid */
-    .models-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .model-item {
-      width: 100%;
-      padding: 12px 8px;
-      border: 2px solid #E2E8F0;
-      border-radius: 12px;
-      background: var(--white);
-      color: #000;
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s ease;
-      word-break: break-word;
-      line-height: 1.3;
-    }
-
-    .model-item:hover {
-      background: #F1F5F9;
-      border-color: #CBD5E1;
-    }
-
-    .model-item.active {
-      background: #000;
-      color: var(--white);
-      border-color: #000;
-      font-weight: 600;
-    }
-
-    /* Back button */
-    .dropdown-back {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 4px;
-      border: none;
-      background: transparent;
-      color: #64748B;
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: color 0.15s ease;
-    }
-
-    .dropdown-back:hover {
-      color: #000;
-    }
-
-    .dropdown-back svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    /* Selected model badge */
-    .model-selected-badge {
-      background: #F0FDF4;
-      border: 1.5px solid #86EFAC;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #166534;
-      display: none;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* ── UPLOAD (Step 2) ── */
-    .upload-btn {
-      width: 100%;
-      padding: 13px 18px;
-      border: 3px solid #000;
-      border-radius: 10px;
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 700;
-      color: #000;
-      background: var(--white);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      box-shadow: 3px 3px 0 0 #000;
-      transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring), background 0.15s ease;
-    }
-
-    .upload-btn:hover:not(:disabled) {
-      background: #F8FAFC;
-      transform: translate(-2px, -3px);
-      box-shadow: 5px 6px 0 0 #000;
-    }
-
-    .upload-btn:active:not(:disabled) {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 0 #000;
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
-    }
-
-    .upload-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .upload-status {
-      font-size: 12px;
-      font-weight: 600;
-      color: #16A34A;
-      display: none;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* ── WIZARD TOOLBAR (Step 3) ── */
-    .wizard-toolbar {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .wizard-tool-btn {
-      flex: 1;
-      height: 48px;
-      border: 2px solid #E2E8F0;
-      border-radius: 12px;
-      background: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #374151;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.22s var(--spring);
-    }
-
-    .wizard-tool-btn:hover:not(:disabled) {
-      background: #F1F5F9;
-      border-color: #CBD5E1;
-      transform: scale(1.08);
-    }
-
-    .wizard-tool-btn:active:not(:disabled) {
-      transform: scale(0.88);
-      transition: transform 0.08s ease;
-    }
-
-    .wizard-tool-btn:disabled {
-      opacity: 0.28;
-      cursor: not-allowed;
-    }
-
-    /* Indicators */
-    .indicators-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .scale-pill,
-    .rotation-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #F1F5F9;
-      border-radius: 100px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #475569;
-    }
-
-    /* ── STEP 4: Finalizar ── */
-    .model-name-display {
-      background: #F8FAFC;
-      border: 1.5px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
-
-    .model-name-display .label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: #94A3B8;
-      margin-bottom: 4px;
-    }
-
-    .model-name-display .name {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-
-    .download-btn {
-      width: 100%;
-      padding: 15px 20px;
-      border: 3px solid #000;
-      border-radius: 10px;
-      font-family: var(--font);
-      font-size: 15px;
-      font-weight: 800;
-      color: #EFF6FF;
-      background: var(--black);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      box-shadow: 3px 3px 0 0 #000;
-      letter-spacing: -0.2px;
-      transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring);
-    }
-
-    .download-btn:hover:not(:disabled) {
-      transform: translate(-2px, -3px);
-      box-shadow: 5px 6px 0 0 #000;
-    }
-
-    .download-btn:active:not(:disabled) {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 0 #000;
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
-    }
-
-    .download-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    /* ── WIZARD NAV ── */
-    .wizard-nav {
-      display: flex;
-      gap: 8px;
-      padding-top: 16px;
-      border-top: 1px solid #F1F5F9;
-      margin-top: 16px;
-      flex-shrink: 0;
-    }
-
-    .nav-btn {
-      flex: 1;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .nav-prev {
-      background: white;
-      border: 1.5px solid #D1D5DB;
-      color: #64748B;
-    }
-
-    .nav-prev:hover:not(:disabled) {
-      background: #F8FAFC;
-      border-color: #9CA3AF;
-    }
-
-    .nav-next {
-      background: #000000;
-      border: 2px solid #000000;
-      color: white;
-    }
-
-    .nav-next:hover:not(:disabled) {
-      background: #1a1a1a;
-    }
-
-    .nav-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    /* ── LOGO ── */
-    .logo-area {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    /* ── KEYFRAMES ── */
-    @keyframes enter-up {
-      from {
-        opacity: 0;
-        transform: translateY(22px) scale(0.97);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes canvas-enter {
-      0% {
-        opacity: 0;
-        transform: scale(0.94);
-      }
-
-      55% {
-        transform: scale(1.018);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes slide-in-down {
-      from {
-        opacity: 0;
-        transform: translateY(-6px) scale(0.96);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes pill-bump {
-      0% {
-        transform: scale(1);
-      }
-
-      40% {
-        transform: scale(1.18);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    #phoneCanvas.entering {
-      animation: canvas-enter 0.4s var(--spring) both;
-    }
-
-    .upload-status.animating {
-      animation: slide-in-down 0.3s var(--spring) both;
-    }
-
-    .pill-bump {
-      animation: pill-bump 0.3s var(--spring);
-    }
-
-    /* Hidden select for JS compat */
-    #modelSelect {
-      display: none;
-    }
-
-    /* Hidden reset btn for JS compat */
-    #btnReset {
-      display: none;
-    }
-
-    /* ── Loader / Splash Screen ── */
-    #loader-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999999;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-
-    #loader-screen.loader-hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    #loader-screen .loader-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-      padding: 40px 48px;
-      border: 4px solid #000;
-      box-shadow: 0 8px 0 0 #000000;
-      border-radius: 15px;
-      background: #fff;
-    }
-
-    #loader-screen .loader-icon {
-      animation: loader-pulse 1.6s ease-in-out infinite;
-    }
-
-    @keyframes loader-pulse {
-
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-
-      50% {
-        transform: scale(0.9);
-        opacity: 0.5;
-      }
-    }
-
-    #loader-screen p {
-      color: #000;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin: 0;
-    }
-
-    /* ══════════════════════════════════════
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobifans — Preview de Capinhas</title>
+
+    <link rel="icon" type="image/svg+xml" sizes="16x16" href="favicon/favicon-Mobifans_16x16.svg">
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="favicon/favicon-Mobifans_32x32.svg">
+    <link rel="icon" type="image/svg+xml" sizes="48x48" href="favicon/favicon-Mobifans_48x48.svg">
+    <link rel="icon" type="image/svg+xml" sizes="96x96" href="favicon/favicon-Mobifans_96x96.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/favicon-Mobifans_180x180.svg">
+    <link rel="icon" type="image/svg+xml" sizes="192x192" href="favicon/favicon-Mobifans_192x192.svg">
+    <link rel="icon" type="image/svg+xml" sizes="512x512" href="favicon/favicon-Mobifans_512x512.svg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Brand */
+            --ocean: #313590;
+            --black: #000;
+            --white: #FFFFFF;
+            --near-black: #1a1a1a;
+            --bg: #E5EAF1;
+            --bgpanel: #FFFFFF;
+
+            /* Grays */
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #D1D5DB;
+            --gray-300b: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-400b: #9CA3AF;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #374151;
+
+            /* Greens */
+            --green-50: #F0FDF4;
+            --green-300: #86EFAC;
+            --green-500: #22C55E;
+            --green-700: #16A34A;
+            --green-900: #166534;
+
+            /* Yellows / Amber */
+            --yellow-100: #FEF3C7;
+            --yellow-500: #F59E0B;
+            --amber-900: #92400E;
+
+            /* Blues */
+            --blue-50: #EFF6FF;
+
+            /* Typography & Easing */
+            --font: 'Plus Jakarta Sans', sans-serif;
+            --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --smooth: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        body {
+            font-family: var(--font);
+            background: #FFFFFF;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* ── WORKSPACE (3 painéis) ── */
+        .workspace {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px 24px 36px 24px;
+            gap: 32px;
+        }
+
+        /* ── PAINEL ESQUERDO ── */
+        .panel-left {
+            width: 286px;
+            flex-shrink: 0;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            border: 4px solid #000;
+            box-shadow: 0 8px 0 0 #000;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: enter-up 0.5s var(--expo-out) both;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+        }
+
+        .how-to-use {
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--gray-500);
+            line-height: 1.9;
+            margin-top: auto;
+        }
+
+        .how-to-use strong {
+            color: var(--black);
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── PAINEL CENTRAL DESKTOP ── */
+        .panel-center {
+            width: 80vh;
+            height: 90vh;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-radius: 36px;
+            border: 4px solid #000;
+            box-shadow: 0 8px 0 0 #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            animation: enter-up 0.5s var(--expo-out) 0.04s both;
+        }
+
+        /* ── STEPPER ── */
+        .stepper {
+            display: flex;
+            align-items: center;
+            width: 80vh;
+            padding: 18px 28px;
+            border-top: 2px solid var(--gray-200);
+            flex-shrink: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-400);
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-400);
+            white-space: nowrap;
+            transition: color 0.25s ease;
+        }
+
+        .step-connector {
+            flex: 1;
+            height: 1.5px;
+            background: var(--gray-200);
+            margin: 0 10px;
+            min-width: 20px;
+            transition: background 0.25s ease;
+        }
+
+        .step-item.active .step-num {
+            background: #000000;
+            color: #fff;
+        }
+
+        .step-item.active .step-label {
+            color: #000000;
+            font-weight: 700;
+        }
+
+        .step-item.completed .step-num {
+            background: var(--green-500);
+            color: #fff;
+        }
+
+        .step-item.completed~.step-connector {
+            background: var(--green-500);
+        }
+
+        /* ── ÁREA DO CANVAS ── */
+        .canvas-area {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 48px 32px;
+            color: var(--gray-400);
+            text-align: center;
+            animation: fade-in 0.3s var(--smooth) both;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .canvas-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-500);
+            gap: 8px;
+            z-index: 30;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .canvas-loading.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray-200);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        #phoneCanvas {
+            display: none;
+            cursor: grab;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #phoneCanvas.dragging {
+            cursor: grabbing;
+        }
+
+        /* Floating hint label */
+        .canvas-float-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* ── PAINEL DIREITO ── */
+        .panel-right {
+            width: 286px;
+            flex-shrink: 0;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            border: 4px solid #000;
+            box-shadow: 0 8px 0 0 #000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            animation: enter-up 0.5s var(--expo-out) 0.08s both;
+        }
+
+        .panel-right-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--near-black);
+            letter-spacing: -0.3px;
+            margin-bottom: 16px;
+        }
+
+        /* Step panels */
+        .step-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+        }
+
+        /* ── INLINE DROPDOWN LAYERS (Step 1) ── */
+        .inline-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--gray-500);
+        }
+
+        /* Brands grid */
+        .brands-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .brand-chip {
+            width: 100%;
+            padding: 12px 8px;
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            background: var(--white);
+            color: #000;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .brand-chip:hover {
+            border-color: #000;
+            background: var(--gray-100);
+        }
+
+        .brand-chip.active {
+            background: var(--white);
+            color: #000000;
+            border-color: #000000;
+            font-weight: 600;
+        }
+
+        /* Series grid */
+        .series-scroll {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .series-chip {
+            width: 100%;
+            padding: 12px 10px;
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            background: var(--white);
+            color: #000;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .series-chip:hover {
+            border-color: #000;
+            background: var(--gray-100);
+        }
+
+        .series-chip.active {
+            background: #000;
+            color: var(--white);
+            border-color: #000;
+        }
+
+        /* Models grid */
+        .models-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .model-item {
+            width: 100%;
+            padding: 12px 8px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            background: var(--white);
+            color: #000;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .model-item:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300b);
+        }
+
+        .model-item.active {
+            background: #000;
+            color: var(--white);
+            border-color: #000;
+            font-weight: 600;
+        }
+
+        /* Back button */
+        .dropdown-back {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 4px;
+            border: none;
+            background: transparent;
+            color: var(--gray-500);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .dropdown-back:hover {
+            color: #000;
+        }
+
+        .dropdown-back svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Selected model badge */
+        .model-selected-badge {
+            background: var(--green-50);
+            border: 1.5px solid var(--green-300);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green-900);
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── UPLOAD (Step 2) ── */
+        .upload-btn {
+            width: 100%;
+            padding: 13px 18px;
+            border: 3px solid #000;
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+            background: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            box-shadow: 3px 3px 0 0 #000;
+            transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring), background 0.15s ease;
+        }
+
+        .upload-btn:hover:not(:disabled) {
+            background: var(--gray-50);
+            transform: translate(-2px, -3px);
+            box-shadow: 5px 6px 0 0 #000;
+        }
+
+        .upload-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 0 #000;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .upload-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green-700);
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FEATURE PAUSED — QR Upload / Conexão Mobile via QR Code (v1.8)
+           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
+           Para reativar: descomente este bloco completo (CSS + HTML + JS abaixo).
+        ════════════════════════════════════════════════════════════════════════ */
+        /*
+        .qr-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray-400);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .qr-divider::before,
+        .qr-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .qr-trigger-btn {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--gray-300);
+            border-radius: 10px;
+            background: var(--gray-50);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--black);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .qr-trigger-btn:hover {
+            border-color: var(--ocean);
+            background: #f0f1ff;
+        }
+
+        .qr-trigger-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .qr-panel {
+            border: 2px solid var(--gray-200);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: var(--gray-50);
+        }
+
+        .qr-panel svg {
+            width: 148px;
+            height: 148px;
+            border-radius: 8px;
+            border: 3px solid var(--black);
+            box-shadow: 3px 3px 0 0 var(--black);
+            display: block;
+        }
+
+        .qr-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .qr-url {
+            font-size: 10px;
+            color: var(--gray-500);
+            font-family: monospace;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .qr-waiting {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qr-waiting::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ocean);
+            animation: qr-pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes qr-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        .qr-cancel-btn {
+            font-size: 11px;
+            color: var(--gray-500);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font);
+            text-decoration: underline;
+            padding: 0;
+        }
+        */
+
+        /* ── WIZARD TOOLBAR (Step 3) ── */
+        .wizard-toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .wizard-tool-btn {
+            flex: 1;
+            height: 48px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-700);
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.22s var(--spring);
+        }
+
+        .wizard-tool-btn:hover:not(:disabled) {
+            background: var(--gray-100);
+            border-color: var(--gray-300b);
+            transform: scale(1.08);
+        }
+
+        .wizard-tool-btn:active:not(:disabled) {
+            transform: scale(0.88);
+            transition: transform 0.08s ease;
+        }
+
+        .wizard-tool-btn:disabled {
+            opacity: 0.28;
+            cursor: not-allowed;
+        }
+
+        /* Indicators */
+        .indicators-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .scale-pill,
+        .rotation-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray-100);
+            border-radius: 100px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray-600);
+        }
+
+        /* ── LAYOUT SELECTOR (Step 2) ── */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .layout-btn {
+            aspect-ratio: unset;
+            padding: 8px 4px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--font);
+            border: 2px solid var(--gray-300);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+            color: var(--gray-500);
+        }
+
+        .layout-btn:hover {
+            border-color: #000;
+            background: var(--gray-100);
+            color: #000;
+        }
+
+        .layout-btn.active {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+        }
+
+        /* ── SLOT DOTS ── */
+        .slot-indicator,
+        .slot-selector-step3 {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slot-dots {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .slot-dot {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gray-500);
+            font-family: var(--font);
+            transition: all 0.15s ease;
+            line-height: 1;
+        }
+
+        .slot-dot:hover {
+            border-color: #000;
+            background: var(--gray-100);
+            color: #000;
+        }
+
+        .slot-dot.active {
+            border-color: var(--ocean);
+            background: var(--ocean);
+            color: #fff;
+        }
+
+        .slot-dot.has-img {
+            border-color: var(--green-500);
+            background: var(--green-50);
+            color: var(--green-900);
+        }
+
+        .slot-dot.active.has-img {
+            border-color: var(--ocean);
+            background: var(--ocean);
+            color: #fff;
+        }
+
+        /* ── DPI TOAST ── */
+        .dpi-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--yellow-100);
+            border: 2px solid var(--yellow-500);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--amber-900);
+            font-family: var(--font);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+            transition: transform 0.35s var(--spring), opacity 0.35s ease;
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .dpi-toast.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ── STEP 4: Finalizar ── */
+        .model-name-display {
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+
+        .model-name-display .label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--gray-400);
+            margin-bottom: 4px;
+        }
+
+        .model-name-display .name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--near-black);
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #000;
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--blue-50);
+            background: var(--black);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            box-shadow: 3px 3px 0 0 #000;
+            letter-spacing: -0.2px;
+            transition: transform 0.26s var(--spring), box-shadow 0.26s var(--spring);
+        }
+
+        .download-btn:hover:not(:disabled) {
+            transform: translate(-2px, -3px);
+            box-shadow: 5px 6px 0 0 #000;
+        }
+
+        .download-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 0 #000;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+
+        .download-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* ── WIZARD NAV ── */
+        .wizard-nav {
+            display: flex;
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-100);
+            margin-top: 16px;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-prev {
+            background: white;
+            border: 1.5px solid var(--gray-300);
+            color: var(--gray-500);
+        }
+
+        .nav-prev:hover:not(:disabled) {
+            background: var(--gray-50);
+            border-color: var(--gray-400b);
+        }
+
+        .nav-next {
+            background: #000000;
+            border: 2px solid #000000;
+            color: white;
+        }
+
+        .nav-next:hover:not(:disabled) {
+            background: var(--near-black);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        /* ── LOGO ── */
+        .logo-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ── KEYFRAMES ── */
+        @keyframes enter-up {
+            from {
+                opacity: 0;
+                transform: translateY(22px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes canvas-enter {
+            0% {
+                opacity: 0;
+                transform: scale(0.94);
+            }
+
+            55% {
+                transform: scale(1.018);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slide-in-down {
+            from {
+                opacity: 0;
+                transform: translateY(-6px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes pill-bump {
+            0% {
+                transform: scale(1);
+            }
+
+            40% {
+                transform: scale(1.18);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #phoneCanvas.entering {
+            animation: canvas-enter 0.4s var(--spring) both;
+        }
+
+        .upload-status.animating {
+            animation: slide-in-down 0.3s var(--spring) both;
+        }
+
+        .pill-bump {
+            animation: pill-bump 0.3s var(--spring);
+        }
+
+        /* Hidden select for JS compat */
+        #modelSelect {
+            display: none;
+        }
+
+        /* Hidden reset btn for JS compat */
+        #btnReset {
+            display: none;
+        }
+
+        /* ── Loader / Splash Screen ── */
+        #loader-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #loader-screen.loader-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #loader-screen .loader-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding: 40px 48px;
+            border: 4px solid #000;
+            box-shadow: 0 8px 0 0 #000000;
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        #loader-screen .loader-icon {
+            animation: loader-pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes loader-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+        }
+
+        #loader-screen p {
+            color: #000;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        /* ══════════════════════════════════════
        MOBILE LAYOUT  (≤ 1024px)
        Base medidas: Mobile_Anatomy.svg 430w
     ══════════════════════════════════════ */
-    @media (max-width: 1024px) {
+        @media (max-width: 1024px) {
 
-      body {
-        height: auto;
-        min-height: 100vh;
-        overflow-y: auto;
-      }
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
 
-      .workspace {
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        padding: 20px 16px 36px;
-        height: auto;
-        min-height: 100vh;
-      }
+            .workspace {
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+                padding: 20px 16px 36px;
+                height: auto;
+                min-height: 100vh;
+            }
 
-      /* Painéis laterais — #3 e #35 do anatomy */
-      .panel-left,
-      .panel-right {
-        width: 318.58px;
-        max-width: calc(100vw - 32px);
-        box-sizing: border-box;
-        border: 2.61px solid #000000;
-        box-shadow: 0px 5.22px 0px 0px #000000;
-        border-radius: 15.22px;
-        padding: 20px 22px;
-      }
+            /* Painéis laterais — #3 e #35 do anatomy */
+            .panel-left,
+            .panel-right {
+                width: 318.58px;
+                max-width: calc(100vw - 32px);
+                box-sizing: border-box;
+                border: 2.61px solid #000000;
+                box-shadow: 0px 5.22px 0px 0px #000000;
+                border-radius: 15.22px;
+                padding: 20px 22px;
+            }
 
-      .panel-left {
-        flex-shrink: 0;
-      }
+            .panel-left {
+                flex-shrink: 0;
+            }
 
-      .panel-right {
-        flex-shrink: 0;
-        overflow-y: visible;
-      }
+            .panel-right {
+                flex-shrink: 0;
+                overflow-y: visible;
+            }
 
-      /* Painel Central / Simulador — #11 do anatomy */
-      .panel-center {
-        width: 318.58px;
-        max-width: calc(100vw - 32px);
-        height: 537.58px;
-        box-sizing: border-box;
-        border-radius: 32.64px;
-        border: 2.61px solid #000000;
-        box-shadow: 0px 5.22px 0px 0px #000000;
-        flex-shrink: 0;
-      }
+            /* Painel Central / Simulador — #11 do anatomy */
+            .panel-center {
+                width: 318.58px;
+                max-width: calc(100vw - 32px);
+                height: 537.58px;
+                box-sizing: border-box;
+                border-radius: 32.64px;
+                border: 2.61px solid #000000;
+                box-shadow: 0px 5.22px 0px 0px #000000;
+                flex-shrink: 0;
+            }
 
-      /* Stepper — #16 do anatomy */
-      .stepper {
-        padding: 12px 14px;
-      }
+            /* Stepper — #16 do anatomy */
+            .stepper {
+                padding: 12px 14px;
+            }
 
-      .step-num {
-        width: 18.28px;
-        height: 18.28px;
-        font-size: 9px;
-      }
+            .step-num {
+                width: 18.28px;
+                height: 18.28px;
+                font-size: 9px;
+            }
 
-      .step-label {
-        font-size: 9.5px;
-        white-space: nowrap;
-      }
+            .step-label {
+                font-size: 9.5px;
+                white-space: nowrap;
+            }
 
-      .step-connector {
-        min-width: 8px;
-        margin: 0 4px;
-      }
+            .step-connector {
+                min-width: 8px;
+                margin: 0 4px;
+            }
 
-      /* Título do app — compacto */
-      .app-title {
-        font-size: 20px;
-      }
+            /* Título do app — compacto */
+            .app-title {
+                font-size: 20px;
+            }
 
-      /* Painel direito — garantir que painéis de step sejam flex */
-      .step-panel {
-        gap: 12px;
-      }
+            /* Painel direito — garantir que painéis de step sejam flex */
+            .step-panel {
+                gap: 12px;
+            }
 
-      /* Wizard nav */
-      .wizard-nav {
-        padding-top: 12px;
-        margin-top: 12px;
-      }
+            /* Wizard nav */
+            .wizard-nav {
+                padding-top: 12px;
+                margin-top: 12px;
+            }
 
-    }
-  </style>
+        }
+    </style>
 </head>
 
 <body>
 
-  <!-- Splash Screen -->
-  <div id="loader-screen">
-    <div class="loader-card">
-      <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
-        <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5" />
-        <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
-        <circle cx="32" cy="53" r="2.5" fill="#000" />
-      </svg>
-      <p>Carregando modelos...</p>
+    <!-- Splash Screen -->
+    <div id="loader-screen">
+        <div class="loader-card">
+            <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5" />
+                <rect x="21" y="11" width="22" height="37" rx="2" fill="var(--gray-200)" />
+                <circle cx="32" cy="53" r="2.5" fill="#000" />
+            </svg>
+            <p>Carregando modelos...</p>
+        </div>
     </div>
-  </div>
 
-  <!-- Hidden elements for JS compatibility -->
-  <select id="modelSelect">
-    <option value="">— Seleciona o modelo —</option>
-  </select>
-  <button id="btnReset" style="display:none"></button>
+    <!-- Hidden elements for JS compatibility -->
+    <select id="modelSelect">
+        <option value="">— Seleciona o modelo —</option>
+    </select>
+    <button id="btnReset" style="display:none"></button>
 
-  <div class="workspace">
+    <div class="workspace">
 
-    <!-- ══════════════════════════════════════
+        <!-- ══════════════════════════════════════
          PAINEL 1: ESQUERDO (Informativo)
     ══════════════════════════════════════ -->
-    <aside class="panel-left">
+        <aside class="panel-left">
 
-      <div class="logo-area">
-        <object data="svg/Logo_Preview.svg" type="image/svg+xml" height="48" aria-label="Mobifans">Mobifans</object>
-      </div>
+            <div class="logo-area">
+                <object data="svg/Logo_Preview.svg" type="image/svg+xml" height="48"
+                    aria-label="Mobifans">Mobifans</object>
+            </div>
 
-      <h1 class="app-title">Personaliza<br>Capinha</h1>
+            <h1 class="app-title">Personaliza<br>Capinha</h1>
 
-      <div class="how-to-use">
-        <strong>Como Usar</strong>
-        1. Seleciona o modelo do celular<br>
-        2. Faz upload da tua imagem<br>
-        3. Arrasta e ajusta o zoom<br>
-        4. Baixa a preview pronta
-      </div>
+            <div class="how-to-use">
+                <strong>Como Usar</strong>
+                1. Seleciona o modelo do celular<br>
+                2. Faz upload da tua imagem<br>
+                3. Arrasta e ajusta o zoom<br>
+                4. Baixa a preview pronta
+            </div>
 
-    </aside>
+        </aside>
 
 
-    <!-- ══════════════════════════════════════
+        <!-- ══════════════════════════════════════
          PAINEL 2: CENTRO (Visualização)
     ══════════════════════════════════════ -->
-    <main class="panel-center">
+        <main class="panel-center">
 
-      <!-- Canvas area -->
-      <div class="canvas-area" id="canvasWrapper">
+            <!-- Canvas area -->
+            <div class="canvas-area" id="canvasWrapper">
 
-        <!-- Empty state -->
-        <div class="empty-state" id="emptyState">
-          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
-            <rect x="16" y="4" width="32" height="56" rx="7" stroke="#CBD5E1" stroke-width="2" />
-            <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
-            <circle cx="32" cy="53" r="2.5" fill="#CBD5E1" />
-          </svg>
-          <p>Seleciona um modelo<br>para começar</p>
-        </div>
+                <!-- Empty state -->
+                <div class="empty-state" id="emptyState">
+                    <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                        <rect x="16" y="4" width="32" height="56" rx="7" stroke="#CBD5E1" stroke-width="2" />
+                        <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
+                        <circle cx="32" cy="53" r="2.5" fill="#CBD5E1" />
+                    </svg>
+                    <p>Seleciona um modelo<br>para começar</p>
+                </div>
 
-        <!-- Loading spinner -->
-        <div class="canvas-loading" id="canvasLoading">
-          <div class="spinner"></div>
-          Carregando mockup…
-        </div>
+                <!-- Loading spinner -->
+                <div class="canvas-loading" id="canvasLoading">
+                    <div class="spinner"></div>
+                    Carregando mockup…
+                </div>
 
-        <!-- Canvas principal — 3 camadas:
+                <!-- Canvas principal — 3 camadas:
              0: mockup AVIF  |  1: arte do usuário (mascarada)  |  2: linha de corte -->
-        <canvas id="phoneCanvas"></canvas>
+                <canvas id="phoneCanvas"></canvas>
 
-      </div>
+            </div>
 
-      <!-- Floating hint -->
-      <div class="canvas-float-hint" id="canvasHint">Clique e Arraste para ajustar</div>
+            <!-- Floating hint -->
+            <div class="canvas-float-hint" id="canvasHint">Clique e Arraste para ajustar</div>
 
-      <!-- Stepper (inferior) -->
-      <div class="stepper" id="stepper">
-        <div class="step-item active" id="stepItem1">
-          <div class="step-num">1</div>
-          <div class="step-label">Modelo</div>
-        </div>
-        <div class="step-connector" id="stepConn1"></div>
-        <div class="step-item" id="stepItem2">
-          <div class="step-num">2</div>
-          <div class="step-label">Foto</div>
-        </div>
-        <div class="step-connector" id="stepConn2"></div>
-        <div class="step-item" id="stepItem3">
-          <div class="step-num">3</div>
-          <div class="step-label">Ajuste</div>
-        </div>
-        <div class="step-connector" id="stepConn3"></div>
-        <div class="step-item" id="stepItem4">
-          <div class="step-num">4</div>
-          <div class="step-label">Finalizar</div>
-        </div>
-      </div>
+            <!-- Stepper (inferior) -->
+            <div class="stepper" id="stepper">
+                <div class="step-item active" id="stepItem1">
+                    <div class="step-num">1</div>
+                    <div class="step-label">Modelo</div>
+                </div>
+                <div class="step-connector" id="stepConn1"></div>
+                <div class="step-item" id="stepItem2">
+                    <div class="step-num">2</div>
+                    <div class="step-label">Foto</div>
+                </div>
+                <div class="step-connector" id="stepConn2"></div>
+                <div class="step-item" id="stepItem3">
+                    <div class="step-num">3</div>
+                    <div class="step-label">Ajuste</div>
+                </div>
+                <div class="step-connector" id="stepConn3"></div>
+                <div class="step-item" id="stepItem4">
+                    <div class="step-num">4</div>
+                    <div class="step-label">Finalizar</div>
+                </div>
+            </div>
 
-    </main>
+        </main>
 
 
-    <!-- ══════════════════════════════════════
+        <!-- ══════════════════════════════════════
          PAINEL 3: DIREITO (Wizard)
     ══════════════════════════════════════ -->
-    <aside class="panel-right">
-
-      <!-- ── PASSO 1: Modelo ── -->
-      <div class="step-panel" id="stepPanel1">
-
-        <div class="panel-right-title">Escolhe o Modelo</div>
-
-        <!-- Badge do modelo selecionado -->
-        <div class="model-selected-badge" id="modelSelectedBadge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-          <span id="modelSelectedName">—</span>
-        </div>
-
-        <!-- Layer Marca -->
-        <div class="inline-layer" id="layerBrand" style="display:flex;">
-          <div class="field-label">Marca</div>
-          <div class="brands-grid" id="brandsGrid"></div>
-        </div>
-
-        <!-- Layer Série -->
-        <div class="inline-layer" id="layerSeries" style="display:none;">
-          <button class="dropdown-back" id="backFromSeries">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Voltar
-          </button>
-          <div class="field-label">Série</div>
-          <div class="series-scroll" id="seriesScroll"></div>
-        </div>
-
-        <!-- Layer Modelo -->
-        <div class="inline-layer" id="layerModel" style="display:none;">
-          <button class="dropdown-back" id="backFromModel">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Voltar
-          </button>
-          <div class="field-label" id="modelLayerHeader">Modelo</div>
-          <div class="models-list" id="modelsList"></div>
-        </div>
-
-      </div>
-
-      <!-- ── PASSO 2: Foto ── -->
-      <div class="step-panel" id="stepPanel2" style="display:none;">
-
-        <div class="panel-right-title">Upload da Imagem</div>
-
-        <div class="field-label">Tua imagem</div>
-        <input type="file" id="fileInput" accept="image/*" style="display:none">
-        <button class="upload-btn" id="uploadBtn" disabled>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" y1="3" x2="12" y2="15" />
-          </svg>
-          Faça upload aqui
-        </button>
-
-        <div class="upload-status" id="uploadStatus">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-          <span id="uploadName">Imagem carregada</span>
-        </div>
-
-      </div>
-
-      <!-- ── PASSO 3: Ajuste ── -->
-      <div class="step-panel" id="stepPanel3" style="display:none;">
-
-        <div class="panel-right-title">Ajusta a Imagem</div>
-
-        <div class="field-label">Ferramentas</div>
-
-        <!-- Toolbar com 5 botões quadrados -->
-        <div class="wizard-toolbar">
-
-          <button class="wizard-tool-btn" id="btnUndo" title="Desfazer" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 14 4 9 9 4" />
-              <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
-            </svg>
-          </button>
-
-          <button class="wizard-tool-btn" id="btnFit" title="Maximizar" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-            </svg>
-          </button>
-
-          <button class="wizard-tool-btn" id="btnRotate" title="Rotacionar" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 2v6h-6" />
-              <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
-            </svg>
-          </button>
-
-          <button class="wizard-tool-btn" id="btnZoomIn" title="Zoom +" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              <line x1="11" y1="8" x2="11" y2="14" />
-              <line x1="8" y1="11" x2="14" y2="11" />
-            </svg>
-          </button>
-
-          <button class="wizard-tool-btn" id="btnZoomOut" title="Zoom −" disabled>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              <line x1="8" y1="11" x2="14" y2="11" />
-            </svg>
-          </button>
-
-        </div>
-
-        <!-- Indicators -->
-        <div class="indicators-row">
-          <div class="scale-pill">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <span id="scaleLabel">100%</span>
-          </div>
-          <div class="rotation-pill" id="rotationRow" style="display:none;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M21 2v6h-6" />
-              <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
-            </svg>
-            <span id="rotationLabel">0°</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ── PASSO 4: Finalizar ── -->
-      <div class="step-panel" id="stepPanel4" style="display:none;">
-
-        <div class="panel-right-title">Finalizar</div>
-
-        <div class="model-name-display">
-          <div class="label">Modelo selecionado</div>
-          <div class="name" id="selectedModelDisplay">—</div>
-        </div>
-
-        <button class="download-btn" id="downloadBtn" disabled>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Baixar Preview
-        </button>
-
-      </div>
-
-      <!-- ── NAVEGAÇÃO DO WIZARD ── -->
-      <div class="wizard-nav">
-        <button class="nav-btn nav-prev" id="btnPrev" disabled>Voltar</button>
-        <button class="nav-btn nav-next" id="btnNext">Próximo Passo</button>
-      </div>
-
-    </aside>
-
-  </div><!-- /.workspace -->
-
-
-  <script>
-
-    /* ================================================================
-     * MOBIFANS — PREVIEW DE CAPINHAS
-     * ================================================================
-     *
-     * ARQUITETURA DO CANVAS: 3 camadas sobrepostas
-     *   CAMADA 0 → Mockup AVIF (aparelho)
-     *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
-     *   CAMADA 2 → Linha de corte (stroke do path SVGs)
-     * ================================================================ */
-
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    const DISPLAY_H = 520;
-    const FACA_SVG_W = 500;
-    const FACA_SVG_H = 1000;
-
-    /* ── MODELOS ── */
-    const MODELS = [];
-
-    /* ── ESTADO ── */
-    const state = {
-      model: null,
-      img: null,
-      x: 0, y: 0,
-      scale: 1.0,
-      rotation: 0,
-      history: [],
-    };
-
-    /* ── WIZARD STATE ── */
-    let currentStep = 1;
-
-    /* ── DOM ── */
-    const canvas = document.getElementById('phoneCanvas');
-    const ctx = canvas.getContext('2d');
-    const sel = document.getElementById('modelSelect');
-    const fileInput = document.getElementById('fileInput');
-    const loadingEl = document.getElementById('canvasLoading');
-
-
-    /* ================================================================
-     * WIZARD — navegação entre passos
-     * ================================================================ */
-
-    function showStep(n) {
-      currentStep = n;
-
-      for (let i = 1; i <= 4; i++) {
-        const p = document.getElementById(`stepPanel${i}`);
-        if (p) p.style.display = i === n ? 'flex' : 'none';
-      }
-
-      updateStepper();
-
-      document.getElementById('btnPrev').disabled = n === 1;
-      const btnNext = document.getElementById('btnNext');
-      btnNext.textContent = n === 4 ? '—' : 'Próximo Passo';
-      btnNext.disabled = n === 4;
-
-      // Hint only visible on step 3 when image is loaded
-      const hint = document.getElementById('canvasHint');
-      hint.style.display = (n === 3 && !!state.img) ? 'block' : 'none';
-
-      // Update step 4 model name
-      if (n === 4) {
-        document.getElementById('selectedModelDisplay').textContent =
-          state.model ? state.model.name : '—';
-      }
-    }
-
-    function updateStepper() {
-      for (let i = 1; i <= 4; i++) {
-        const item = document.getElementById(`stepItem${i}`);
-        if (!item) continue;
-        item.classList.remove('active', 'completed');
-        if (i < currentStep) item.classList.add('completed');
-        else if (i === currentStep) item.classList.add('active');
-      }
-
-      // Connector color (between step i and i+1 is completed when step i is completed)
-      for (let i = 1; i <= 3; i++) {
-        const conn = document.getElementById(`stepConn${i}`);
-        if (conn) conn.style.background = i < currentStep ? '#22C55E' : '#E2E8F0';
-      }
-    }
-
-    document.getElementById('btnPrev').addEventListener('click', () => {
-      if (currentStep > 1) showStep(currentStep - 1);
-    });
-
-    document.getElementById('btnNext').addEventListener('click', () => {
-      if (currentStep === 1 && !state.model) return; // need model first
-      if (currentStep === 2 && !state.img) return;   // need image first
-      if (currentStep < 4) showStep(currentStep + 1);
-    });
-
-
-    /* ================================================================
-     * DROPDOWN — hierarquia de marca/série/modelo
-     * ================================================================ */
-
-    const dropdownState = {
-      selectedBrand: null,
-      selectedSeries: null,
-      hierarchy: {},
-    };
-
-    function organizeModelsByBrandAndSeries() {
-      const h = {};
-      MODELS.forEach(m => {
-        const parts = m.name.split(' ');
-        const brand = parts[0];
-        const displayBrand = brand === 'iPhone' ? 'Apple' : brand;
-        const series = displayBrand === 'Apple' ? parts[1] : parts[1].charAt(0);
-        if (!h[displayBrand]) h[displayBrand] = {};
-        if (!h[displayBrand][series]) h[displayBrand][series] = [];
-        h[displayBrand][series].push(m);
-      });
-      return h;
-    }
-
-    function renderBrands() {
-      const grid = document.getElementById('brandsGrid');
-      grid.innerHTML = '';
-      Object.keys(dropdownState.hierarchy).sort().forEach(brand => {
-        const chip = document.createElement('button');
-        chip.className = 'brand-chip';
-        chip.textContent = brand;
-        chip.onclick = () => selectBrand(brand);
-        grid.appendChild(chip);
-      });
-    }
-
-    function renderSeries() {
-      const scroll = document.getElementById('seriesScroll');
-      scroll.innerHTML = '';
-      if (!dropdownState.selectedBrand) return;
-      const series = Object.keys(dropdownState.hierarchy[dropdownState.selectedBrand])
-        .sort((a, b) => {
-          const an = parseInt(a), bn = parseInt(b);
-          if (!isNaN(an) && !isNaN(bn)) return bn - an;
-          return a.localeCompare(b);
-        });
-      series.forEach(s => {
-        const chip = document.createElement('button');
-        chip.className = 'series-chip';
-        chip.textContent = dropdownState.selectedBrand === 'Apple' ? `Linha ${s}` : `Série ${s}`;
-        chip.onclick = () => selectSeries(s);
-        scroll.appendChild(chip);
-      });
-    }
-
-    function renderModels() {
-      const list = document.getElementById('modelsList');
-      list.innerHTML = '';
-      if (!dropdownState.selectedBrand || !dropdownState.selectedSeries) return;
-
-      const models = dropdownState.hierarchy[dropdownState.selectedBrand][dropdownState.selectedSeries];
-      document.getElementById('modelLayerHeader').textContent =
-        dropdownState.selectedBrand === 'Apple'
-          ? `Linha ${dropdownState.selectedSeries}`
-          : `Série ${dropdownState.selectedSeries}`;
-
-      models.forEach(m => {
-        const item = document.createElement('button');
-        item.className = 'model-item';
-        item.textContent = m.name;
-        item.onclick = () => selectModel(m);
-        list.appendChild(item);
-      });
-    }
-
-    function selectBrand(brand) {
-      dropdownState.selectedBrand = brand;
-      dropdownState.selectedSeries = null;
-      renderSeries();
-      document.getElementById('layerBrand').style.display = 'none';
-      document.getElementById('layerSeries').style.display = 'flex';
-    }
-
-    function selectSeries(series) {
-      dropdownState.selectedSeries = series;
-      renderModels();
-      document.getElementById('layerSeries').style.display = 'none';
-      document.getElementById('layerModel').style.display = 'flex';
-    }
-
-    function selectModel(m) {
-      sel.value = m.id;
-      sel.dispatchEvent(new Event('change'));
-      // Show badge and reset to brand layer for re-selection
-      const badge = document.getElementById('modelSelectedBadge');
-      document.getElementById('modelSelectedName').textContent = m.name;
-      badge.style.display = 'flex';
-      // Reset to brand layer
-      dropdownState.selectedBrand = null;
-      dropdownState.selectedSeries = null;
-      document.getElementById('layerModel').style.display = 'none';
-      document.getElementById('layerSeries').style.display = 'none';
-      document.getElementById('layerBrand').style.display = 'flex';
-      renderBrands();
-    }
-
-    document.getElementById('backFromSeries').addEventListener('click', () => {
-      dropdownState.selectedBrand = null;
-      renderBrands();
-      document.getElementById('layerSeries').style.display = 'none';
-      document.getElementById('layerBrand').style.display = 'flex';
-    });
-
-    document.getElementById('backFromModel').addEventListener('click', () => {
-      dropdownState.selectedSeries = null;
-      renderSeries();
-      document.getElementById('layerModel').style.display = 'none';
-      document.getElementById('layerSeries').style.display = 'flex';
-    });
-
-
-    /* ================================================================
-     * UTILITÁRIOS DE CANVAS
-     * ================================================================ */
-
-    function getFacaPath(m) {
-      const d = m.facaMaskPath;
-      if (!d) return null;
-      const sx = m.fw / FACA_SVG_W;
-      const sy = m.fh / FACA_SVG_H;
-
-      // Build combined path: outer case boundary + camera/sensor circles.
-      // When filled with evenodd, the circles become transparent holes so
-      // camera hardware shows through the user art on Layer 1 and remains
-      // visible in the Layer 2 overlay.
-      const base = new Path2D();
-      base.addPath(new Path2D(d));
-      if (m.facaCircles) {
-        for (const { cx, cy, r } of m.facaCircles) {
-          base.moveTo(cx + r, cy);
-          base.arc(cx, cy, r, 0, Math.PI * 2);
-        }
-      }
-
-      if (sx === 1 && sy === 1) return base;
-      const matrix = new DOMMatrix().scale(sx, sy);
-      const scaled = new Path2D();
-      scaled.addPath(base, matrix);
-      return scaled;
-    }
-
-    function initCanvas(m) {
-      const wrapper = document.getElementById('canvasWrapper');
-      const availH = Math.max((wrapper.clientHeight || 400) - 16, 200);
-      const availW = Math.max((wrapper.clientWidth || 300) - 16, 200);
-
-      let cssH = Math.min(DISPLAY_H, availH);
-      let cssW = Math.round(cssH * m.fw / m.fh);
-
-      if (cssW > availW) {
-        cssW = availW;
-        cssH = Math.round(cssW * m.fh / m.fw);
-      }
-
-      canvas.width = m.fw * DPR;
-      canvas.height = m.fh * DPR;
-      canvas.style.width = cssW + 'px';
-      canvas.style.height = cssH + 'px';
-    }
-
-    function cssToLogical(dx, dy) {
-      const m = state.model;
-      return {
-        dx: dx * m.fw / canvas.clientWidth,
-        dy: dy * m.fh / canvas.clientHeight,
-      };
-    }
-
-
-    /* ================================================================
-     * CAMADA 0 — MOCKUP DO APARELHO
-     * ================================================================ */
-
-    function drawLayer0(c, m) {
-      if (m._mockupImg) {
-        c.drawImage(m._mockupImg, 0, 0, m.fw, m.fh);
-        return;
-      }
-      const path = getFacaPath(m);
-      c.fillStyle = '#e0e0e0';
-      c.fillRect(0, 0, m.fw, m.fh);
-      if (path) {
-        c.fillStyle = '#f8f8f8';
-        c.fill(path);
-        c.strokeStyle = '#bbb';
-        c.lineWidth = 1;
-        c.stroke(path);
-      }
-      c.fillStyle = '#aaa';
-      c.font = "500 11px 'Plus Jakarta Sans', sans-serif";
-      c.textAlign = 'center';
-      c.textBaseline = 'middle';
-      c.fillText('Mockup carregando…', m.fw / 2, m.fh / 2);
-      c.textAlign = 'left';
-      c.textBaseline = 'alphabetic';
-    }
-
-
-    /* ================================================================
-     * CAMADA 1 — ARTE DO USUÁRIO (recortada pela faca)
-     * ================================================================ */
-
-    function drawLayer1(mainCtx, m, s, sc) {
-      const tmp = document.createElement('canvas');
-      tmp.width = m.fw * sc;
-      tmp.height = m.fh * sc;
-      const tc = tmp.getContext('2d');
-      tc.setTransform(sc, 0, 0, sc, 0, 0);
-
-      const cx = m._facaCenter ? m._facaCenter.x : m.fw / 2;
-      const cy = m._facaCenter ? m._facaCenter.y : m.fh / 2;
-      const pw = m._facaCenter ? m._facaCenter.w : m.fw * 0.9;
-      const ph = m._facaCenter ? m._facaCenter.h : m.fh * 0.9;
-
-      const rotated90 = Math.round(s.rotation / 90) % 2 !== 0;
-      const iw = rotated90 ? s.img.naturalHeight : s.img.naturalWidth;
-      const ih = rotated90 ? s.img.naturalWidth : s.img.naturalHeight;
-      const baseScale = Math.max(pw / iw, ph / ih);
-      const totalScale = baseScale * s.scale;
-
-      tc.save();
-      tc.translate(cx + s.x, cy + s.y);
-      tc.rotate(s.rotation * Math.PI / 180);
-      tc.scale(totalScale, totalScale);
-      tc.drawImage(s.img, -s.img.naturalWidth / 2, -s.img.naturalHeight / 2);
-      tc.restore();
-
-      tc.globalCompositeOperation = 'destination-in';
-      const maskPath = getFacaPath(m);
-      if (maskPath) {
-        tc.fillStyle = '#fff';
-        tc.fill(maskPath, 'evenodd');
-      }
-      tc.globalCompositeOperation = 'source-over';
-
-      mainCtx.setTransform(1, 0, 0, 1, 0, 0);
-      mainCtx.drawImage(tmp, 0, 0);
-    }
-
-    function drawLayer1Empty(c, m) {
-      const path = getFacaPath(m);
-      if (!path) return;
-      c.save();
-      c.clip(path, 'evenodd');
-      c.fillStyle = 'rgba(0,0,0,0.06)';
-      c.fillRect(0, 0, m.fw, m.fh);
-      const cx = m._facaCenter ? m._facaCenter.x : m.fw / 2;
-      const cy = m._facaCenter ? m._facaCenter.y : m.fh / 2;
-      c.fillStyle = 'rgba(0,0,0,0.30)';
-      c.font = "600 24px 'Plus Jakarta Sans', sans-serif";
-      c.textAlign = 'center';
-      c.textBaseline = 'middle';
-      c.fillText('Faz upload da tua imagem →', cx, cy);
-      c.restore();
-    }
-
-
-    /* ================================================================
-     * CAMADA 2 — OVERLAY DO MOCKUP (máscara inversa da faca)
-     * Renderiza o AVIF novamente, apagando a área da faca via
-     * destination-out, deixando visível apenas bordas/botões/câmeras.
-     * ================================================================ */
-
-    function drawLayer2(mainCtx, m, sc) {
-      const path = getFacaPath(m);
-      if (!path) return;
-
-      if (!m._mockupImg) {
-        // Fallback: traço do contorno quando o AVIF ainda não carregou
-        mainCtx.save();
-        mainCtx.setTransform(sc, 0, 0, sc, 0, 0);
-        mainCtx.strokeStyle = 'rgba(35, 31, 32, 0.55)';
-        mainCtx.lineWidth = 1.2;
-        mainCtx.setLineDash([]);
-        mainCtx.stroke(path);
-        mainCtx.restore();
-        mainCtx.setTransform(1, 0, 0, 1, 0, 0);
-        return;
-      }
-
-      const tmp = document.createElement('canvas');
-      tmp.width = m.fw * sc;
-      tmp.height = m.fh * sc;
-      const tc = tmp.getContext('2d');
-      tc.setTransform(sc, 0, 0, sc, 0, 0);
-
-      // Desenha o mockup completo no buffer temporário
-      tc.drawImage(m._mockupImg, 0, 0, m.fw, m.fh);
-
-      // Apaga a área da faca → sobra a parte externa (bordas, botões) + furos das câmeras
-      tc.globalCompositeOperation = 'destination-out';
-      tc.fillStyle = '#fff';
-      tc.fill(path, 'evenodd');
-      tc.globalCompositeOperation = 'source-over';
-
-      mainCtx.setTransform(1, 0, 0, 1, 0, 0);
-      mainCtx.drawImage(tmp, 0, 0);
-    }
-
-
-    /* ================================================================
-     * RENDER PRINCIPAL
-     * ================================================================ */
-
-    function draw() {
-      if (!state.model) return;
-      renderAllLayers(ctx, state.model, state, DPR);
-    }
-
-    function renderAllLayers(c, m, s, sc) {
-      c.setTransform(1, 0, 0, 1, 0, 0);
-      c.clearRect(0, 0, m.fw * sc, m.fh * sc);
-      c.fillStyle = '#ffffff';
-      c.fillRect(0, 0, m.fw * sc, m.fh * sc);
-      c.setTransform(sc, 0, 0, sc, 0, 0);
-
-      // Camada 0: mockup AVIF completo (fundo do aparelho)
-      drawLayer0(c, m);
-
-      // Camada 1: arte do usuário recortada pela faca
-      if (s.img) {
-        drawLayer1(c, m, s, sc);
-        c.setTransform(sc, 0, 0, sc, 0, 0);
-      } else {
-        drawLayer1Empty(c, m);
-      }
-
-      // Camada 2: mockup AVIF com máscara inversa (bordas, botões, câmeras)
-      drawLayer2(c, m, sc);
-    }
-
-
-    /* ================================================================
-     * CARREGAMENTO DE IMAGENS DO MODELO
-     * ================================================================ */
-
-    async function loadModelImages(m) {
-      const loads = [];
-
-      if (m.mockupPath && !m._mockupImg) {
-        loads.push(new Promise(resolve => {
-          const img = new Image();
-          img.onload = () => {
-            m._mockupImg = img;
-            if (img.naturalWidth !== m.fw || img.naturalHeight !== m.fh) {
-              m.fw = img.naturalWidth;
-              m.fh = img.naturalHeight;
-            }
-            resolve();
-          };
-          img.onerror = () => { console.warn('[Mobifans] Mockup não encontrado:', m.mockupPath); resolve(); };
-          img.src = m.mockupPath;
-        }));
-      }
-
-      await Promise.all(loads);
-
-      if (m.facaMaskPath && !m._facaCenter) {
-        m._facaCenter = computeFacaCenter(m);
-      }
-    }
-
-    function computeFacaCenter(m) {
-      const path = getFacaPath(m);
-      if (!path) return null;
-      const tmp = document.createElement('canvas');
-      tmp.width = m.fw; tmp.height = m.fh;
-      const tc = tmp.getContext('2d');
-      const STEPS = 40;
-      let minX = m.fw, maxX = 0, minY = m.fh, maxY = 0, found = false;
-      for (let xi = 0; xi <= STEPS; xi++) {
-        for (let yi = 0; yi <= STEPS; yi++) {
-          const x = (xi / STEPS) * m.fw;
-          const y = (yi / STEPS) * m.fh;
-          if (tc.isPointInPath(path, x, y)) {
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-            found = true;
-          }
-        }
-      }
-      if (!found) return { x: m.fw / 2, y: m.fh / 2, w: m.fw * 0.85, h: m.fh * 0.92 };
-      return { x: (minX + maxX) / 2, y: (minY + maxY) / 2, w: maxX - minX, h: maxY - minY };
-    }
-
-
-    /* ================================================================
-     * DRAG — arrastar a arte
-     * ================================================================ */
-
-    let dragging = false;
-    let dragOrigin = { x: 0, y: 0 };
-    let posOrigin = { x: 0, y: 0 };
-
-    canvas.addEventListener('mousedown', e => {
-      if (!state.img) return;
-      dragging = true;
-      dragOrigin = { x: e.clientX, y: e.clientY };
-      posOrigin = { x: state.x, y: state.y };
-      canvas.classList.add('dragging');
-    });
-
-    window.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      const { dx, dy } = cssToLogical(e.clientX - dragOrigin.x, e.clientY - dragOrigin.y);
-      state.x = posOrigin.x + dx;
-      state.y = posOrigin.y + dy;
-      draw();
-    });
-
-    window.addEventListener('mouseup', () => {
-      if (!dragging) return;
-      dragging = false;
-      canvas.classList.remove('dragging');
-      pushHistory();
-    });
-
-
-    /* ================================================================
-     * TOUCH — arrastar + pinch zoom
-     * ================================================================ */
-
-    let touchDragging = false;
-    let lastPinchDist = 0;
-    let pinchScaleBase = 1;
-
-    canvas.addEventListener('touchstart', e => {
-      if (!state.img) return;
-      if (e.touches.length === 1) {
-        e.preventDefault();
-        touchDragging = true;
-        dragOrigin = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        posOrigin = { x: state.x, y: state.y };
-      } else if (e.touches.length === 2) {
-        e.preventDefault();
-        touchDragging = false;
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        lastPinchDist = Math.hypot(dx, dy);
-        pinchScaleBase = state.scale;
-      }
-    }, { passive: false });
-
-    canvas.addEventListener('touchmove', e => {
-      if (!state.img) return;
-      e.preventDefault();
-      if (e.touches.length === 1 && touchDragging) {
-        const { dx, dy } = cssToLogical(
-          e.touches[0].clientX - dragOrigin.x,
-          e.touches[0].clientY - dragOrigin.y
-        );
-        state.x = posOrigin.x + dx;
-        state.y = posOrigin.y + dy;
-        draw();
-      } else if (e.touches.length === 2 && lastPinchDist > 0) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        applyScale(pinchScaleBase * (Math.hypot(dx, dy) / lastPinchDist));
-      }
-    }, { passive: false });
-
-    canvas.addEventListener('touchend', e => {
-      if (e.touches.length === 0) {
-        if (touchDragging) pushHistory();
-        touchDragging = false;
-        lastPinchDist = 0;
-      }
-    });
-
-
-    /* ================================================================
-     * WHEEL — zoom com scroll
-     * ================================================================ */
-
-    canvas.addEventListener('wheel', e => {
-      if (!state.img) return;
-      e.preventDefault();
-      applyScale(state.scale + (e.deltaY > 0 ? -0.06 : 0.06));
-    }, { passive: false });
-
-
-    /* ================================================================
-     * MOTION HELPERS
-     * ================================================================ */
-
-    function triggerBump(el) {
-      if (!el) return;
-      el.classList.remove('pill-bump');
-      void el.offsetWidth;
-      el.classList.add('pill-bump');
-      el.addEventListener('animationend', () => el.classList.remove('pill-bump'), { once: true });
-    }
-
-
-    /* ================================================================
-     * ZOOM
-     * ================================================================ */
-
-    function applyScale(v) {
-      state.scale = Math.max(0.2, Math.min(3.0, v));
-      document.getElementById('scaleLabel').textContent = Math.round(state.scale * 100) + '%';
-      triggerBump(document.querySelector('.scale-pill'));
-      draw();
-    }
-
-    function resetView() {
-      pushHistory();
-      state.x = 0; state.y = 0;
-      state.scale = 1; state.rotation = 0;
-      document.getElementById('scaleLabel').textContent = '100%';
-      document.getElementById('rotationLabel').textContent = '0°';
-      document.getElementById('rotationRow').style.display = 'none';
-      draw();
-    }
-
-
-    /* ================================================================
-     * HISTÓRICO — pilha de undo
-     * ================================================================ */
-
-    function pushHistory() {
-      state.history.push({ x: state.x, y: state.y, scale: state.scale, rotation: state.rotation });
-      if (state.history.length > 20) state.history.shift();
-      syncUI();
-    }
-
-    function undo() {
-      if (!state.history.length) return;
-      const snap = state.history.pop();
-      state.x = snap.x; state.y = snap.y;
-      state.scale = snap.scale; state.rotation = snap.rotation;
-      document.getElementById('scaleLabel').textContent = Math.round(state.scale * 100) + '%';
-      document.getElementById('rotationLabel').textContent = state.rotation + '°';
-      document.getElementById('rotationRow').style.display = state.rotation !== 0 ? 'flex' : 'none';
-      draw();
-      syncUI();
-    }
-
-
-    /* ================================================================
-     * SYNC UI
-     * ================================================================ */
-
-    function syncUI() {
-      const hasModel = !!state.model;
-      const hasImg = !!state.img;
-      const hasHist = state.history.length > 0;
-
-      document.getElementById('uploadBtn').disabled = !hasModel;
-      document.getElementById('downloadBtn').disabled = !hasImg;
-      document.getElementById('btnUndo').disabled = !hasImg || !hasHist;
-      document.getElementById('btnFit').disabled = !hasImg;
-      document.getElementById('btnReset').disabled = !hasImg;
-      document.getElementById('btnRotate').disabled = !hasImg;
-      document.getElementById('btnZoomIn').disabled = !hasImg;
-      document.getElementById('btnZoomOut').disabled = !hasImg;
-
-      // Update hint visibility
-      const hint = document.getElementById('canvasHint');
-      hint.style.display = (currentStep === 3 && hasImg) ? 'block' : 'none';
-    }
-
-
-    /* ================================================================
-     * TOOLBAR — handlers
-     * ================================================================ */
-
-    document.getElementById('btnUndo').onclick = undo;
-    document.getElementById('btnFit').onclick = resetView;
-    document.getElementById('btnReset').onclick = resetView;
-
-    document.getElementById('btnRotate').onclick = () => {
-      pushHistory();
-      state.rotation = (state.rotation + 90) % 360;
-      document.getElementById('rotationLabel').textContent = state.rotation + '°';
-      document.getElementById('rotationRow').style.display = state.rotation !== 0 ? 'flex' : 'none';
-      triggerBump(document.querySelector('.rotation-pill'));
-      draw();
-    };
-
-    document.getElementById('btnZoomIn').onclick = () => {
-      pushHistory();
-      applyScale(state.scale + 0.1);
-    };
-
-    document.getElementById('btnZoomOut').onclick = () => {
-      pushHistory();
-      applyScale(state.scale - 0.1);
-    };
-
-
-    /* ================================================================
-     * CARREGAMENTO E INICIALIZAÇÃO DA APP
-     * ================================================================ */
-
-    function addModelOption(m) {
-      const opt = document.createElement('option');
-      opt.value = m.id;
-      opt.textContent = m.name;
-      sel.appendChild(opt);
-    }
-
-    async function initApp() {
-      try {
-        const csvResp = await fetch('server/data/models.csv');
-        if (!csvResp.ok) throw new Error('CSV não encontrado');
-        const csvText = await csvResp.text();
-
-        for (const row of csvText.split('\n').map(l => l.trim()).filter(l => l)) {
-          const [name, mockupPath, facaSvgPath] = row.split(',').map(s => s.trim());
-          if (!name || !mockupPath) continue;
-
-          const mockupFile = mockupPath.split('/').pop();
-          const facaFile = facaSvgPath ? facaSvgPath.split('/').pop() : null;
-
-          let facaMaskPath = null;
-          let facaCircles = [];
-          if (facaFile) {
-            try {
-              const svgResp = await fetch(`public/assets/facas/${facaFile}`);
-              if (svgResp.ok) {
-                const svgText = await svgResp.text();
-                const dMatch = svgText.match(/\sd="([^"]+)"/);
-                facaMaskPath = dMatch ? dMatch[1] : null;
-                const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
-                facaCircles = circleMatches.map(cm => {
-                  const a = cm[1];
-                  return {
-                    cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
-                    cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
-                    r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
-                  };
-                }).filter(c => c.r > 0);
-              }
-            } catch (e) {
-              console.warn('[Mobifans] SVG não encontrado:', facaFile);
-            }
-          }
-
-          const m = {
-            id: name.toLowerCase().replace(/\s+/g, '-'),
-            name,
-            mockupPath: `public/assets/previews/${mockupFile}`,
-            facaMaskPath,
-            facaCircles,
-            fw: 500, fh: 1000,
-            _mockupImg: null,
-          };
-
-          MODELS.push(m);
-          addModelOption(m);
-        }
-
-        dropdownState.hierarchy = organizeModelsByBrandAndSeries();
-        renderBrands();
-
-      } catch (err) {
-        console.error('[Mobifans] Erro ao carregar modelos:', err);
-      } finally {
-        finishLoading();
-      }
-    }
-
-    initApp();
-
-
-    /* ================================================================
-     * HANDLER DE MUDANÇA DE MODELO
-     * ================================================================ */
-
-    sel.addEventListener('change', async () => {
-      const found = MODELS.find(m => m.id === sel.value);
-
-      if (!found) {
-        state.model = null;
-        canvas.style.display = 'none';
-        document.getElementById('emptyState').style.display = 'flex';
-        syncUI();
-        return;
-      }
-
-      loadingEl.classList.add('visible');
-      document.getElementById('emptyState').style.display = 'none';
-
-      state.model = found;
-      state.x = 0; state.y = 0;
-      state.scale = 1; state.rotation = 0;
-      state.history = [];
-
-      document.getElementById('scaleLabel').textContent = '100%';
-      document.getElementById('rotationLabel').textContent = '0°';
-      document.getElementById('rotationRow').style.display = 'none';
-
-      initCanvas(found);
-      canvas.style.display = 'block';
-      canvas.classList.add('entering');
-      canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), { once: true });
-
-      await loadModelImages(found);
-      initCanvas(found);
-
-      loadingEl.classList.remove('visible');
-      draw();
-      syncUI();
-    });
-
-
-    /* ================================================================
-     * UPLOAD DA ARTE
-     * ================================================================ */
-
-    document.getElementById('uploadBtn').onclick = () => fileInput.click();
-
-    fileInput.addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          state.img = img;
-          state.x = 0; state.y = 0;
-          state.scale = 1; state.rotation = 0;
-          state.history = [];
-
-          document.getElementById('scaleLabel').textContent = '100%';
-          document.getElementById('rotationLabel').textContent = '0°';
-          document.getElementById('rotationRow').style.display = 'none';
-
-          const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
-          document.getElementById('uploadName').textContent = name;
-          const uploadStatus = document.getElementById('uploadStatus');
-          uploadStatus.style.display = 'flex';
-          uploadStatus.classList.remove('animating');
-          void uploadStatus.offsetWidth;
-          uploadStatus.classList.add('animating');
-          uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), { once: true });
-
-          draw();
-          syncUI();
+        <aside class="panel-right">
+
+            <!-- ── PASSO 1: Modelo ── -->
+            <div class="step-panel" id="stepPanel1">
+
+                <div class="panel-right-title">Escolhe o Modelo</div>
+
+                <!-- Badge do modelo selecionado -->
+                <div class="model-selected-badge" id="modelSelectedBadge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span id="modelSelectedName">—</span>
+                </div>
+
+                <!-- Layer Marca -->
+                <div class="inline-layer" id="layerBrand" style="display:flex;">
+                    <div class="field-label">Marca</div>
+                    <div class="brands-grid" id="brandsGrid"></div>
+                </div>
+
+                <!-- Layer Série -->
+                <div class="inline-layer" id="layerSeries" style="display:none;">
+                    <button class="dropdown-back" id="backFromSeries">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        Voltar
+                    </button>
+                    <div class="field-label">Série</div>
+                    <div class="series-scroll" id="seriesScroll"></div>
+                </div>
+
+                <!-- Layer Modelo -->
+                <div class="inline-layer" id="layerModel" style="display:none;">
+                    <button class="dropdown-back" id="backFromModel">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        Voltar
+                    </button>
+                    <div class="field-label" id="modelLayerHeader">Modelo</div>
+                    <div class="models-list" id="modelsList"></div>
+                </div>
+
+            </div>
+
+            <!-- ── PASSO 2: Foto ── -->
+            <div class="step-panel" id="stepPanel2" style="display:none;">
+
+                <div class="panel-right-title">Upload da Imagem</div>
+
+                <!-- Layout selector -->
+                <div class="field-label">Layout da Capinha</div>
+                <div class="layout-grid" id="layoutGrid">
+                    <button class="layout-btn active" data-layout="RETRATO">Retrato</button>
+                    <button class="layout-btn" data-layout="3-FOTOS">3 Fotos</button>
+                    <button class="layout-btn" data-layout="DIVISOR-2">Divisor</button>
+                </div>
+
+                <!-- Slot indicator (visível quando layout > 1) -->
+                <div class="slot-indicator" id="slotIndicator" style="display:none;">
+                    <div class="field-label">Foto ativa</div>
+                    <div class="slot-dots" id="slotDots"></div>
+                </div>
+
+                <div class="field-label">Tua imagem</div>
+                <input type="file" id="fileInput" accept="image/*" style="display:none">
+                <button class="upload-btn" id="uploadBtn" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span id="uploadBtnLabel">Faça upload aqui</span>
+                </button>
+
+                <div class="upload-status" id="uploadStatus">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span id="uploadName">Imagem carregada</span>
+                </div>
+
+                <!-- ═══ FEATURE PAUSED: QR Upload / Conexão Mobile v1.8 ═══
+                     Para reativar: descomente este bloco HTML (+ CSS e JS correspondentes).
+                <div class="qr-divider">ou</div>
+
+                <button class="qr-trigger-btn" id="qrTriggerBtn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                        <path d="M14 14h3v3M17 20h3M20 17v3"/>
+                    </svg>
+                    Enviar do Celular via QR
+                </button>
+
+                <div class="qr-panel" id="qrPanel" style="display:none">
+                    <div id="qrCode"></div>
+                    <div class="qr-label">Escaneia com o teu celular</div>
+                    <div class="qr-url" id="qrUrl"></div>
+                    <div class="qr-waiting">Aguardando foto…</div>
+                    <button class="qr-cancel-btn" onclick="closeQrPanel()">Cancelar</button>
+                </div>
+                ═══ END FEATURE PAUSED ═══ -->
+
+            </div>
+
+            <!-- ── PASSO 3: Ajuste ── -->
+            <div class="step-panel" id="stepPanel3" style="display:none;">
+
+                <div class="panel-right-title">Ajusta a Imagem</div>
+
+                <div class="field-label">Ferramentas</div>
+
+                <!-- Toolbar com 5 botões quadrados -->
+                <div class="wizard-toolbar">
+
+                    <button class="wizard-tool-btn" id="btnUndo" title="Desfazer" disabled>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 14 4 9 9 4" />
+                            <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
+                        </svg>
+                    </button>
+
+                    <button class="wizard-tool-btn" id="btnFit" title="Maximizar" disabled>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                        </svg>
+                    </button>
+
+                    <button class="wizard-tool-btn" id="btnRotate" title="Rotacionar" disabled>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 2v6h-6" />
+                            <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
+                        </svg>
+                    </button>
+
+                    <button class="wizard-tool-btn" id="btnZoomIn" title="Zoom +" disabled>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="11" y1="8" x2="11" y2="14" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                        </svg>
+                    </button>
+
+                    <button class="wizard-tool-btn" id="btnZoomOut" title="Zoom −" disabled>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                        </svg>
+                    </button>
+
+                </div>
+
+                <!-- Seletor de slot ativo (visível quando layout > 1) -->
+                <div class="slot-selector-step3" id="slotSelectorStep3" style="display:none;">
+                    <div class="field-label">Foto ativa</div>
+                    <div class="slot-dots" id="slotDotsStep3"></div>
+                </div>
+
+                <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+                <div id="divisorControls" style="display:none;">
+                    <div class="field-label">Slots do Divisor</div>
+                    <div class="wizard-toolbar" style="gap:8px;">
+                        <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
+                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+                        <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
+                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
+                    </div>
+                </div>
+
+                <!-- Ajuste Fino (nudge) -->
+                <div id="nudgePanel" style="display:none;">
+                    <div class="field-label">Ajuste Fino</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
+                        <div></div>
+                        <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
+                        <div></div>
+                        <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda"
+                            disabled>←</button>
+                        <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
+                        <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita"
+                            disabled>→</button>
+                    </div>
+                </div>
+
+                <!-- Indicators -->
+                <div class="indicators-row">
+                    <div class="scale-pill">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <span id="scaleLabel">100%</span>
+                    </div>
+                    <div class="rotation-pill" id="rotationRow" style="display:none;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M21 2v6h-6" />
+                            <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
+                        </svg>
+                        <span id="rotationLabel">0°</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── PASSO 4: Finalizar ── -->
+            <div class="step-panel" id="stepPanel4" style="display:none;">
+
+                <div class="panel-right-title">Finalizar</div>
+
+                <div class="model-name-display">
+                    <div class="label">Modelo selecionado</div>
+                    <div class="name" id="selectedModelDisplay">—</div>
+                </div>
+
+                <button class="download-btn" id="downloadBtn" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Baixar Preview
+                </button>
+
+            </div>
+
+            <!-- ── NAVEGAÇÃO DO WIZARD ── -->
+            <div class="wizard-nav">
+                <button class="nav-btn nav-prev" id="btnPrev" disabled>Voltar</button>
+                <button class="nav-btn nav-next" id="btnNext">Próximo Passo</button>
+            </div>
+
+        </aside>
+
+    </div><!-- /.workspace -->
+
+
+    <script>
+        /* ================================================================
+         * MOBIFANS — PREVIEW DE CAPINHAS  v1.6
+         * ================================================================
+         * ARQUITETURA DO CANVAS: 3 camadas sobrepostas
+         *   CAMADA 0 → Mockup AVIF (aparelho)
+         *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
+         *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
+         * ================================================================ */
+
+        const DPR = Math.min(window.devicePixelRatio || 1, 2);
+        const DISPLAY_H = 520;
+        const FACA_SVG_W = 500;
+        const FACA_SVG_H = 1000;
+
+        /* ── GRIDS CUSTOMIZADOS — coordenadas normalizadas (0–1) no espaço da faca ── */
+        const CUSTOM_GRIDS = {
+            'RETRATO': [{
+                x: 0.25,
+                y: 0.25,
+                w: 0.5,
+                h: 0.5
+            },],
+            '3-FOTOS': [{
+                x: 0.55,
+                y: 0.15,
+                w: 0.3,
+                h: 0.3
+            },
+            {
+                x: 0.35,
+                y: 0.40,
+                w: 0.3,
+                h: 0.3
+            },
+            {
+                x: 0.15,
+                y: 0.65,
+                w: 0.3,
+                h: 0.3
+            },
+            ],
+            'DIVISOR-2': [{
+                x: 0,
+                y: 0,
+                w: 1,
+                h: 0.5
+            },
+            {
+                x: 0,
+                y: 0.5,
+                w: 1,
+                h: 0.5
+            },
+            ],
+            'DIVISOR-4': [{
+                x: 0,
+                y: 0,
+                w: 0.5,
+                h: 0.5
+            }, {
+                x: 0.5,
+                y: 0,
+                w: 0.5,
+                h: 0.5
+            },
+            {
+                x: 0,
+                y: 0.5,
+                w: 0.5,
+                h: 0.5
+            }, {
+                x: 0.5,
+                y: 0.5,
+                w: 0.5,
+                h: 0.5
+            },
+            ],
+            'DIVISOR-6': [{
+                x: 0,
+                y: 0,
+                w: 0.5,
+                h: 0.33
+            }, {
+                x: 0.5,
+                y: 0,
+                w: 0.5,
+                h: 0.33
+            },
+            {
+                x: 0,
+                y: 0.33,
+                w: 0.5,
+                h: 0.34
+            }, {
+                x: 0.5,
+                y: 0.33,
+                w: 0.5,
+                h: 0.34
+            },
+            {
+                x: 0,
+                y: 0.67,
+                w: 0.5,
+                h: 0.33
+            }, {
+                x: 0.5,
+                y: 0.67,
+                w: 0.5,
+                h: 0.33
+            },
+            ],
         };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-      e.target.value = '';
-    });
+
+        const DIVISOR_SEQUENCE = ['DIVISOR-2', 'DIVISOR-4', 'DIVISOR-6'];
+
+        /* ── MODELOS ── */
+        const MODELS = [];
+
+        /* ── ESTADO v1.6.4 ── */
+        const state = {
+            model: null,
+            layout: 'RETRATO',
+            layoutOffset: {
+                x: 0,
+                y: 0
+            },
+            slots: [{
+                img: null,
+                imgUrl: null,
+                x: 0,
+                y: 0,
+                scale: 1,
+                rotation: 0
+            }],
+            activeSlot: 0,
+            history: [],
+        };
+
+        function currentSlot() {
+            return state.slots[state.activeSlot] || state.slots[0];
+        }
+
+        /* ── WIZARD STATE ── */
+        let currentStep = 1;
+
+        /* ── DOM ── */
+        const canvas = document.getElementById('phoneCanvas');
+        const ctx = canvas.getContext('2d');
+        const sel = document.getElementById('modelSelect');
+        const fileInput = document.getElementById('fileInput');
+        const loadingEl = document.getElementById('canvasLoading');
 
 
-    /* ================================================================
-     * DOWNLOAD — exportar preview em alta resolução (4×)
-     * ================================================================ */
+        /* ================================================================
+         * WIZARD — navegação entre passos
+         * ================================================================ */
 
-    document.getElementById('downloadBtn').onclick = () => {
-      if (!state.model || !state.img) return;
-      const m = state.model;
-      const SC = 4;
-      const dlCanvas = document.createElement('canvas');
-      dlCanvas.width = m.fw * SC;
-      dlCanvas.height = m.fh * SC;
-      const dlCtx = dlCanvas.getContext('2d');
-      renderAllLayers(dlCtx, m, state, SC);
-      dlCanvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `preview-capinha-${m.id}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 'image/png');
-    };
+        function showStep(n) {
+            currentStep = n;
+
+            for (let i = 1; i <= 4; i++) {
+                const p = document.getElementById(`stepPanel${i}`);
+                if (p) p.style.display = i === n ? 'flex' : 'none';
+            }
+
+            updateStepper();
+
+            document.getElementById('btnPrev').disabled = n === 1;
+            const btnNext = document.getElementById('btnNext');
+            btnNext.textContent = n === 4 ? '—' : 'Próximo Passo';
+            btnNext.disabled = n === 4;
+
+            // Hint only visible on step 3 when active slot has image
+            const hint = document.getElementById('canvasHint');
+            hint.style.display = (n === 3 && !!currentSlot().img) ? 'block' : 'none';
+
+            // Update step 4 model name
+            if (n === 4) {
+                document.getElementById('selectedModelDisplay').textContent =
+                    state.model ? state.model.name : '—';
+            }
+        }
+
+        function updateStepper() {
+            for (let i = 1; i <= 4; i++) {
+                const item = document.getElementById(`stepItem${i}`);
+                if (!item) continue;
+                item.classList.remove('active', 'completed');
+                if (i < currentStep) item.classList.add('completed');
+                else if (i === currentStep) item.classList.add('active');
+            }
+
+            // Connector color (between step i and i+1 is completed when step i is completed)
+            for (let i = 1; i <= 3; i++) {
+                const conn = document.getElementById(`stepConn${i}`);
+                if (conn) conn.style.background = i < currentStep ? '#22C55E' : '#E2E8F0';
+            }
+        }
+
+        document.getElementById('btnPrev').addEventListener('click', () => {
+            if (currentStep > 1) showStep(currentStep - 1);
+        });
+
+        document.getElementById('btnNext').addEventListener('click', () => {
+            if (currentStep === 1 && !state.model) return; // need model first
+            if (currentStep === 2 && !state.slots.some(s => s.img)) return; // need at least 1 image
+            if (currentStep < 4) showStep(currentStep + 1);
+        });
 
 
-    /* ================================================================
-     * INICIALIZAÇÃO
-     * ================================================================ */
+        /* ================================================================
+         * DROPDOWN — hierarquia de marca/série/modelo
+         * ================================================================ */
 
-    function finishLoading() {
-      const loader = document.getElementById('loader-screen');
-      if (!loader) return;
-      loader.classList.add('loader-hidden');
-      loader.addEventListener('transitionend', () => loader.remove(), { once: true });
-    }
+        const dropdownState = {
+            selectedBrand: null,
+            selectedSeries: null,
+            hierarchy: {},
+        };
 
-    syncUI();
-    showStep(1);
+        function organizeModelsByBrandAndSeries() {
+            const h = {};
+            MODELS.forEach(m => {
+                const parts = m.name.split(' ');
+                const brand = parts[0];
+                const displayBrand = brand === 'iPhone' ? 'Apple' : brand;
+                const series = displayBrand === 'Apple' ? parts[1] : parts[1].charAt(0);
+                if (!h[displayBrand]) h[displayBrand] = {};
+                if (!h[displayBrand][series]) h[displayBrand][series] = [];
+                h[displayBrand][series].push(m);
+            });
+            return h;
+        }
 
-  </script>
+        function renderBrands() {
+            const grid = document.getElementById('brandsGrid');
+            grid.innerHTML = '';
+            Object.keys(dropdownState.hierarchy).sort().forEach(brand => {
+                const chip = document.createElement('button');
+                chip.className = 'brand-chip';
+                chip.textContent = brand;
+                chip.onclick = () => selectBrand(brand);
+                grid.appendChild(chip);
+            });
+        }
+
+        function renderSeries() {
+            const scroll = document.getElementById('seriesScroll');
+            scroll.innerHTML = '';
+            if (!dropdownState.selectedBrand) return;
+            const series = Object.keys(dropdownState.hierarchy[dropdownState.selectedBrand])
+                .sort((a, b) => {
+                    const an = parseInt(a),
+                        bn = parseInt(b);
+                    if (!isNaN(an) && !isNaN(bn)) return bn - an;
+                    return a.localeCompare(b);
+                });
+            series.forEach(s => {
+                const chip = document.createElement('button');
+                chip.className = 'series-chip';
+                chip.textContent = dropdownState.selectedBrand === 'Apple' ? `Linha ${s}` : `Série ${s}`;
+                chip.onclick = () => selectSeries(s);
+                scroll.appendChild(chip);
+            });
+        }
+
+        function renderModels() {
+            const list = document.getElementById('modelsList');
+            list.innerHTML = '';
+            if (!dropdownState.selectedBrand || !dropdownState.selectedSeries) return;
+
+            const models = dropdownState.hierarchy[dropdownState.selectedBrand][dropdownState.selectedSeries];
+            document.getElementById('modelLayerHeader').textContent =
+                dropdownState.selectedBrand === 'Apple' ?
+                    `Linha ${dropdownState.selectedSeries}` :
+                    `Série ${dropdownState.selectedSeries}`;
+
+            models.forEach(m => {
+                const item = document.createElement('button');
+                item.className = 'model-item';
+                item.textContent = m.name;
+                item.onclick = () => selectModel(m);
+                list.appendChild(item);
+            });
+        }
+
+        function selectBrand(brand) {
+            dropdownState.selectedBrand = brand;
+            dropdownState.selectedSeries = null;
+            renderSeries();
+            document.getElementById('layerBrand').style.display = 'none';
+            document.getElementById('layerSeries').style.display = 'flex';
+        }
+
+        function selectSeries(series) {
+            dropdownState.selectedSeries = series;
+            renderModels();
+            document.getElementById('layerSeries').style.display = 'none';
+            document.getElementById('layerModel').style.display = 'flex';
+        }
+
+        function selectModel(m) {
+            sel.value = m.id;
+            sel.dispatchEvent(new Event('change'));
+            // Show badge and reset to brand layer for re-selection
+            const badge = document.getElementById('modelSelectedBadge');
+            document.getElementById('modelSelectedName').textContent = m.name;
+            badge.style.display = 'flex';
+            // Reset to brand layer
+            dropdownState.selectedBrand = null;
+            dropdownState.selectedSeries = null;
+            document.getElementById('layerModel').style.display = 'none';
+            document.getElementById('layerSeries').style.display = 'none';
+            document.getElementById('layerBrand').style.display = 'flex';
+            renderBrands();
+        }
+
+        document.getElementById('backFromSeries').addEventListener('click', () => {
+            dropdownState.selectedBrand = null;
+            renderBrands();
+            document.getElementById('layerSeries').style.display = 'none';
+            document.getElementById('layerBrand').style.display = 'flex';
+        });
+
+        document.getElementById('backFromModel').addEventListener('click', () => {
+            dropdownState.selectedSeries = null;
+            renderSeries();
+            document.getElementById('layerModel').style.display = 'none';
+            document.getElementById('layerSeries').style.display = 'flex';
+        });
+
+
+        /* ================================================================
+         * GRID — geometria dos slots no espaço da faca
+         * Coordenadas normalizadas (0–1) × dimensões da faca = pixels do modelo
+         * ================================================================ */
+
+        function getSlotRects(m, layout) {
+            const fc = m._facaCenter;
+            if (!fc) return [{
+                x: 0,
+                y: 0,
+                w: m.fw,
+                h: m.fh
+            }];
+            const x0 = fc.x - fc.w / 2;
+            const y0 = fc.y - fc.h / 2;
+            const W = fc.w;
+            const H = fc.h;
+
+            const grid = CUSTOM_GRIDS[layout];
+            if (!grid || !grid.length) return [{
+                x: x0,
+                y: y0,
+                w: W,
+                h: H
+            }];
+            return grid.map(nr => ({
+                x: x0 + nr.x * W,
+                y: y0 + nr.y * H,
+                w: nr.w * W,
+                h: nr.h * H,
+            }));
+        }
+
+        function clipToShape(ctx, rect) {
+            ctx.beginPath();
+            ctx.rect(rect.x, rect.y, rect.w, rect.h);
+        }
+
+
+        /* ================================================================
+         * UTILITÁRIOS DE CANVAS
+         * ================================================================ */
+
+        function getFacaPath(m) {
+            const d = m.facaMaskPath;
+            if (!d) return null;
+            const sx = m.fw / FACA_SVG_W;
+            const sy = m.fh / FACA_SVG_H;
+
+            // Build combined path: outer case boundary + camera/sensor circles.
+            // When filled with evenodd, the circles become transparent holes so
+            // camera hardware shows through the user art on Layer 1 and remains
+            // visible in the Layer 2 overlay.
+            const base = new Path2D();
+            base.addPath(new Path2D(d));
+            if (m.facaCircles) {
+                for (const {
+                    cx,
+                    cy,
+                    r
+                } of m.facaCircles) {
+                    base.moveTo(cx + r, cy);
+                    base.arc(cx, cy, r, 0, Math.PI * 2);
+                }
+            }
+
+            if (sx === 1 && sy === 1) return base;
+            const matrix = new DOMMatrix().scale(sx, sy);
+            const scaled = new Path2D();
+            scaled.addPath(base, matrix);
+            return scaled;
+        }
+
+        function initCanvas(m) {
+            const wrapper = document.getElementById('canvasWrapper');
+            const availH = Math.max((wrapper.clientHeight || 400) - 16, 200);
+            const availW = Math.max((wrapper.clientWidth || 300) - 16, 200);
+
+            let cssH = Math.min(DISPLAY_H, availH);
+            let cssW = Math.round(cssH * m.fw / m.fh);
+
+            if (cssW > availW) {
+                cssW = availW;
+                cssH = Math.round(cssW * m.fh / m.fw);
+            }
+
+            canvas.width = m.fw * DPR;
+            canvas.height = m.fh * DPR;
+            canvas.style.width = cssW + 'px';
+            canvas.style.height = cssH + 'px';
+        }
+
+        function cssToLogical(dx, dy) {
+            const m = state.model;
+            return {
+                dx: dx * m.fw / canvas.clientWidth,
+                dy: dy * m.fh / canvas.clientHeight,
+            };
+        }
+
+
+        /* ================================================================
+         * CAMADA 0 — MOCKUP DO APARELHO
+         * ================================================================ */
+
+        function drawLayer0(c, m) {
+            if (m._mockupImg) {
+                c.drawImage(m._mockupImg, 0, 0, m.fw, m.fh);
+                return;
+            }
+            const path = getFacaPath(m);
+            c.fillStyle = '#e0e0e0';
+            c.fillRect(0, 0, m.fw, m.fh);
+            if (path) {
+                c.fillStyle = '#f8f8f8';
+                c.fill(path);
+                c.strokeStyle = '#bbb';
+                c.lineWidth = 1;
+                c.stroke(path);
+            }
+            c.fillStyle = '#aaa';
+            c.font = "500 11px 'Plus Jakarta Sans', sans-serif";
+            c.textAlign = 'center';
+            c.textBaseline = 'middle';
+            c.fillText('Mockup carregando…', m.fw / 2, m.fh / 2);
+            c.textAlign = 'left';
+            c.textBaseline = 'alphabetic';
+        }
+
+
+        /* ================================================================
+         * CAMADA 1 — ARTE DO USUÁRIO (recortada pela faca)
+         * Desenha todos os slots ativos; a máscara da faca é aplicada
+         * uma única vez no buffer temporário, cobrindo todos os slots.
+         * ================================================================ */
+
+        function drawLayer1(mainCtx, m, slots, slotRects, sc, exportMode) {
+            const tmp = document.createElement('canvas');
+            tmp.width = m.fw * sc;
+            tmp.height = m.fh * sc;
+            const tc = tmp.getContext('2d');
+            tc.setTransform(sc, 0, 0, sc, 0, 0);
+
+            slots.forEach((s, i) => {
+                if (!s.img) return;
+                const rect = slotRects[i];
+                if (!rect) return;
+                const cx = rect.x + rect.w / 2;
+                const cy = rect.y + rect.h / 2;
+                const rotated90 = Math.round(s.rotation / 90) % 2 !== 0;
+                const iw = rotated90 ? s.img.naturalHeight : s.img.naturalWidth;
+                const ih = rotated90 ? s.img.naturalWidth : s.img.naturalHeight;
+                const baseScale = Math.max(rect.w / iw, rect.h / ih);
+                const totalScale = baseScale * s.scale;
+
+                tc.save();
+                tc.globalAlpha = exportMode ? 1.0 : (i === state.activeSlot ? 1.0 : 0.4);
+                clipToShape(tc, rect);
+                tc.clip();
+                tc.translate(cx + s.x, cy + s.y);
+                tc.rotate(s.rotation * Math.PI / 180);
+                tc.scale(totalScale, totalScale);
+                tc.drawImage(s.img, -s.img.naturalWidth / 2, -s.img.naturalHeight / 2);
+                tc.restore();
+            });
+
+            // Máscara da faca aplicada uma vez para todos os slots
+            tc.globalAlpha = 1;
+            tc.globalCompositeOperation = 'destination-in';
+            const maskPath = getFacaPath(m);
+            if (maskPath) {
+                tc.fillStyle = '#fff';
+                tc.fill(maskPath, 'evenodd');
+            }
+            tc.globalCompositeOperation = 'source-over';
+
+            mainCtx.setTransform(1, 0, 0, 1, 0, 0);
+            mainCtx.drawImage(tmp, 0, 0);
+        }
+
+        function drawLayer1Empty(c, m, slotRects, activeSlot) {
+            const path = getFacaPath(m);
+            if (!path) return;
+            c.save();
+            c.clip(path, 'evenodd');
+            slotRects.forEach((rect, i) => {
+                c.fillStyle = i === activeSlot ? 'rgba(49,53,144,0.07)' : 'rgba(0,0,0,0.04)';
+                c.fillRect(rect.x, rect.y, rect.w, rect.h);
+                const fontSize = slotRects.length === 1 ? 22 : Math.min(16, Math.max(9, rect.w / 14));
+                c.fillStyle = i === activeSlot ? 'rgba(49,53,144,0.55)' : 'rgba(0,0,0,0.22)';
+                c.font = `700 ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+                c.textAlign = 'center';
+                c.textBaseline = 'middle';
+                const label = slotRects.length > 1 ? `Foto ${i + 1}` : 'Faz upload →';
+                c.fillText(label, rect.x + rect.w / 2, rect.y + rect.h / 2);
+            });
+            c.textAlign = 'left';
+            c.textBaseline = 'alphabetic';
+            c.restore();
+        }
+
+        function drawActiveSlotOverlay(c, m, slotRects, slots, activeSlot, exportMode) {
+            if (exportMode) return;
+            const path = getFacaPath(m);
+            const OCEAN = 'rgba(49,53,144,0.9)';
+            const H_SIZE = 8;
+
+            c.save();
+            if (path) c.clip(path, 'evenodd');
+
+            // Thin outline on inactive filled slots
+            slotRects.forEach((rect, i) => {
+                if (i === activeSlot || !slots[i] || !slots[i].img) return;
+                c.strokeStyle = 'rgba(255,255,255,0.35)';
+                c.lineWidth = 1;
+                clipToShape(c, rect);
+                c.stroke();
+            });
+
+            // Active slot: ocean border
+            const r = slotRects[activeSlot];
+            if (!r) {
+                c.restore();
+                return;
+            }
+
+            c.strokeStyle = OCEAN;
+            c.lineWidth = 3;
+            clipToShape(c, r);
+            c.stroke();
+
+            // Corner handles
+            c.fillStyle = OCEAN;
+            [
+                [r.x, r.y],
+                [r.x + r.w, r.y],
+                [r.x, r.y + r.h],
+                [r.x + r.w, r.y + r.h]
+            ]
+                .forEach(([hx, hy]) => c.fillRect(hx - H_SIZE / 2, hy - H_SIZE / 2, H_SIZE, H_SIZE));
+
+            c.restore();
+        }
+
+
+        /* ================================================================
+         * CAMADA 2 — OVERLAY DO MOCKUP (máscara inversa da faca)
+         * Renderiza o AVIF novamente, apagando a área da faca via
+         * destination-out, deixando visível apenas bordas/botões/câmeras.
+         * ================================================================ */
+
+        function drawLayer2(mainCtx, m, sc) {
+            const path = getFacaPath(m);
+            if (!path) return;
+
+            if (!m._mockupImg) {
+                // Fallback: traço do contorno quando o AVIF ainda não carregou
+                mainCtx.save();
+                mainCtx.setTransform(sc, 0, 0, sc, 0, 0);
+                mainCtx.strokeStyle = 'rgba(35, 31, 32, 0.55)';
+                mainCtx.lineWidth = 1.2;
+                mainCtx.setLineDash([]);
+                mainCtx.stroke(path);
+                mainCtx.restore();
+                mainCtx.setTransform(1, 0, 0, 1, 0, 0);
+                return;
+            }
+
+            const tmp = document.createElement('canvas');
+            tmp.width = m.fw * sc;
+            tmp.height = m.fh * sc;
+            const tc = tmp.getContext('2d');
+            tc.setTransform(sc, 0, 0, sc, 0, 0);
+
+            // Desenha o mockup completo no buffer temporário
+            tc.drawImage(m._mockupImg, 0, 0, m.fw, m.fh);
+
+            // Apaga a área da faca → sobra a parte externa (bordas, botões) + furos das câmeras
+            tc.globalCompositeOperation = 'destination-out';
+            tc.fillStyle = '#fff';
+            tc.fill(path, 'evenodd');
+            tc.globalCompositeOperation = 'source-over';
+
+            mainCtx.setTransform(1, 0, 0, 1, 0, 0);
+            mainCtx.drawImage(tmp, 0, 0);
+        }
+
+
+        /* ================================================================
+         * RENDER PRINCIPAL
+         * ================================================================ */
+
+        function draw() {
+            if (!state.model) return;
+            renderAllLayers(ctx, state.model, state, DPR, false);
+        }
+
+        function renderAllLayers(c, m, s, sc, exportMode) {
+            c.setTransform(1, 0, 0, 1, 0, 0);
+            c.clearRect(0, 0, m.fw * sc, m.fh * sc);
+            c.fillStyle = '#ffffff';
+            c.fillRect(0, 0, m.fw * sc, m.fh * sc);
+            c.setTransform(sc, 0, 0, sc, 0, 0);
+
+            const layout = s.layout || 'RETRATO';
+            const off = s.layoutOffset || {
+                x: 0,
+                y: 0
+            };
+            const slotRects = getSlotRects(m, layout).map(r => ({
+                ...r,
+                x: r.x + off.x,
+                y: r.y + off.y
+            }));
+            const hasAnyImage = s.slots.some(sl => sl.img);
+            const active = s.activeSlot || 0;
+
+            drawLayer0(c, m);
+
+            if (hasAnyImage) {
+                drawLayer1(c, m, s.slots, slotRects, sc, exportMode);
+                c.setTransform(sc, 0, 0, sc, 0, 0);
+            } else {
+                drawLayer1Empty(c, m, slotRects, active);
+            }
+
+            c.setTransform(sc, 0, 0, sc, 0, 0);
+            drawActiveSlotOverlay(c, m, slotRects, s.slots, active, exportMode);
+
+            drawLayer2(c, m, sc);
+
+            // ── DEBUG VISUAL (remover depois) ── ativado via window.DEBUG_LAYOUTS = true
+            if (window.DEBUG_LAYOUTS) {
+                c.setTransform(sc, 0, 0, sc, 0, 0);
+
+                // 1. Contorno vermelho em cada slotRect
+                slotRects.forEach((rect, i) => {
+                    c.save();
+                    c.strokeStyle = '#FF0055';
+                    c.lineWidth = 3;
+                    c.setLineDash([6, 3]);
+                    c.strokeRect(rect.x, rect.y, rect.w, rect.h);
+                    c.fillStyle = 'rgba(255,0,85,0.85)';
+                    c.font = 'bold 13px monospace';
+                    c.textBaseline = 'top';
+                    c.fillText(
+                        `#${i} (${Math.round(rect.x)},${Math.round(rect.y)}) ${Math.round(rect.w)}×${Math.round(rect.h)}`,
+                        rect.x + 4, rect.y + 4
+                    );
+                    c.restore();
+                });
+
+                // 2. Marcador azul no _facaCenter (cx, cy e bounding box)
+                const fc = m._facaCenter;
+                if (fc) {
+                    c.save();
+                    const bx = fc.x - fc.w / 2;
+                    const by = fc.y - fc.h / 2;
+                    // bounding box verde
+                    c.strokeStyle = '#00CC66';
+                    c.lineWidth = 2;
+                    c.setLineDash([4, 4]);
+                    c.strokeRect(bx, by, fc.w, fc.h);
+                    // centro azul
+                    c.setLineDash([]);
+                    c.fillStyle = '#0066FF';
+                    c.fillRect(fc.x - 5, fc.y - 5, 10, 10);
+                    c.strokeStyle = '#fff';
+                    c.lineWidth = 1.5;
+                    c.strokeRect(fc.x - 5, fc.y - 5, 10, 10);
+                    // label
+                    c.fillStyle = 'rgba(0,102,255,0.9)';
+                    c.font = 'bold 11px monospace';
+                    c.textBaseline = 'top';
+                    c.fillText(
+                        `fc (${Math.round(fc.x)},${Math.round(fc.y)}) ${Math.round(fc.w)}×${Math.round(fc.h)}`,
+                        bx + 4, by + 4
+                    );
+                    c.restore();
+                }
+            }
+            // ── FIM DEBUG ──
+        }
+
+
+        /* ================================================================
+         * CARREGAMENTO DE IMAGENS DO MODELO
+         * ================================================================ */
+
+        async function loadModelImages(m) {
+            const loads = [];
+
+            if (m.mockupPath && !m._mockupImg) {
+                loads.push(new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => {
+                        m._mockupImg = img;
+                        if (img.naturalWidth !== m.fw || img.naturalHeight !== m.fh) {
+                            m.fw = img.naturalWidth;
+                            m.fh = img.naturalHeight;
+                        }
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        console.warn('[Mobifans] Mockup não encontrado:', m.mockupPath);
+                        resolve();
+                    };
+                    img.src = m.mockupPath;
+                }));
+            }
+
+            await Promise.all(loads);
+
+            if (m.facaMaskPath && !m._facaCenter) {
+                m._facaCenter = computeFacaCenter(m);
+            }
+        }
+
+        function computeFacaCenter(m) {
+            const path = getFacaPath(m);
+            if (!path) return null;
+            const tmp = document.createElement('canvas');
+            tmp.width = m.fw;
+            tmp.height = m.fh;
+            const tc = tmp.getContext('2d');
+            const STEPS = 40;
+            let minX = m.fw,
+                maxX = 0,
+                minY = m.fh,
+                maxY = 0,
+                found = false;
+            for (let xi = 0; xi <= STEPS; xi++) {
+                for (let yi = 0; yi <= STEPS; yi++) {
+                    const x = (xi / STEPS) * m.fw;
+                    const y = (yi / STEPS) * m.fh;
+                    if (tc.isPointInPath(path, x, y)) {
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                        found = true;
+                    }
+                }
+            }
+            if (!found) return {
+                x: m.fw / 2,
+                y: m.fh / 2,
+                w: m.fw * 0.85,
+                h: m.fh * 0.92
+            };
+            return {
+                x: (minX + maxX) / 2,
+                y: (minY + maxY) / 2,
+                w: maxX - minX,
+                h: maxY - minY
+            };
+        }
+
+
+        /* ================================================================
+         * DRAG — arrastar a arte
+         * ================================================================ */
+
+        let dragging = false;
+        let dragOrigin = {
+            x: 0,
+            y: 0
+        };
+        let posOrigin = {
+            x: 0,
+            y: 0
+        };
+
+        /* Converte posição do cliente para coordenadas do modelo */
+        function clientToModel(clientX, clientY) {
+            const r = canvas.getBoundingClientRect();
+            return {
+                x: (clientX - r.left) * state.model.fw / canvas.clientWidth,
+                y: (clientY - r.top) * state.model.fh / canvas.clientHeight,
+            };
+        }
+
+        /* Retorna o índice do slot onde o ponto (mx,my) cai */
+        function slotAtModel(mx, my) {
+            if (!state.model) return 0;
+            const off = state.layoutOffset || {
+                x: 0,
+                y: 0
+            };
+            const rects = getSlotRects(state.model, state.layout).map(r => ({
+                ...r,
+                x: r.x + off.x,
+                y: r.y + off.y
+            }));
+            for (let i = 0; i < rects.length; i++) {
+                const r = rects[i];
+                if (mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h) return i;
+            }
+            return state.activeSlot;
+        }
+
+        canvas.addEventListener('mousedown', e => {
+            if (!state.slots.some(s => s.img)) return;
+            const {
+                x: mx,
+                y: my
+            } = clientToModel(e.clientX, e.clientY);
+            const clicked = slotAtModel(mx, my);
+            if (clicked !== state.activeSlot) {
+                state.activeSlot = clicked;
+                updateSlotDotsUI();
+                updateIndicators();
+                draw();
+                syncUI();
+            }
+            if (!currentSlot().img) return;
+            dragging = true;
+            dragOrigin = {
+                x: e.clientX,
+                y: e.clientY
+            };
+            posOrigin = {
+                x: currentSlot().x,
+                y: currentSlot().y
+            };
+            canvas.classList.add('dragging');
+        });
+
+        window.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            const {
+                dx,
+                dy
+            } = cssToLogical(e.clientX - dragOrigin.x, e.clientY - dragOrigin.y);
+            currentSlot().x = posOrigin.x + dx;
+            currentSlot().y = posOrigin.y + dy;
+            draw();
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!dragging) return;
+            dragging = false;
+            canvas.classList.remove('dragging');
+            pushHistory();
+        });
+
+
+        /* ================================================================
+         * TOUCH — arrastar + pinch zoom
+         * ================================================================ */
+
+        let touchDragging = false;
+        let lastPinchDist = 0;
+        let pinchScaleBase = 1;
+
+        canvas.addEventListener('touchstart', e => {
+            if (!state.slots.some(s => s.img)) return;
+            if (e.touches.length === 1) {
+                e.preventDefault();
+                const t = e.touches[0];
+                const {
+                    x: mx,
+                    y: my
+                } = clientToModel(t.clientX, t.clientY);
+                const clicked = slotAtModel(mx, my);
+                if (clicked !== state.activeSlot) {
+                    state.activeSlot = clicked;
+                    updateSlotDotsUI();
+                    updateIndicators();
+                    draw();
+                    syncUI();
+                }
+                if (!currentSlot().img) return;
+                touchDragging = true;
+                dragOrigin = {
+                    x: t.clientX,
+                    y: t.clientY
+                };
+                posOrigin = {
+                    x: currentSlot().x,
+                    y: currentSlot().y
+                };
+            } else if (e.touches.length === 2) {
+                e.preventDefault();
+                touchDragging = false;
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                lastPinchDist = Math.hypot(dx, dy);
+                pinchScaleBase = currentSlot().scale;
+            }
+        }, {
+            passive: false
+        });
+
+        canvas.addEventListener('touchmove', e => {
+            if (!state.slots.some(s => s.img)) return;
+            e.preventDefault();
+            if (e.touches.length === 1 && touchDragging) {
+                const {
+                    dx,
+                    dy
+                } = cssToLogical(
+                    e.touches[0].clientX - dragOrigin.x,
+                    e.touches[0].clientY - dragOrigin.y
+                );
+                currentSlot().x = posOrigin.x + dx;
+                currentSlot().y = posOrigin.y + dy;
+                draw();
+            } else if (e.touches.length === 2 && lastPinchDist > 0) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                applyScale(pinchScaleBase * (Math.hypot(dx, dy) / lastPinchDist));
+            }
+        }, {
+            passive: false
+        });
+
+        canvas.addEventListener('touchend', e => {
+            if (e.touches.length === 0) {
+                if (touchDragging) pushHistory();
+                touchDragging = false;
+                lastPinchDist = 0;
+            }
+        });
+
+
+        /* ================================================================
+         * WHEEL — zoom com scroll
+         * ================================================================ */
+
+        canvas.addEventListener('wheel', e => {
+            if (!currentSlot().img) return;
+            e.preventDefault();
+            applyScale(currentSlot().scale + (e.deltaY > 0 ? -0.06 : 0.06));
+        }, {
+            passive: false
+        });
+
+
+        /* ================================================================
+         * MOTION HELPERS
+         * ================================================================ */
+
+        function triggerBump(el) {
+            if (!el) return;
+            el.classList.remove('pill-bump');
+            void el.offsetWidth;
+            el.classList.add('pill-bump');
+            el.addEventListener('animationend', () => el.classList.remove('pill-bump'), {
+                once: true
+            });
+        }
+
+
+        /* ================================================================
+         * INDICADORES — sincroniza pills com o slot ativo
+         * ================================================================ */
+
+        function updateIndicators() {
+            const s = currentSlot();
+            document.getElementById('scaleLabel').textContent = Math.round((s.scale || 1) * 100) + '%';
+            const rot = s.rotation || 0;
+            document.getElementById('rotationLabel').textContent = rot + '°';
+            document.getElementById('rotationRow').style.display = rot !== 0 ? 'flex' : 'none';
+        }
+
+
+        /* ================================================================
+         * ZOOM
+         * ================================================================ */
+
+        function applyScale(v) {
+            currentSlot().scale = Math.max(0.2, Math.min(3.0, v));
+            document.getElementById('scaleLabel').textContent = Math.round(currentSlot().scale * 100) + '%';
+            triggerBump(document.querySelector('.scale-pill'));
+            draw();
+        }
+
+        function resetView() {
+            pushHistory();
+            const s = currentSlot();
+            s.x = 0;
+            s.y = 0;
+            s.scale = 1;
+            s.rotation = 0;
+            updateIndicators();
+            draw();
+        }
+
+
+        /* ================================================================
+         * HISTÓRICO — snapshot completo do estado
+         * ================================================================ */
+
+        function pushHistory() {
+            state.history.push({
+                layout: state.layout,
+                layoutOffset: {
+                    ...state.layoutOffset
+                },
+                activeSlot: state.activeSlot,
+                slots: state.slots.map(s => ({
+                    img: s.img,
+                    imgUrl: s.imgUrl,
+                    x: s.x,
+                    y: s.y,
+                    scale: s.scale,
+                    rotation: s.rotation,
+                })),
+            });
+            if (state.history.length > 20) state.history.shift();
+            syncUI();
+        }
+
+        function undo() {
+            if (!state.history.length) return;
+            const snap = state.history.pop();
+            // Revoke URLs for slots that will be removed
+            for (let i = snap.slots.length; i < state.slots.length; i++) {
+                if (state.slots[i].imgUrl) URL.revokeObjectURL(state.slots[i].imgUrl);
+            }
+            state.layout = snap.layout;
+            state.layoutOffset = snap.layoutOffset ? {
+                ...snap.layoutOffset
+            } : {
+                x: 0,
+                y: 0
+            };
+            state.activeSlot = snap.activeSlot;
+            state.slots = snap.slots.map(ss => ({
+                ...ss
+            }));
+            updateLayoutUI();
+            updateSlotDotsUI();
+            updateIndicators();
+            draw();
+            syncUI();
+        }
+
+
+        /* ================================================================
+         * SYNC UI
+         * ================================================================ */
+
+        function syncUI() {
+            const hasModel = !!state.model;
+            const hasAnyImg = state.slots.some(s => s.img);
+            const hasCurImg = !!currentSlot().img;
+            const hasHist = state.history.length > 0;
+            const multiSlot = state.slots.length > 1;
+            const isDivisor = state.layout.startsWith('DIVISOR');
+
+            document.getElementById('uploadBtn').disabled = !hasModel;
+            // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
+            // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
+            document.getElementById('downloadBtn').disabled = !hasAnyImg;
+            document.getElementById('btnUndo').disabled = !hasHist;
+            document.getElementById('btnFit').disabled = !hasCurImg;
+            document.getElementById('btnReset').disabled = !hasCurImg;
+            document.getElementById('btnRotate').disabled = !hasCurImg;
+            document.getElementById('btnZoomIn').disabled = !hasCurImg;
+            document.getElementById('btnZoomOut').disabled = !hasCurImg;
+
+            // Divisor dinâmico
+            const divisorControls = document.getElementById('divisorControls');
+            if (divisorControls) divisorControls.style.display = isDivisor ? 'flex' : 'none';
+            const divisorIdx = DIVISOR_SEQUENCE.indexOf(state.layout);
+            const btnDA = document.getElementById('btnDivisorAdd');
+            const btnDR = document.getElementById('btnDivisorRemove');
+            if (btnDA) btnDA.disabled = divisorIdx >= DIVISOR_SEQUENCE.length - 1;
+            if (btnDR) btnDR.disabled = divisorIdx <= 0;
+
+            // Nudge panel: visível no Step 3 apenas para Retrato e 3-Fotos
+            const nudgePanel = document.getElementById('nudgePanel');
+            const showNudge = currentStep === 3 && !isDivisor;
+            if (nudgePanel) nudgePanel.style.display = showNudge ? 'flex' : 'none';
+            ['btnNudgeUp', 'btnNudgeDown', 'btnNudgeLeft', 'btnNudgeRight'].forEach(id => {
+                const b = document.getElementById(id);
+                if (b) b.disabled = !hasCurImg;
+            });
+
+            // Slot indicator visibility
+            const ind = document.getElementById('slotIndicator');
+            const sel3 = document.getElementById('slotSelectorStep3');
+            if (ind) ind.style.display = multiSlot ? 'flex' : 'none';
+            if (sel3) sel3.style.display = multiSlot ? 'flex' : 'none';
+
+            // Upload label
+            const emptyIdx = state.slots.findIndex(s => !s.img);
+            const lbl = document.getElementById('uploadBtnLabel');
+            if (lbl) lbl.textContent = multiSlot && emptyIdx !== -1 ?
+                `Foto ${emptyIdx + 1} de ${state.slots.length}` :
+                'Faça upload aqui';
+
+            const hint = document.getElementById('canvasHint');
+            hint.style.display = (currentStep === 3 && hasCurImg) ? 'block' : 'none';
+        }
+
+
+        /* ================================================================
+         * TOOLBAR — handlers
+         * ================================================================ */
+
+        document.getElementById('btnUndo').onclick = undo;
+        document.getElementById('btnFit').onclick = resetView;
+        document.getElementById('btnReset').onclick = resetView;
+
+        document.getElementById('btnRotate').onclick = () => {
+            pushHistory();
+            const s = currentSlot();
+            s.rotation = (s.rotation + 90) % 360;
+            updateIndicators();
+            triggerBump(document.querySelector('.rotation-pill'));
+            draw();
+        };
+
+        document.getElementById('btnZoomIn').onclick = () => {
+            pushHistory();
+            applyScale(currentSlot().scale + 0.1);
+        };
+
+        document.getElementById('btnZoomOut').onclick = () => {
+            pushHistory();
+            applyScale(currentSlot().scale - 0.1);
+        };
+
+
+        /* ================================================================
+         * LAYOUT — seletor de grid
+         * ================================================================ */
+
+        function setLayout(name) {
+            const oldSlots = state.slots;
+            const grid = CUSTOM_GRIDS[name];
+            const count = grid ? grid.length : 1;
+
+            // Revoke URLs for slots beyond new count
+            for (let i = count; i < oldSlots.length; i++) {
+                if (oldSlots[i] && oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
+            }
+
+            state.layout = name;
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
+            state.history = [];
+            state.slots = Array.from({
+                length: count
+            }, (_, i) => ({
+                img: oldSlots[i] ? oldSlots[i].img : null,
+                imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+                x: 0,
+                y: 0,
+                scale: 1,
+                rotation: 0,
+            }));
+            state.activeSlot = Math.min(state.activeSlot, count - 1);
+
+            updateLayoutUI();
+            updateSlotDotsUI();
+            draw();
+            syncUI();
+        }
+
+        function updateLayoutUI() {
+            document.querySelectorAll('.layout-btn').forEach(btn => {
+                const match = btn.dataset.layout === state.layout ||
+                    (btn.dataset.layout === 'DIVISOR-2' && state.layout.startsWith('DIVISOR'));
+                btn.classList.toggle('active', match);
+            });
+        }
+
+        document.getElementById('layoutGrid').addEventListener('click', e => {
+            const btn = e.target.closest('.layout-btn');
+            if (!btn) return;
+            setLayout(btn.dataset.layout);
+        });
+
+
+        /* ================================================================
+         * SLOT DOTS — botões de seleção de slot ativo
+         * ================================================================ */
+
+        function updateSlotDotsUI() {
+            ['slotDots', 'slotDotsStep3'].forEach(id => {
+                const container = document.getElementById(id);
+                if (!container) return;
+                container.innerHTML = '';
+                state.slots.forEach((s, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'slot-dot' +
+                        (i === state.activeSlot ? ' active' : '') +
+                        (s.img ? ' has-img' : '');
+                    dot.title = `Foto ${i + 1}`;
+                    dot.textContent = s.img ? '✓' : String(i + 1);
+                    dot.addEventListener('click', () => {
+                        state.activeSlot = i;
+                        updateSlotDotsUI();
+                        updateIndicators();
+                        draw();
+                        syncUI();
+                    });
+                    container.appendChild(dot);
+                });
+            });
+        }
+
+
+        /* ================================================================
+         * TOAST — notificação genérica
+         * ================================================================ */
+
+        let _toastTimer = null;
+
+        function showToast(msg) {
+            let toast = document.getElementById('dpiToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'dpiToast';
+                toast.className = 'dpi-toast';
+                toast.innerHTML = '<span id="dpiToastMsg"></span>';
+                document.body.appendChild(toast);
+            }
+            document.getElementById('dpiToastMsg').textContent = msg;
+            toast.classList.add('visible');
+            clearTimeout(_toastTimer);
+            _toastTimer = setTimeout(() => toast.classList.remove('visible'), 5500);
+        }
+
+
+        /* ================================================================
+         * DPI — verificação 300 DPI para impressão
+         * ================================================================ */
+
+        function checkDpi(img, rect) {
+            // Para impressão a 300 DPI, a imagem precisa de ~4× os pixels lógicos do slot
+            if (img.naturalWidth < rect.w * 4 || img.naturalHeight < rect.h * 4) {
+                showToast('⚠️ Resolução baixa — pode ficar pixelado na impressão a 300 DPI.');
+            }
+        }
+
+
+        /* ================================================================
+         * CÂMERA — aviso de sobreposição com zona da câmera traseira
+         * ================================================================ */
+
+        function checkCameraOverlap(rect, m) {
+            const fc = m._facaCenter;
+            if (!fc) return;
+            const x0 = fc.x - fc.w / 2;
+            const y0 = fc.y - fc.h / 2;
+            const normX = (rect.x - x0) / fc.w;
+            const normY = (rect.y - y0) / fc.h;
+            // Camera zone: top portion of faca space (y < 0.20)
+            if (normY < 0.20) {
+                showToast('⚠️ Foto pode sobrepor a câmera traseira neste layout.');
+            }
+        }
+
+
+        /* ================================================================
+         * DIVISOR DINÂMICO — ciclar entre 2 / 4 / 6 slots
+         * ================================================================ */
+
+        function addDivisorSlots() {
+            const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
+            if (idx < 0 || idx >= DIVISOR_SEQUENCE.length - 1) return;
+            pushHistory();
+            const nextLayout = DIVISOR_SEQUENCE[idx + 1];
+            const oldSlots = state.slots;
+            const count = CUSTOM_GRIDS[nextLayout].length;
+            state.layout = nextLayout;
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
+            state.slots = Array.from({
+                length: count
+            }, (_, i) => ({
+                img: oldSlots[i] ? oldSlots[i].img : null,
+                imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+                x: 0,
+                y: 0,
+                scale: 1,
+                rotation: 0,
+            }));
+            state.activeSlot = Math.min(state.activeSlot, count - 1);
+            updateLayoutUI();
+            updateSlotDotsUI();
+            draw();
+            syncUI();
+        }
+
+        function removeDivisorSlots() {
+            const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
+            if (idx <= 0) return;
+            pushHistory();
+            const prevLayout = DIVISOR_SEQUENCE[idx - 1];
+            const oldSlots = state.slots;
+            const count = CUSTOM_GRIDS[prevLayout].length;
+            // Revoke URLs for removed slots
+            for (let i = count; i < oldSlots.length; i++) {
+                if (oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
+            }
+            state.layout = prevLayout;
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
+            state.slots = Array.from({
+                length: count
+            }, (_, i) => ({
+                img: oldSlots[i] ? oldSlots[i].img : null,
+                imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+                x: oldSlots[i] ? oldSlots[i].x : 0,
+                y: oldSlots[i] ? oldSlots[i].y : 0,
+                scale: oldSlots[i] ? oldSlots[i].scale : 1,
+                rotation: oldSlots[i] ? oldSlots[i].rotation : 0,
+            }));
+            state.activeSlot = Math.min(state.activeSlot, count - 1);
+            updateLayoutUI();
+            updateSlotDotsUI();
+            draw();
+            syncUI();
+        }
+
+        document.getElementById('btnDivisorAdd').onclick = addDivisorSlots;
+        document.getElementById('btnDivisorRemove').onclick = removeDivisorSlots;
+
+        /* ================================================================
+         * NUDGE — micro-ajuste de posição (1px por clique)
+         * ================================================================ */
+
+        function nudgeImage(dx, dy) {
+            if (!state.model) return;
+            pushHistory();
+            state.layoutOffset.x += dx;
+            state.layoutOffset.y += dy;
+            draw();
+        }
+
+        document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -5);
+        document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 5);
+        document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-5, 0);
+        document.getElementById('btnNudgeRight').onclick = () => nudgeImage(5, 0);
+
+
+        /* ================================================================
+         * CARREGAMENTO E INICIALIZAÇÃO DA APP
+         * ================================================================ */
+
+        function addModelOption(m) {
+            const opt = document.createElement('option');
+            opt.value = m.id;
+            opt.textContent = m.name;
+            sel.appendChild(opt);
+        }
+
+        async function initApp() {
+            try {
+                const resp = await fetch('/api/models');
+                if (!resp.ok) throw new Error('Falha ao carregar modelos');
+                const models = await resp.json();
+
+                for (const m of models) {
+                    const model = {
+                        id: m.id,
+                        name: m.name,
+                        mockupPath: m.mockupImageUrl,
+                        facaMaskPath: null,
+                        facaCircles: [],
+                        fw: m.frameWidth,
+                        fh: m.frameHeight,
+                        _mockupImg: null,
+                    };
+
+                    // Carregar SVG da máscara para extrair path outline + circles
+                    if (m.screenMaskPath) {
+                        try {
+                            const svgResp = await fetch(m.screenMaskPath);
+                            if (svgResp.ok) {
+                                const svgText = await svgResp.text();
+                                // Extrair o d="" do <path> principal (outline da capinha)
+                                const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
+                                if (pathMatch) model.facaMaskPath = pathMatch[1];
+
+                                const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
+                                model.facaCircles = circleMatches.map(cm => {
+                                    const a = cm[1];
+                                    return {
+                                        //se não tiver carregando, verifique aqui, pois dá erro de sintaxe do JSON
+                                        cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
+                                        cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
+                                        r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
+                                    };
+                                }).filter(c => c.r > 0);
+                            }
+                        } catch (e) {
+                            console.warn('[Mobifans] SVG não encontrado:', m.screenMaskPath);
+                        }
+                    }
+
+                    MODELS.push(model);
+                    addModelOption(model);
+                }
+
+                dropdownState.hierarchy = organizeModelsByBrandAndSeries();
+                renderBrands();
+
+            } catch (err) {
+                console.error('[Mobifans] Erro ao carregar modelos:', err);
+            } finally {
+                finishLoading();
+            }
+        }
+
+        initApp();
+
+
+        /* ================================================================
+         * HANDLER DE MUDANÇA DE MODELO
+         * ================================================================ */
+
+        sel.addEventListener('change', async () => {
+            // Revoke all existing image object URLs before switching model
+            state.slots.forEach(s => {
+                if (s.imgUrl) URL.revokeObjectURL(s.imgUrl);
+            });
+
+            const found = MODELS.find(m => m.id === sel.value);
+
+            if (!found) {
+                state.model = null;
+                canvas.style.display = 'none';
+                document.getElementById('emptyState').style.display = 'flex';
+                syncUI();
+                return;
+            }
+
+            loadingEl.classList.add('visible');
+            document.getElementById('emptyState').style.display = 'none';
+
+            state.model = found;
+            state.layout = 'RETRATO';
+            state.layoutOffset = {
+                x: 0,
+                y: 0
+            };
+            state.slots = [{
+                img: null,
+                imgUrl: null,
+                x: 0,
+                y: 0,
+                scale: 1,
+                rotation: 0
+            }];
+            state.activeSlot = 0;
+            state.history = [];
+
+            updateIndicators();
+            updateLayoutUI();
+            updateSlotDotsUI();
+
+            initCanvas(found);
+            canvas.style.display = 'block';
+            canvas.classList.add('entering');
+            canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), {
+                once: true
+            });
+
+            await loadModelImages(found);
+            initCanvas(found);
+
+            loadingEl.classList.remove('visible');
+            draw();
+            syncUI();
+        });
+
+
+        /* ================================================================
+         * UPLOAD DA ARTE
+         * ================================================================ */
+
+        document.getElementById('uploadBtn').onclick = () => fileInput.click();
+
+        fileInput.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Preenche o primeiro slot vazio; se todos cheios, substitui o ativo
+            let targetIdx = state.slots.findIndex(s => !s.img);
+            if (targetIdx === -1) targetIdx = state.activeSlot;
+
+            const slot = state.slots[targetIdx];
+
+            // Revoke previous URL for this slot
+            if (slot.imgUrl) {
+                URL.revokeObjectURL(slot.imgUrl);
+                slot.imgUrl = null;
+            }
+
+            const imgUrl = URL.createObjectURL(file);
+            const img = new Image();
+
+            img.onload = () => {
+                slot.img = img;
+                slot.imgUrl = imgUrl;
+                slot.x = 0;
+                slot.y = 0;
+                slot.scale = 1;
+                slot.rotation = 0;
+
+                state.activeSlot = targetIdx;
+                state.history = [];
+
+                updateIndicators();
+                updateSlotDotsUI();
+
+                if (state.model && state.model._facaCenter) {
+                    const rects = getSlotRects(state.model, state.layout);
+                    const r = rects[targetIdx];
+                    if (r) {
+                        checkDpi(img, r);
+                        checkCameraOverlap(r, state.model);
+                    }
+                }
+
+                const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
+                document.getElementById('uploadName').textContent = name;
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.style.display = 'flex';
+                uploadStatus.classList.remove('animating');
+                void uploadStatus.offsetWidth;
+                uploadStatus.classList.add('animating');
+                uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), {
+                    once: true
+                });
+
+                draw();
+                syncUI();
+            };
+
+            img.onerror = () => URL.revokeObjectURL(imgUrl);
+            img.src = imgUrl;
+            e.target.value = '';
+        });
+
+
+        /* ================================================================
+         * DOWNLOAD — exportar preview em alta resolução (4×)
+         * ================================================================ */
+
+        document.getElementById('downloadBtn').onclick = () => {
+            if (!state.model || !state.slots.some(s => s.img)) return;
+            const m = state.model;
+            const SC = 4;
+            const dlCanvas = document.createElement('canvas');
+            dlCanvas.width = m.fw * SC;
+            dlCanvas.height = m.fh * SC;
+            const dlCtx = dlCanvas.getContext('2d');
+            renderAllLayers(dlCtx, m, state, SC, true); // exportMode=true: all slots at 100% opacity
+            dlCanvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `preview-capinha-${m.id}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        };
+
+
+        /* ================================================================
+         * INICIALIZAÇÃO
+         * ================================================================ */
+
+        function finishLoading() {
+            const loader = document.getElementById('loader-screen');
+            if (!loader) return;
+            loader.classList.add('loader-hidden');
+            const remove = () => {
+                if (loader.parentNode) loader.remove();
+            };
+            loader.addEventListener('transitionend', remove, {
+                once: true
+            });
+            setTimeout(remove, 600);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FEATURE PAUSED — QR Upload / WebSocket Client (v1.8)
+           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
+           Para reativar: descomente este bloco (+ CSS e HTML correspondentes acima).
+           Também reativar: server/index.ts → qrRouter, WebSocket upgrade handler.
+        ════════════════════════════════════════════════════════════════════════
+
+        let qrWs = null;
+
+        document.getElementById('qrTriggerBtn').onclick = async () => {
+            const btn = document.getElementById('qrTriggerBtn');
+            btn.disabled = true;
+            btn.textContent = 'Gerando QR…';
+
+            try {
+                const res = await fetch('/api/session', { method: 'POST' });
+                if (!res.ok) throw new Error('Erro ao criar sessão');
+                const { sessionId, qrSvg, url } = await res.json();
+
+                document.getElementById('qrCode').innerHTML = qrSvg;
+                document.getElementById('qrUrl').textContent = url;
+                document.getElementById('qrPanel').style.display = 'flex';
+                btn.style.display = 'none';
+
+                const wsUrl = `ws://${location.host}/ws?sessionId=${sessionId}`;
+                qrWs = new WebSocket(wsUrl);
+
+                qrWs.onmessage = (e) => {
+                    let parsed;
+                    try { parsed = JSON.parse(e.data); } catch { return; }
+                    if (parsed.type !== 'image') return;
+
+                    const img = new Image();
+                    img.onload = () => {
+                        const slot = currentSlot();
+                        pushHistory();
+                        slot.img = img;
+                        slot.scale = 1;
+                        slot.x = 0;
+                        slot.y = 0;
+                        slot.rotation = 0;
+                        if (typeof checkDpi === 'function') checkDpi(img, state.model);
+                        if (typeof checkCameraOverlap === 'function') checkCameraOverlap();
+                        draw();
+                        syncUI();
+                        closeQrPanel();
+                        showToast('Foto recebida do celular!');
+                    };
+                    img.onerror = () => {
+                        console.error('[QR] Falha ao carregar imagem recebida via WebSocket');
+                        closeQrPanel();
+                        showToast('Erro ao carregar a foto. Tenta novamente.');
+                    };
+                    img.src = parsed.data;
+                };
+
+                qrWs.onerror = () => {
+                    closeQrPanel();
+                    showToast('Erro de conexão com o servidor.');
+                };
+
+            } catch (err) {
+                closeQrPanel();
+                showToast('Não foi possível gerar o QR.');
+            }
+        };
+
+        function closeQrPanel() {
+            document.getElementById('qrPanel').style.display = 'none';
+            const btn = document.getElementById('qrTriggerBtn');
+            btn.style.display = '';
+            btn.disabled = !state.model;
+            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 20h3M20 17v3"/></svg> Enviar do Celular via QR`;
+            if (qrWs && qrWs.readyState <= 1) { qrWs.close(); }
+            qrWs = null;
+        }
+
+        ═══ END FEATURE PAUSED ═══ */
+
+        syncUI();
+        showStep(1);
+        updateLayoutUI();
+        updateSlotDotsUI();
+    </script>
+
+    <div id="versionBadge" style="
+        position: fixed;
+        bottom: 10px;
+        right: 12px;
+        font-family: monospace;
+        font-size: 11px;
+        color: rgba(255,255,255,0.45);
+        background: rgba(0,0,0,0.35);
+        padding: 3px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 9999;
+        letter-spacing: 0.03em;
+    ">Versão atual: v1.6.4</div>
 </body>
 
 </html>

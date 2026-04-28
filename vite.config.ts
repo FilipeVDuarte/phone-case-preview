@@ -1,39 +1,36 @@
 import { defineConfig, Plugin } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "node:path";
-import { createServer } from "./server";
+import { createServer, createWebSocketServer } from "./server/index";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   server: {
-    host: "::",
+    host: "0.0.0.0",
     port: 8080,
     fs: {
-      allow: ["./client", "./shared", "index.html"],
-      deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
+      allow: [".", "index.html", "public", "server/data"],
+      deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**"],
     },
   },
   build: {
     outDir: "dist/spa",
   },
-  plugins: [react(), expressPlugin()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
-    },
-  },
-}));
+  plugins: [expressPlugin()],
+});
 
 function expressPlugin(): Plugin {
+  let wsServerCreated = false;
   return {
     name: "express-plugin",
-    apply: "serve", // Only apply during development (serve mode)
+    apply: "serve",
     configureServer(server) {
       const app = createServer();
-
-      // Add Express app as middleware to Vite dev server
       server.middlewares.use(app);
+
+      server.httpServer?.once("listening", () => {
+        if (!wsServerCreated && server.httpServer) {
+          createWebSocketServer(server.httpServer);
+          wsServerCreated = true;
+        }
+      });
     },
   };
 }
