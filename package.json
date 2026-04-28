@@ -7,10 +7,13 @@
     "dev:vite": "vite",
     "dev:server": "tsx dev-server.ts",
     "build": "vite build",
+    "build:server": "vite build -c vite.config.server.ts",
+    "build:all": "vite build && vite build -c vite.config.server.ts",
     "start": "node dist/server/node-build.mjs",
     "format.fix": "prettier --write ."
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^4.18.2",
     "html2canvas": "^1.4.1",
@@ -27,7 +30,6 @@
     "@types/qrcode": "^1.5.5",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.14",
-    "cors": "^2.8.5",
     "prettier": "^3.6.2",
     "serverless-http": "^3.2.0",
     "tsx": "^4.20.3",

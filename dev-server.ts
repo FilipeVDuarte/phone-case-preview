@@ -7,7 +7,7 @@ const httpServer = http.createServer(app);
 
 createWebSocketServer(httpServer);
 
-const port = 8080;
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
 httpServer.listen(port, "0.0.0.0", () => {
   console.log(`🚀 Express server running on http://localhost:${port}`);
 });

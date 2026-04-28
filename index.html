@@ -3012,7 +3012,6 @@
                                 model.facaCircles = circleMatches.map(cm => {
                                     const a = cm[1];
                                     return {
-                                        // Se não carregar nada vem aqui ERRO DE FORMATAÇãO
                                         cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
                                         cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
                                         r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
