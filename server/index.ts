@@ -22,6 +22,7 @@ export function createServer() {
 
   // Serve static files from root and public
   app.use(express.static(process.cwd()));
+  app.use(express.static(path.join(process.cwd(), "public")));
   app.use("/assets", express.static(path.join(process.cwd(), "public/assets")));
 
   app.get("/api/ping", (_req, res) => {
