@@ -27,10 +27,42 @@
     }
 
     :root {
+      /* Brand */
       --ocean: #313590;
       --black: #000;
+      --white: #FFFFFF;
+      --near-black: #1a1a1a;
       --bg: #E5EAF1;
       --bgpanel: #FFFFFF;
+
+      /* Grays */
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #D1D5DB;
+      --gray-300b: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-400b: #9CA3AF;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #374151;
+
+      /* Greens */
+      --green-50: #F0FDF4;
+      --green-300: #86EFAC;
+      --green-500: #22C55E;
+      --green-700: #16A34A;
+      --green-900: #166534;
+
+      /* Yellows / Amber */
+      --yellow-100: #FEF3C7;
+      --yellow-500: #F59E0B;
+      --amber-900: #92400E;
+
+      /* Blues */
+      --blue-50: #EFF6FF;
+
+      /* Typography & Easing */
       --font: 'Plus Jakarta Sans', sans-serif;
       --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
       --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -84,12 +116,12 @@
     }
 
     .how-to-use {
-      background: #F8FAFC;
-      border: 1.5px solid #E2E8F0;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-200);
       border-radius: 12px;
       padding: 14px 16px;
       font-size: 13px;
-      color: #64748B;
+      color: var(--gray-500);
       line-height: 1.9;
       margin-top: auto;
     }
@@ -126,7 +158,7 @@
       align-items: center;
       width: 80vh;
       padding: 18px 28px;
-      border-top: 2px solid #E2E8F0;
+      border-top: 2px solid var(--gray-200);
       flex-shrink: 0;
     }
 
@@ -140,8 +172,8 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: #E2E8F0;
-      color: #94A3B8;
+      background: var(--gray-200);
+      color: var(--gray-400);
       font-size: 12px;
       font-weight: 700;
       display: flex;
@@ -154,7 +186,7 @@
     .step-label {
       font-size: 12px;
       font-weight: 600;
-      color: #94A3B8;
+      color: var(--gray-400);
       white-space: nowrap;
       transition: color 0.25s ease;
     }
@@ -162,7 +194,7 @@
     .step-connector {
       flex: 1;
       height: 1.5px;
-      background: #E2E8F0;
+      background: var(--gray-200);
       margin: 0 10px;
       min-width: 20px;
       transition: background 0.25s ease;
@@ -179,12 +211,12 @@
     }
 
     .step-item.completed .step-num {
-      background: #22C55E;
+      background: var(--green-500);
       color: #fff;
     }
 
     .step-item.completed~.step-connector {
-      background: #22C55E;
+      background: var(--green-500);
     }
 
     /* ── ÁREA DO CANVAS ── */
@@ -205,7 +237,7 @@
       align-items: center;
       gap: 12px;
       padding: 48px 32px;
-      color: #94A3B8;
+      color: var(--gray-400);
       text-align: center;
       animation: fade-in 0.3s var(--smooth) both;
     }
@@ -225,7 +257,7 @@
       background: rgba(255, 255, 255, 0.8);
       font-size: 13px;
       font-weight: 600;
-      color: #64748B;
+      color: var(--gray-500);
       gap: 8px;
       z-index: 30;
       opacity: 0;
@@ -247,7 +279,7 @@
     .spinner {
       width: 18px;
       height: 18px;
-      border: 2px solid #E2E8F0;
+      border: 2px solid var(--gray-200);
       border-top-color: #000;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
@@ -299,7 +331,7 @@
     .panel-right-title {
       font-size: 16px;
       font-weight: 800;
-      color: #1a1a1a;
+      color: var(--near-black);
       letter-spacing: -0.3px;
       margin-bottom: 16px;
     }
@@ -324,7 +356,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.09em;
-      color: #64748B;
+      color: var(--gray-500);
     }
 
     /* Brands grid */
@@ -337,7 +369,7 @@
     .brand-chip {
       width: 100%;
       padding: 12px 8px;
-      border: 2px solid #D1D5DB;
+      border: 2px solid var(--gray-300);
       border-radius: 12px;
       background: var(--white);
       color: #000;
@@ -351,7 +383,7 @@
 
     .brand-chip:hover {
       border-color: #000;
-      background: #F1F5F9;
+      background: var(--gray-100);
     }
 
     .brand-chip.active {
@@ -371,7 +403,7 @@
     .series-chip {
       width: 100%;
       padding: 12px 10px;
-      border: 2px solid #D1D5DB;
+      border: 2px solid var(--gray-300);
       border-radius: 12px;
       background: var(--white);
       color: #000;
@@ -386,7 +418,7 @@
 
     .series-chip:hover {
       border-color: #000;
-      background: #F1F5F9;
+      background: var(--gray-100);
     }
 
     .series-chip.active {
@@ -405,7 +437,7 @@
     .model-item {
       width: 100%;
       padding: 12px 8px;
-      border: 2px solid #E2E8F0;
+      border: 2px solid var(--gray-200);
       border-radius: 12px;
       background: var(--white);
       color: #000;
@@ -420,8 +452,8 @@
     }
 
     .model-item:hover {
-      background: #F1F5F9;
-      border-color: #CBD5E1;
+      background: var(--gray-100);
+      border-color: var(--gray-300b);
     }
 
     .model-item.active {
@@ -439,7 +471,7 @@
       padding: 6px 4px;
       border: none;
       background: transparent;
-      color: #64748B;
+      color: var(--gray-500);
       font-family: var(--font);
       font-size: 12px;
       font-weight: 600;
@@ -458,13 +490,13 @@
 
     /* Selected model badge */
     .model-selected-badge {
-      background: #F0FDF4;
-      border: 1.5px solid #86EFAC;
+      background: var(--green-50);
+      border: 1.5px solid var(--green-300);
       border-radius: 8px;
       padding: 8px 12px;
       font-size: 12px;
       font-weight: 600;
-      color: #166534;
+      color: var(--green-900);
       display: none;
       align-items: center;
       gap: 6px;
@@ -491,7 +523,7 @@
     }
 
     .upload-btn:hover:not(:disabled) {
-      background: #F8FAFC;
+      background: var(--gray-50);
       transform: translate(-2px, -3px);
       box-shadow: 5px 6px 0 0 #000;
     }
@@ -511,11 +543,132 @@
     .upload-status {
       font-size: 12px;
       font-weight: 600;
-      color: #16A34A;
+      color: var(--green-700);
       display: none;
       align-items: center;
       gap: 6px;
     }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+           FEATURE PAUSED — QR Upload / Conexão Mobile via QR Code (v1.8)
+           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
+           Para reativar: descomente este bloco completo (CSS + HTML + JS abaixo).
+        ════════════════════════════════════════════════════════════════════════ */
+    /*
+        .qr-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray-400);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .qr-divider::before,
+        .qr-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .qr-trigger-btn {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--gray-300);
+            border-radius: 10px;
+            background: var(--gray-50);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--black);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .qr-trigger-btn:hover {
+            border-color: var(--ocean);
+            background: #f0f1ff;
+        }
+
+        .qr-trigger-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .qr-panel {
+            border: 2px solid var(--gray-200);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: var(--gray-50);
+        }
+
+        .qr-panel svg {
+            width: 148px;
+            height: 148px;
+            border-radius: 8px;
+            border: 3px solid var(--black);
+            box-shadow: 3px 3px 0 0 var(--black);
+            display: block;
+        }
+
+        .qr-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .qr-url {
+            font-size: 10px;
+            color: var(--gray-500);
+            font-family: monospace;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .qr-waiting {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qr-waiting::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ocean);
+            animation: qr-pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes qr-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        .qr-cancel-btn {
+            font-size: 11px;
+            color: var(--gray-500);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font);
+            text-decoration: underline;
+            padding: 0;
+        }
+        */
 
     /* ── WIZARD TOOLBAR (Step 3) ── */
     .wizard-toolbar {
@@ -527,20 +680,20 @@
     .wizard-tool-btn {
       flex: 1;
       height: 48px;
-      border: 2px solid #E2E8F0;
+      border: 2px solid var(--gray-200);
       border-radius: 12px;
       background: white;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #374151;
+      color: var(--gray-700);
       transition: background 0.15s ease, border-color 0.15s ease, transform 0.22s var(--spring);
     }
 
     .wizard-tool-btn:hover:not(:disabled) {
-      background: #F1F5F9;
-      border-color: #CBD5E1;
+      background: var(--gray-100);
+      border-color: var(--gray-300b);
       transform: scale(1.08);
     }
 
@@ -566,18 +719,143 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #F1F5F9;
+      background: var(--gray-100);
       border-radius: 100px;
       padding: 5px 12px;
       font-size: 12px;
       font-weight: 700;
-      color: #475569;
+      color: var(--gray-600);
+    }
+
+    /* ── LAYOUT SELECTOR (Step 2) ── */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .layout-btn {
+      aspect-ratio: unset;
+      padding: 8px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font);
+      border: 2px solid var(--gray-300);
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+      color: var(--gray-500);
+    }
+
+    .layout-btn:hover {
+      border-color: #000;
+      background: var(--gray-100);
+      color: #000;
+    }
+
+    .layout-btn.active {
+      border-color: #000;
+      background: #000;
+      color: #fff;
+    }
+
+    /* ── SLOT DOTS ── */
+    .slot-indicator,
+    .slot-selector-step3 {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slot-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .slot-dot {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--gray-300);
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-500);
+      font-family: var(--font);
+      transition: all 0.15s ease;
+      line-height: 1;
+    }
+
+    .slot-dot:hover {
+      border-color: #000;
+      background: var(--gray-100);
+      color: #000;
+    }
+
+    .slot-dot.active {
+      border-color: var(--ocean);
+      background: var(--ocean);
+      color: #fff;
+    }
+
+    .slot-dot.has-img {
+      border-color: var(--green-500);
+      background: var(--green-50);
+      color: var(--green-900);
+    }
+
+    .slot-dot.active.has-img {
+      border-color: var(--ocean);
+      background: var(--ocean);
+      color: #fff;
+    }
+
+    /* ── DPI TOAST ── */
+    .dpi-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--yellow-100);
+      border: 2px solid var(--yellow-500);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--amber-900);
+      font-family: var(--font);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+      transition: transform 0.35s var(--spring), opacity 0.35s ease;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .dpi-toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
     }
 
     /* ── STEP 4: Finalizar ── */
     .model-name-display {
-      background: #F8FAFC;
-      border: 1.5px solid #E2E8F0;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-200);
       border-radius: 12px;
       padding: 14px 16px;
     }
@@ -587,14 +865,14 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.09em;
-      color: #94A3B8;
+      color: var(--gray-400);
       margin-bottom: 4px;
     }
 
     .model-name-display .name {
       font-size: 15px;
       font-weight: 700;
-      color: #1a1a1a;
+      color: var(--near-black);
     }
 
     .download-btn {
@@ -605,7 +883,7 @@
       font-family: var(--font);
       font-size: 15px;
       font-weight: 800;
-      color: #EFF6FF;
+      color: var(--blue-50);
       background: var(--black);
       cursor: pointer;
       display: flex;
@@ -639,7 +917,7 @@
       display: flex;
       gap: 8px;
       padding-top: 16px;
-      border-top: 1px solid #F1F5F9;
+      border-top: 1px solid var(--gray-100);
       margin-top: 16px;
       flex-shrink: 0;
     }
@@ -658,13 +936,13 @@
 
     .nav-prev {
       background: white;
-      border: 1.5px solid #D1D5DB;
-      color: #64748B;
+      border: 1.5px solid var(--gray-300);
+      color: var(--gray-500);
     }
 
     .nav-prev:hover:not(:disabled) {
-      background: #F8FAFC;
-      border-color: #9CA3AF;
+      background: var(--gray-50);
+      border-color: var(--gray-400b);
     }
 
     .nav-next {
@@ -674,7 +952,7 @@
     }
 
     .nav-next:hover:not(:disabled) {
-      background: #1a1a1a;
+      background: var(--near-black);
     }
 
     .nav-btn:disabled {
@@ -939,7 +1217,7 @@
     <div class="loader-card">
       <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
         <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5" />
-        <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
+        <rect x="21" y="11" width="22" height="37" rx="2" fill="var(--gray-200)" />
         <circle cx="32" cy="53" r="2.5" fill="#000" />
       </svg>
       <p>Carregando modelos...</p>
@@ -1093,6 +1371,31 @@
 
         <div class="panel-right-title">Upload da Imagem</div>
 
+        <!-- Layout selector -->
+        <div class="field-label">Layout da Capinha</div>
+        <div class="layout-grid" id="layoutGrid">
+          <button class="layout-btn active" data-layout="RETRATO">Retrato</button>
+          <button class="layout-btn" data-layout="3-FOTOS">3 Fotos</button>
+          <button class="layout-btn" data-layout="DIVISOR-1">Divisor</button>
+        </div>
+
+        <!-- Slot indicator (visível quando layout > 1) -->
+        <div class="slot-indicator" id="slotIndicator" style="display:none;">
+          <div class="field-label">Foto ativa</div>
+          <div class="slot-dots" id="slotDots"></div>
+        </div>
+
+        <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+        <div id="divisorControls" style="display:none;">
+          <div class="field-label">Número de fotos</div>
+          <div class="wizard-toolbar" style="gap:8px;">
+            <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
+              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+            <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
+              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
+          </div>
+        </div>
+
         <div class="field-label">Tua imagem</div>
         <input type="file" id="fileInput" accept="image/*" style="display:none">
         <button class="upload-btn" id="uploadBtn" disabled>
@@ -1112,6 +1415,27 @@
           </svg>
           <span id="uploadName">Imagem carregada</span>
         </div>
+
+        <!-- ═══ FEATURE PAUSED: QR Upload / Conexão Mobile v1.8 ═══
+                     Para reativar: descomente este bloco HTML (+ CSS e JS correspondentes).
+                <div class="qr-divider">ou</div>
+
+                <button class="qr-trigger-btn" id="qrTriggerBtn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                        <path d="M14 14h3v3M17 20h3M20 17v3"/>
+                    </svg>
+                    Enviar do Celular via QR
+                </button>
+
+                <div class="qr-panel" id="qrPanel" style="display:none">
+                    <div id="qrCode"></div>
+                    <div class="qr-label">Escaneia com o teu celular</div>
+                    <div class="qr-url" id="qrUrl"></div>
+                    <div class="qr-waiting">Aguardando foto…</div>
+                    <button class="qr-cancel-btn" onclick="closeQrPanel()">Cancelar</button>
+                </div>
+                ═══ END FEATURE PAUSED ═══ -->
 
       </div>
 
@@ -1173,17 +1497,6 @@
         <div class="slot-selector-step3" id="slotSelectorStep3" style="display:none;">
           <div class="field-label">Foto ativa</div>
           <div class="slot-dots" id="slotDotsStep3"></div>
-        </div>
-
-        <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
-        <div id="divisorControls" style="display:none;">
-          <div class="field-label">Slots do Divisor</div>
-          <div class="wizard-toolbar" style="gap:8px;">
-            <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
-              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
-            <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
-              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
-          </div>
         </div>
 
         <!-- Ajuste Fino (nudge) -->
@@ -1253,15 +1566,13 @@
 
 
   <script>
-
     /* ================================================================
-     * MOBIFANS — PREVIEW DE CAPINHAS
+     * MOBIFANS — PREVIEW DE CAPINHAS  v1.6
      * ================================================================
-     *
      * ARQUITETURA DO CANVAS: 3 camadas sobrepostas
      *   CAMADA 0 → Mockup AVIF (aparelho)
      *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
-     *   CAMADA 2 → Linha de corte (stroke do path SVGs)
+     *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
 
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -1296,6 +1607,12 @@
         h: 0.3
       },
       ],
+      'DIVISOR-1': [{
+        x: 0,
+        y: 0,
+        w: 1,
+        h: 1
+      }],
       'DIVISOR-2': [{
         x: 0,
         y: 0,
@@ -1368,20 +1685,34 @@
       ],
     };
 
-    const DIVISOR_SEQUENCE = ['DIVISOR-2', 'DIVISOR-4', 'DIVISOR-6'];
+    const DIVISOR_SEQUENCE = ['DIVISOR-1', 'DIVISOR-2', 'DIVISOR-4', 'DIVISOR-6'];
 
     /* ── MODELOS ── */
     const MODELS = [];
 
-    /* ── ESTADO ── */
+    /* ── ESTADO v1.6.4 ── */
     const state = {
       model: null,
-      img: null,
-      x: 0, y: 0,
-      scale: 1.0,
-      rotation: 0,
+      layout: 'RETRATO',
+      layoutOffset: {
+        x: 0,
+        y: 0
+      },
+      slots: [{
+        img: null,
+        imgUrl: null,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0
+      }],
+      activeSlot: 0,
       history: [],
     };
+
+    function currentSlot() {
+      return state.slots[state.activeSlot] || state.slots[0];
+    }
 
     /* ── WIZARD STATE ── */
     let currentStep = 1;
@@ -1413,9 +1744,9 @@
       btnNext.textContent = n === 4 ? '—' : 'Próximo Passo';
       btnNext.disabled = n === 4;
 
-      // Hint only visible on step 3 when image is loaded
+      // Hint only visible on step 3 when active slot has image
       const hint = document.getElementById('canvasHint');
-      hint.style.display = (n === 3 && !!state.img) ? 'block' : 'none';
+      hint.style.display = (n === 3 && !!currentSlot().img) ? 'block' : 'none';
 
       // Update step 4 model name
       if (n === 4) {
@@ -1446,7 +1777,7 @@
 
     document.getElementById('btnNext').addEventListener('click', () => {
       if (currentStep === 1 && !state.model) return; // need model first
-      if (currentStep === 2 && !state.img) return;   // need image first
+      if (currentStep === 2 && !state.slots.some(s => s.img)) return; // need at least 1 image
       if (currentStep < 4) showStep(currentStep + 1);
     });
 
@@ -1493,7 +1824,8 @@
       if (!dropdownState.selectedBrand) return;
       const series = Object.keys(dropdownState.hierarchy[dropdownState.selectedBrand])
         .sort((a, b) => {
-          const an = parseInt(a), bn = parseInt(b);
+          const an = parseInt(a),
+            bn = parseInt(b);
           if (!isNaN(an) && !isNaN(bn)) return bn - an;
           return a.localeCompare(b);
         });
@@ -1570,6 +1902,45 @@
       document.getElementById('layerModel').style.display = 'none';
       document.getElementById('layerSeries').style.display = 'flex';
     });
+
+
+    /* ================================================================
+     * GRID — geometria dos slots no espaço da faca
+     * Coordenadas normalizadas (0–1) × dimensões da faca = pixels do modelo
+     * ================================================================ */
+
+    function getSlotRects(m, layout) {
+      const fc = m._facaCenter;
+      if (!fc) return [{
+        x: 0,
+        y: 0,
+        w: m.fw,
+        h: m.fh
+      }];
+      const x0 = fc.x - fc.w / 2;
+      const y0 = fc.y - fc.h / 2;
+      const W = fc.w;
+      const H = fc.h;
+
+      const grid = CUSTOM_GRIDS[layout];
+      if (!grid || !grid.length) return [{
+        x: x0,
+        y: y0,
+        w: W,
+        h: H
+      }];
+      return grid.map(nr => ({
+        x: x0 + nr.x * W,
+        y: y0 + nr.y * H,
+        w: nr.w * W,
+        h: nr.h * H,
+      }));
+    }
+
+    function clipToShape(ctx, rect) {
+      ctx.beginPath();
+      ctx.rect(rect.x, rect.y, rect.w, rect.h);
+    }
 
 
     /* ================================================================
@@ -1665,33 +2036,42 @@
 
     /* ================================================================
      * CAMADA 1 — ARTE DO USUÁRIO (recortada pela faca)
+     * Desenha todos os slots ativos; a máscara da faca é aplicada
+     * uma única vez no buffer temporário, cobrindo todos os slots.
      * ================================================================ */
 
-    function drawLayer1(mainCtx, m, s, sc) {
+    function drawLayer1(mainCtx, m, slots, slotRects, sc, exportMode) {
       const tmp = document.createElement('canvas');
       tmp.width = m.fw * sc;
       tmp.height = m.fh * sc;
       const tc = tmp.getContext('2d');
       tc.setTransform(sc, 0, 0, sc, 0, 0);
 
-      const cx = m._facaCenter ? m._facaCenter.x : m.fw / 2;
-      const cy = m._facaCenter ? m._facaCenter.y : m.fh / 2;
-      const pw = m._facaCenter ? m._facaCenter.w : m.fw * 0.9;
-      const ph = m._facaCenter ? m._facaCenter.h : m.fh * 0.9;
+      slots.forEach((s, i) => {
+        if (!s.img) return;
+        const rect = slotRects[i];
+        if (!rect) return;
+        const cx = rect.x + rect.w / 2;
+        const cy = rect.y + rect.h / 2;
+        const rotated90 = Math.round(s.rotation / 90) % 2 !== 0;
+        const iw = rotated90 ? s.img.naturalHeight : s.img.naturalWidth;
+        const ih = rotated90 ? s.img.naturalWidth : s.img.naturalHeight;
+        const baseScale = Math.max(rect.w / iw, rect.h / ih);
+        const totalScale = baseScale * s.scale;
 
-      const rotated90 = Math.round(s.rotation / 90) % 2 !== 0;
-      const iw = rotated90 ? s.img.naturalHeight : s.img.naturalWidth;
-      const ih = rotated90 ? s.img.naturalWidth : s.img.naturalHeight;
-      const baseScale = Math.max(pw / iw, ph / ih);
-      const totalScale = baseScale * s.scale;
+        tc.save();
+        tc.globalAlpha = exportMode ? 1.0 : (i === state.activeSlot ? 1.0 : 0.4);
+        clipToShape(tc, rect);
+        tc.clip();
+        tc.translate(cx + s.x, cy + s.y);
+        tc.rotate(s.rotation * Math.PI / 180);
+        tc.scale(totalScale, totalScale);
+        tc.drawImage(s.img, -s.img.naturalWidth / 2, -s.img.naturalHeight / 2);
+        tc.restore();
+      });
 
-      tc.save();
-      tc.translate(cx + s.x, cy + s.y);
-      tc.rotate(s.rotation * Math.PI / 180);
-      tc.scale(totalScale, totalScale);
-      tc.drawImage(s.img, -s.img.naturalWidth / 2, -s.img.naturalHeight / 2);
-      tc.restore();
-
+      // Máscara da faca aplicada uma vez para todos os slots
+      tc.globalAlpha = 1;
       tc.globalCompositeOperation = 'destination-in';
       const maskPath = getFacaPath(m);
       if (maskPath) {
@@ -1818,29 +2198,94 @@
 
     function draw() {
       if (!state.model) return;
-      renderAllLayers(ctx, state.model, state, DPR);
+      renderAllLayers(ctx, state.model, state, DPR, false);
     }
 
-    function renderAllLayers(c, m, s, sc) {
+    function renderAllLayers(c, m, s, sc, exportMode) {
       c.setTransform(1, 0, 0, 1, 0, 0);
       c.clearRect(0, 0, m.fw * sc, m.fh * sc);
       c.fillStyle = '#ffffff';
       c.fillRect(0, 0, m.fw * sc, m.fh * sc);
       c.setTransform(sc, 0, 0, sc, 0, 0);
 
-      // Camada 0: mockup AVIF completo (fundo do aparelho)
+      const layout = s.layout || 'RETRATO';
+      const off = s.layoutOffset || {
+        x: 0,
+        y: 0
+      };
+      const slotRects = getSlotRects(m, layout).map(r => ({
+        ...r,
+        x: r.x + off.x,
+        y: r.y + off.y
+      }));
+      const hasAnyImage = s.slots.some(sl => sl.img);
+      const active = s.activeSlot || 0;
+
       drawLayer0(c, m);
 
-      // Camada 1: arte do usuário recortada pela faca
-      if (s.img) {
-        drawLayer1(c, m, s, sc);
+      if (hasAnyImage) {
+        drawLayer1(c, m, s.slots, slotRects, sc, exportMode);
         c.setTransform(sc, 0, 0, sc, 0, 0);
       } else {
-        drawLayer1Empty(c, m);
+        drawLayer1Empty(c, m, slotRects, active);
       }
 
-      // Camada 2: mockup AVIF com máscara inversa (bordas, botões, câmeras)
+      c.setTransform(sc, 0, 0, sc, 0, 0);
+      drawActiveSlotOverlay(c, m, slotRects, s.slots, active, exportMode);
+
       drawLayer2(c, m, sc);
+
+      // ── DEBUG VISUAL (remover depois) ── ativado via window.DEBUG_LAYOUTS = true
+      if (window.DEBUG_LAYOUTS) {
+        c.setTransform(sc, 0, 0, sc, 0, 0);
+
+        // 1. Contorno vermelho em cada slotRect
+        slotRects.forEach((rect, i) => {
+          c.save();
+          c.strokeStyle = '#FF0055';
+          c.lineWidth = 3;
+          c.setLineDash([6, 3]);
+          c.strokeRect(rect.x, rect.y, rect.w, rect.h);
+          c.fillStyle = 'rgba(255,0,85,0.85)';
+          c.font = 'bold 13px monospace';
+          c.textBaseline = 'top';
+          c.fillText(
+            `#${i} (${Math.round(rect.x)},${Math.round(rect.y)}) ${Math.round(rect.w)}×${Math.round(rect.h)}`,
+            rect.x + 4, rect.y + 4
+          );
+          c.restore();
+        });
+
+        // 2. Marcador azul no _facaCenter (cx, cy e bounding box)
+        const fc = m._facaCenter;
+        if (fc) {
+          c.save();
+          const bx = fc.x - fc.w / 2;
+          const by = fc.y - fc.h / 2;
+          // bounding box verde
+          c.strokeStyle = '#00CC66';
+          c.lineWidth = 2;
+          c.setLineDash([4, 4]);
+          c.strokeRect(bx, by, fc.w, fc.h);
+          // centro azul
+          c.setLineDash([]);
+          c.fillStyle = '#0066FF';
+          c.fillRect(fc.x - 5, fc.y - 5, 10, 10);
+          c.strokeStyle = '#fff';
+          c.lineWidth = 1.5;
+          c.strokeRect(fc.x - 5, fc.y - 5, 10, 10);
+          // label
+          c.fillStyle = 'rgba(0,102,255,0.9)';
+          c.font = 'bold 11px monospace';
+          c.textBaseline = 'top';
+          c.fillText(
+            `fc (${Math.round(fc.x)},${Math.round(fc.y)}) ${Math.round(fc.w)}×${Math.round(fc.h)}`,
+            bx + 4, by + 4
+          );
+          c.restore();
+        }
+      }
+      // ── FIM DEBUG ──
     }
 
 
@@ -1862,7 +2307,10 @@
             }
             resolve();
           };
-          img.onerror = () => { console.warn('[Mobifans] Mockup não encontrado:', m.mockupPath); resolve(); };
+          img.onerror = () => {
+            console.warn('[Mobifans] Mockup não encontrado:', m.mockupPath);
+            resolve();
+          };
           img.src = m.mockupPath;
         }));
       }
@@ -1878,10 +2326,15 @@
       const path = getFacaPath(m);
       if (!path) return null;
       const tmp = document.createElement('canvas');
-      tmp.width = m.fw; tmp.height = m.fh;
+      tmp.width = m.fw;
+      tmp.height = m.fh;
       const tc = tmp.getContext('2d');
       const STEPS = 40;
-      let minX = m.fw, maxX = 0, minY = m.fh, maxY = 0, found = false;
+      let minX = m.fw,
+        maxX = 0,
+        minY = m.fh,
+        maxY = 0,
+        found = false;
       for (let xi = 0; xi <= STEPS; xi++) {
         for (let yi = 0; yi <= STEPS; yi++) {
           const x = (xi / STEPS) * m.fw;
@@ -1895,8 +2348,18 @@
           }
         }
       }
-      if (!found) return { x: m.fw / 2, y: m.fh / 2, w: m.fw * 0.85, h: m.fh * 0.92 };
-      return { x: (minX + maxX) / 2, y: (minY + maxY) / 2, w: maxX - minX, h: maxY - minY };
+      if (!found) return {
+        x: m.fw / 2,
+        y: m.fh / 2,
+        w: m.fw * 0.85,
+        h: m.fh * 0.92
+      };
+      return {
+        x: (minX + maxX) / 2,
+        y: (minY + maxY) / 2,
+        w: maxX - minX,
+        h: maxY - minY
+      };
     }
 
 
@@ -1905,22 +2368,78 @@
      * ================================================================ */
 
     let dragging = false;
-    let dragOrigin = { x: 0, y: 0 };
-    let posOrigin = { x: 0, y: 0 };
+    let dragOrigin = {
+      x: 0,
+      y: 0
+    };
+    let posOrigin = {
+      x: 0,
+      y: 0
+    };
+
+    /* Converte posição do cliente para coordenadas do modelo */
+    function clientToModel(clientX, clientY) {
+      const r = canvas.getBoundingClientRect();
+      return {
+        x: (clientX - r.left) * state.model.fw / canvas.clientWidth,
+        y: (clientY - r.top) * state.model.fh / canvas.clientHeight,
+      };
+    }
+
+    /* Retorna o índice do slot onde o ponto (mx,my) cai */
+    function slotAtModel(mx, my) {
+      if (!state.model) return 0;
+      const off = state.layoutOffset || {
+        x: 0,
+        y: 0
+      };
+      const rects = getSlotRects(state.model, state.layout).map(r => ({
+        ...r,
+        x: r.x + off.x,
+        y: r.y + off.y
+      }));
+      for (let i = 0; i < rects.length; i++) {
+        const r = rects[i];
+        if (mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h) return i;
+      }
+      return state.activeSlot;
+    }
 
     canvas.addEventListener('mousedown', e => {
-      if (!state.img) return;
+      if (!state.slots.some(s => s.img)) return;
+      const {
+        x: mx,
+        y: my
+      } = clientToModel(e.clientX, e.clientY);
+      const clicked = slotAtModel(mx, my);
+      if (clicked !== state.activeSlot) {
+        state.activeSlot = clicked;
+        updateSlotDotsUI();
+        updateIndicators();
+        draw();
+        syncUI();
+      }
+      if (!currentSlot().img) return;
       dragging = true;
-      dragOrigin = { x: e.clientX, y: e.clientY };
-      posOrigin = { x: state.x, y: state.y };
+      dragOrigin = {
+        x: e.clientX,
+        y: e.clientY
+      };
+      posOrigin = {
+        x: currentSlot().x,
+        y: currentSlot().y
+      };
       canvas.classList.add('dragging');
     });
 
     window.addEventListener('mousemove', e => {
       if (!dragging) return;
-      const { dx, dy } = cssToLogical(e.clientX - dragOrigin.x, e.clientY - dragOrigin.y);
-      state.x = posOrigin.x + dx;
-      state.y = posOrigin.y + dy;
+      const {
+        dx,
+        dy
+      } = cssToLogical(e.clientX - dragOrigin.x, e.clientY - dragOrigin.y);
+      currentSlot().x = posOrigin.x + dx;
+      currentSlot().y = posOrigin.y + dy;
       draw();
     });
 
@@ -1941,39 +2460,66 @@
     let pinchScaleBase = 1;
 
     canvas.addEventListener('touchstart', e => {
-      if (!state.img) return;
+      if (!state.slots.some(s => s.img)) return;
       if (e.touches.length === 1) {
         e.preventDefault();
+        const t = e.touches[0];
+        const {
+          x: mx,
+          y: my
+        } = clientToModel(t.clientX, t.clientY);
+        const clicked = slotAtModel(mx, my);
+        if (clicked !== state.activeSlot) {
+          state.activeSlot = clicked;
+          updateSlotDotsUI();
+          updateIndicators();
+          draw();
+          syncUI();
+        }
+        if (!currentSlot().img) return;
         touchDragging = true;
-        dragOrigin = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        posOrigin = { x: state.x, y: state.y };
+        dragOrigin = {
+          x: t.clientX,
+          y: t.clientY
+        };
+        posOrigin = {
+          x: currentSlot().x,
+          y: currentSlot().y
+        };
       } else if (e.touches.length === 2) {
         e.preventDefault();
         touchDragging = false;
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         lastPinchDist = Math.hypot(dx, dy);
-        pinchScaleBase = state.scale;
+        pinchScaleBase = currentSlot().scale;
       }
-    }, { passive: false });
+    }, {
+      passive: false
+    });
 
     canvas.addEventListener('touchmove', e => {
-      if (!state.img) return;
+      if (!state.slots.some(s => s.img)) return;
       e.preventDefault();
       if (e.touches.length === 1 && touchDragging) {
-        const { dx, dy } = cssToLogical(
+        const {
+          dx,
+          dy
+        } = cssToLogical(
           e.touches[0].clientX - dragOrigin.x,
           e.touches[0].clientY - dragOrigin.y
         );
-        state.x = posOrigin.x + dx;
-        state.y = posOrigin.y + dy;
+        currentSlot().x = posOrigin.x + dx;
+        currentSlot().y = posOrigin.y + dy;
         draw();
       } else if (e.touches.length === 2 && lastPinchDist > 0) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         applyScale(pinchScaleBase * (Math.hypot(dx, dy) / lastPinchDist));
       }
-    }, { passive: false });
+    }, {
+      passive: false
+    });
 
     canvas.addEventListener('touchend', e => {
       if (e.touches.length === 0) {
@@ -1989,10 +2535,12 @@
      * ================================================================ */
 
     canvas.addEventListener('wheel', e => {
-      if (!state.img) return;
+      if (!currentSlot().img) return;
       e.preventDefault();
-      applyScale(state.scale + (e.deltaY > 0 ? -0.06 : 0.06));
-    }, { passive: false });
+      applyScale(currentSlot().scale + (e.deltaY > 0 ? -0.06 : 0.06));
+    }, {
+      passive: false
+    });
 
 
     /* ================================================================
@@ -2004,7 +2552,22 @@
       el.classList.remove('pill-bump');
       void el.offsetWidth;
       el.classList.add('pill-bump');
-      el.addEventListener('animationend', () => el.classList.remove('pill-bump'), { once: true });
+      el.addEventListener('animationend', () => el.classList.remove('pill-bump'), {
+        once: true
+      });
+    }
+
+
+    /* ================================================================
+     * INDICADORES — sincroniza pills com o slot ativo
+     * ================================================================ */
+
+    function updateIndicators() {
+      const s = currentSlot();
+      document.getElementById('scaleLabel').textContent = Math.round((s.scale || 1) * 100) + '%';
+      const rot = s.rotation || 0;
+      document.getElementById('rotationLabel').textContent = rot + '°';
+      document.getElementById('rotationRow').style.display = rot !== 0 ? 'flex' : 'none';
     }
 
 
@@ -2013,29 +2576,44 @@
      * ================================================================ */
 
     function applyScale(v) {
-      state.scale = Math.max(0.2, Math.min(3.0, v));
-      document.getElementById('scaleLabel').textContent = Math.round(state.scale * 100) + '%';
+      currentSlot().scale = Math.max(0.2, Math.min(3.0, v));
+      document.getElementById('scaleLabel').textContent = Math.round(currentSlot().scale * 100) + '%';
       triggerBump(document.querySelector('.scale-pill'));
       draw();
     }
 
     function resetView() {
       pushHistory();
-      state.x = 0; state.y = 0;
-      state.scale = 1; state.rotation = 0;
-      document.getElementById('scaleLabel').textContent = '100%';
-      document.getElementById('rotationLabel').textContent = '0°';
-      document.getElementById('rotationRow').style.display = 'none';
+      const s = currentSlot();
+      s.x = 0;
+      s.y = 0;
+      s.scale = 1;
+      s.rotation = 0;
+      updateIndicators();
       draw();
     }
 
 
     /* ================================================================
-     * HISTÓRICO — pilha de undo
+     * HISTÓRICO — snapshot completo do estado
      * ================================================================ */
 
     function pushHistory() {
-      state.history.push({ x: state.x, y: state.y, scale: state.scale, rotation: state.rotation });
+      state.history.push({
+        layout: state.layout,
+        layoutOffset: {
+          ...state.layoutOffset
+        },
+        activeSlot: state.activeSlot,
+        slots: state.slots.map(s => ({
+          img: s.img,
+          imgUrl: s.imgUrl,
+          x: s.x,
+          y: s.y,
+          scale: s.scale,
+          rotation: s.rotation,
+        })),
+      });
       if (state.history.length > 20) state.history.shift();
       syncUI();
     }
@@ -2043,11 +2621,24 @@
     function undo() {
       if (!state.history.length) return;
       const snap = state.history.pop();
-      state.x = snap.x; state.y = snap.y;
-      state.scale = snap.scale; state.rotation = snap.rotation;
-      document.getElementById('scaleLabel').textContent = Math.round(state.scale * 100) + '%';
-      document.getElementById('rotationLabel').textContent = state.rotation + '°';
-      document.getElementById('rotationRow').style.display = state.rotation !== 0 ? 'flex' : 'none';
+      // Revoke URLs for slots that will be removed
+      for (let i = snap.slots.length; i < state.slots.length; i++) {
+        if (state.slots[i].imgUrl) URL.revokeObjectURL(state.slots[i].imgUrl);
+      }
+      state.layout = snap.layout;
+      state.layoutOffset = snap.layoutOffset ? {
+        ...snap.layoutOffset
+      } : {
+        x: 0,
+        y: 0
+      };
+      state.activeSlot = snap.activeSlot;
+      state.slots = snap.slots.map(ss => ({
+        ...ss
+      }));
+      updateLayoutUI();
+      updateSlotDotsUI();
+      updateIndicators();
       draw();
       syncUI();
     }
@@ -2059,21 +2650,56 @@
 
     function syncUI() {
       const hasModel = !!state.model;
-      const hasImg = !!state.img;
+      const hasAnyImg = state.slots.some(s => s.img);
+      const hasCurImg = !!currentSlot().img;
       const hasHist = state.history.length > 0;
+      const multiSlot = state.slots.length > 1;
+      const isDivisor = state.layout.startsWith('DIVISOR');
 
       document.getElementById('uploadBtn').disabled = !hasModel;
-      document.getElementById('downloadBtn').disabled = !hasImg;
-      document.getElementById('btnUndo').disabled = !hasImg || !hasHist;
-      document.getElementById('btnFit').disabled = !hasImg;
-      document.getElementById('btnReset').disabled = !hasImg;
-      document.getElementById('btnRotate').disabled = !hasImg;
-      document.getElementById('btnZoomIn').disabled = !hasImg;
-      document.getElementById('btnZoomOut').disabled = !hasImg;
+      // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
+      // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
+      document.getElementById('downloadBtn').disabled = !hasAnyImg;
+      document.getElementById('btnUndo').disabled = !hasHist;
+      document.getElementById('btnFit').disabled = !hasCurImg;
+      document.getElementById('btnReset').disabled = !hasCurImg;
+      document.getElementById('btnRotate').disabled = !hasCurImg;
+      document.getElementById('btnZoomIn').disabled = !hasCurImg;
+      document.getElementById('btnZoomOut').disabled = !hasCurImg;
 
-      // Update hint visibility
+      // Divisor dinâmico
+      const divisorControls = document.getElementById('divisorControls');
+      if (divisorControls) divisorControls.style.display = isDivisor ? 'flex' : 'none';
+      const divisorIdx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      const btnDA = document.getElementById('btnDivisorAdd');
+      const btnDR = document.getElementById('btnDivisorRemove');
+      if (btnDA) btnDA.disabled = divisorIdx >= DIVISOR_SEQUENCE.length - 1;
+      if (btnDR) btnDR.disabled = divisorIdx <= 0;
+
+      // Nudge panel: visível no Step 3 apenas para Retrato e 3-Fotos
+      const nudgePanel = document.getElementById('nudgePanel');
+      const showNudge = currentStep === 3 && !isDivisor;
+      if (nudgePanel) nudgePanel.style.display = showNudge ? 'flex' : 'none';
+      ['btnNudgeUp', 'btnNudgeDown', 'btnNudgeLeft', 'btnNudgeRight'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.disabled = !hasCurImg;
+      });
+
+      // Slot indicator visibility
+      const ind = document.getElementById('slotIndicator');
+      const sel3 = document.getElementById('slotSelectorStep3');
+      if (ind) ind.style.display = multiSlot ? 'flex' : 'none';
+      if (sel3) sel3.style.display = multiSlot ? 'flex' : 'none';
+
+      // Upload label
+      const emptyIdx = state.slots.findIndex(s => !s.img);
+      const lbl = document.getElementById('uploadBtnLabel');
+      if (lbl) lbl.textContent = multiSlot && emptyIdx !== -1 ?
+        `Foto ${emptyIdx + 1} de ${state.slots.length}` :
+        'Faça upload aqui';
+
       const hint = document.getElementById('canvasHint');
-      hint.style.display = (currentStep === 3 && hasImg) ? 'block' : 'none';
+      hint.style.display = (currentStep === 3 && hasCurImg) ? 'block' : 'none';
     }
 
 
@@ -2087,16 +2713,16 @@
 
     document.getElementById('btnRotate').onclick = () => {
       pushHistory();
-      state.rotation = (state.rotation + 90) % 360;
-      document.getElementById('rotationLabel').textContent = state.rotation + '°';
-      document.getElementById('rotationRow').style.display = state.rotation !== 0 ? 'flex' : 'none';
+      const s = currentSlot();
+      s.rotation = (s.rotation + 90) % 360;
+      updateIndicators();
       triggerBump(document.querySelector('.rotation-pill'));
       draw();
     };
 
     document.getElementById('btnZoomIn').onclick = () => {
       pushHistory();
-      applyScale(state.scale + 0.1);
+      applyScale(currentSlot().scale + 0.1);
     };
 
     document.getElementById('btnZoomOut').onclick = () => {
@@ -2146,7 +2772,7 @@
     function updateLayoutUI() {
       document.querySelectorAll('.layout-btn').forEach(btn => {
         const match = btn.dataset.layout === state.layout ||
-          (btn.dataset.layout === 'DIVISOR-2' && state.layout.startsWith('DIVISOR'));
+          (btn.dataset.layout === 'DIVISOR-1' && state.layout.startsWith('DIVISOR'));
         btn.classList.toggle('active', match);
       });
     }
@@ -2320,10 +2946,10 @@
       draw();
     }
 
-    document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -1);
-    document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 1);
-    document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-1, 0);
-    document.getElementById('btnNudgeRight').onclick = () => nudgeImage(1, 0);
+    document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -5);
+    document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 5);
+    document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-5, 0);
+    document.getElementById('btnNudgeRight').onclick = () => nudgeImage(5, 0);
 
 
     /* ================================================================
@@ -2369,9 +2995,10 @@
                 model.facaCircles = circleMatches.map(cm => {
                   const a = cm[1];
                   return {
-                    cx: parseFloat(a.match(/cx="([^"]+)"/) ? . [1] || 0),
-                    cy: parseFloat(a.match(/cy="([^"]+)"/) ? . [1] || 0),
-                    r: parseFloat(a.match(/\br="([^"]+)"/) ? . [1] || 0),
+                    //se não tiver carregando, verifique aqui, pois dá erro de sintaxe do JSON
+                    cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
+                    cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
+                    r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
                   };
                 }).filter(c => c.r > 0);
               }
@@ -2402,6 +3029,11 @@
      * ================================================================ */
 
     sel.addEventListener('change', async () => {
+      // Revoke all existing image object URLs before switching model
+      state.slots.forEach(s => {
+        if (s.imgUrl) URL.revokeObjectURL(s.imgUrl);
+      });
+
       const found = MODELS.find(m => m.id === sel.value);
 
       if (!found) {
@@ -2417,7 +3049,10 @@
 
       state.model = found;
       state.layout = 'RETRATO';
-      state.layoutOffset = { x: 0, y: 0 };
+      state.layoutOffset = {
+        x: 0,
+        y: 0
+      };
       state.slots = [{
         img: null,
         imgUrl: null,
@@ -2429,14 +3064,16 @@
       state.activeSlot = 0;
       state.history = [];
 
-      document.getElementById('scaleLabel').textContent = '100%';
-      document.getElementById('rotationLabel').textContent = '0°';
-      document.getElementById('rotationRow').style.display = 'none';
+      updateIndicators();
+      updateLayoutUI();
+      updateSlotDotsUI();
 
       initCanvas(found);
       canvas.style.display = 'block';
       canvas.classList.add('entering');
-      canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), { once: true });
+      canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), {
+        once: true
+      });
 
       await loadModelImages(found);
       initCanvas(found);
@@ -2457,34 +3094,61 @@
       const file = e.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          state.img = img;
-          state.x = 0; state.y = 0;
-          state.scale = 1; state.rotation = 0;
-          state.history = [];
+      // Preenche o primeiro slot vazio; se todos cheios, substitui o ativo
+      let targetIdx = state.slots.findIndex(s => !s.img);
+      if (targetIdx === -1) targetIdx = state.activeSlot;
 
-          document.getElementById('scaleLabel').textContent = '100%';
-          document.getElementById('rotationLabel').textContent = '0°';
-          document.getElementById('rotationRow').style.display = 'none';
+      const slot = state.slots[targetIdx];
 
-          const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
-          document.getElementById('uploadName').textContent = name;
-          const uploadStatus = document.getElementById('uploadStatus');
-          uploadStatus.style.display = 'flex';
-          uploadStatus.classList.remove('animating');
-          void uploadStatus.offsetWidth;
-          uploadStatus.classList.add('animating');
-          uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), { once: true });
+      // Revoke previous URL for this slot
+      if (slot.imgUrl) {
+        URL.revokeObjectURL(slot.imgUrl);
+        slot.imgUrl = null;
+      }
 
-          draw();
-          syncUI();
-        };
-        img.src = ev.target.result;
+      const imgUrl = URL.createObjectURL(file);
+      const img = new Image();
+
+      img.onload = () => {
+        slot.img = img;
+        slot.imgUrl = imgUrl;
+        slot.x = 0;
+        slot.y = 0;
+        slot.scale = 1;
+        slot.rotation = 0;
+
+        state.activeSlot = targetIdx;
+        state.history = [];
+
+        updateIndicators();
+        updateSlotDotsUI();
+
+        if (state.model && state.model._facaCenter) {
+          const rects = getSlotRects(state.model, state.layout);
+          const r = rects[targetIdx];
+          if (r) {
+            checkDpi(img, r);
+            checkCameraOverlap(r, state.model);
+          }
+        }
+
+        const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
+        document.getElementById('uploadName').textContent = name;
+        const uploadStatus = document.getElementById('uploadStatus');
+        uploadStatus.style.display = 'flex';
+        uploadStatus.classList.remove('animating');
+        void uploadStatus.offsetWidth;
+        uploadStatus.classList.add('animating');
+        uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), {
+          once: true
+        });
+
+        draw();
+        syncUI();
       };
-      reader.readAsDataURL(file);
+
+      img.onerror = () => URL.revokeObjectURL(imgUrl);
+      img.src = imgUrl;
       e.target.value = '';
     });
 
@@ -2494,14 +3158,14 @@
      * ================================================================ */
 
     document.getElementById('downloadBtn').onclick = () => {
-      if (!state.model || !state.img) return;
+      if (!state.model || !state.slots.some(s => s.img)) return;
       const m = state.model;
       const SC = 4;
       const dlCanvas = document.createElement('canvas');
       dlCanvas.width = m.fw * SC;
       dlCanvas.height = m.fh * SC;
       const dlCtx = dlCanvas.getContext('2d');
-      renderAllLayers(dlCtx, m, state, SC);
+      renderAllLayers(dlCtx, m, state, SC, true); // exportMode=true: all slots at 100% opacity
       dlCanvas.toBlob(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -2523,9 +3187,13 @@
       const loader = document.getElementById('loader-screen');
       if (!loader) return;
       loader.classList.add('loader-hidden');
-      loader.addEventListener('transitionend', () => loader.remove(), {
+      const remove = () => {
+        if (loader.parentNode) loader.remove();
+      };
+      loader.addEventListener('transitionend', remove, {
         once: true
       });
+      setTimeout(remove, 600);
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
@@ -2609,8 +3277,24 @@
 
     syncUI();
     showStep(1);
-
+    updateLayoutUI();
+    updateSlotDotsUI();
   </script>
+
+  <div id="versionBadge" style="
+        position: fixed;
+        bottom: 10px;
+        right: 12px;
+        font-family: monospace;
+        font-size: 11px;
+        color: rgba(255,255,255,0.45);
+        background: rgba(0,0,0,0.35);
+        padding: 3px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 9999;
+        letter-spacing: 0.03em;
+    ">Versão atual: v1.6.4</div>
 </body>
 
 </html>
