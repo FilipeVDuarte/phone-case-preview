@@ -1501,55 +1501,51 @@
                     <div class="slot-dots" id="slotDotsStep3"></div>
                 </div>
 
-                <<<<<<< HEAD=======<!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
-                    <div id="divisorControls" style="display:none;">
-                        <div class="field-label">Slots do Divisor</div>
-                        <div class="wizard-toolbar" style="gap:8px;">
-                            <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
-                                style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+]
-                                Fotos</button>
-                            <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
-                                style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-]
-                                Fotos</button>
-                        </div>
+                <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+                <div id="divisorControls" style="display:none;">
+                    <div class="field-label">Slots do Divisor</div>
+                    <div class="wizard-toolbar" style="gap:8px;">
+                        <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
+                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+                        <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
+                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
                     </div>
+                </div>
 
-                    >>>>>>> parent of e47bc75 (Fix SVG circle parsing, loader removal & nudge step)
-                    <!-- Ajuste Fino (nudge) -->
-                    <div id="nudgePanel" style="display:none;">
-                        <div class="field-label">Ajuste Fino</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
-                            <div></div>
-                            <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
-                            <div></div>
-                            <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda"
-                                disabled>←</button>
-                            <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo"
-                                disabled>↓</button>
-                            <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita"
-                                disabled>→</button>
-                        </div>
+                <!-- Ajuste Fino (nudge) -->
+                <div id="nudgePanel" style="display:none;">
+                    <div class="field-label">Ajuste Fino</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
+                        <div></div>
+                        <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
+                        <div></div>
+                        <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda"
+                            disabled>←</button>
+                        <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
+                        <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita"
+                            disabled>→</button>
                     </div>
+                </div>
 
-                    <!-- Indicators -->
-                    <div class="indicators-row">
-                        <div class="scale-pill">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            <span id="scaleLabel">100%</span>
-                        </div>
-                        <div class="rotation-pill" id="rotationRow" style="display:none;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <path d="M21 2v6h-6" />
-                                <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
-                            </svg>
-                            <span id="rotationLabel">0°</span>
-                        </div>
+                <!-- Indicators -->
+                <div class="indicators-row">
+                    <div class="scale-pill">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <span id="scaleLabel">100%</span>
                     </div>
+                    <div class="rotation-pill" id="rotationRow" style="display:none;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M21 2v6h-6" />
+                            <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
+                        </svg>
+                        <span id="rotationLabel">0°</span>
+                    </div>
+                </div>
 
             </div>
 
@@ -3068,7 +3064,7 @@
             document.getElementById('emptyState').style.display = 'none';
 
             state.model = found;
-            state.layout = 'RETRATo';
+            state.layout = 'RETRATO';
             state.layoutOffset = { x: 0, y: 0 };
             state.slots = [{
                 img: null,
