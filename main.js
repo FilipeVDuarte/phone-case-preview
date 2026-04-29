@@ -8,7 +8,7 @@
      * ================================================================ */
 
 // Troque o fetch('./models.json') por:
-const fallback = await fetch(`${BASE_URL}models.json`).catch(() => null);
+const BASE_URL = import.meta.env.BASE_URL;
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const DISPLAY_H = 520;
 const FACA_SVG_W = 500;
@@ -1405,7 +1405,7 @@ async function initApp() {
         if (resp && resp.ok) {
             models = await resp.json();
         } else {
-            const fallback = await fetch(BASE_URL + 'models.json').catch(() => null);
+            const fallback = await fetch(`${BASE_URL}models.json`).catch(() => null);
             models = fallback && fallback.ok ? await fallback.json() : [];
         }
 
