@@ -1358,31 +1358,29 @@
           <div class="slot-dots" id="slotDotsStep3"></div>
         </div>
 
-                <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
-                <div id="divisorControls" style="display:none;">
-                    <div class="field-label">Slots do Divisor</div>
-                    <div class="wizard-toolbar" style="gap:8px;">
-                        <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
-                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
-                        <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
-                            style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
-                    </div>
-                </div>
+        <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+        <div id="divisorControls" style="display:none;">
+          <div class="field-label">Slots do Divisor</div>
+          <div class="wizard-toolbar" style="gap:8px;">
+            <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
+              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+            <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
+              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
+          </div>
+        </div>
 
-                <!-- Ajuste Fino (nudge) -->
-                <div id="nudgePanel" style="display:none;">
-                    <div class="field-label">Ajuste Fino</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
-                        <div></div>
-                        <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
-                        <div></div>
-                        <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda"
-                            disabled>←</button>
-                        <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
-                        <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita"
-                            disabled>→</button>
-                    </div>
-                </div>
+        <!-- Ajuste Fino (nudge) -->
+        <div id="nudgePanel" style="display:none;">
+          <div class="field-label">Ajuste Fino</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
+            <div></div>
+            <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
+            <div></div>
+            <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda" disabled>←</button>
+            <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
+            <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita" disabled>→</button>
+          </div>
+        </div>
 
         <!-- Indicators -->
         <div class="indicators-row">
@@ -3067,6 +3065,662 @@
       setTimeout(remove, 600);
     }
 
+    /* ================================================================
+     * WHEEL — zoom com scroll
+     * ================================================================ */
+
+    canvas.addEventListener('wheel', e => {
+      if (!currentSlot().img) return;
+      e.preventDefault();
+      applyScale(currentSlot().scale + (e.deltaY > 0 ? -0.06 : 0.06));
+    }, {
+      passive: false
+    });
+
+
+    /* ================================================================
+     * MOTION HELPERS
+     * ================================================================ */
+
+    function triggerBump(el) {
+      if (!el) return;
+      el.classList.remove('pill-bump');
+      void el.offsetWidth;
+      el.classList.add('pill-bump');
+      el.addEventListener('animationend', () => el.classList.remove('pill-bump'), {
+        once: true
+      });
+    }
+
+
+    /* ================================================================
+     * INDICADORES — sincroniza pills com o slot ativo
+     * ================================================================ */
+
+    function updateIndicators() {
+      const s = currentSlot();
+      document.getElementById('scaleLabel').textContent = Math.round((s.scale || 1) * 100) + '%';
+      const rot = s.rotation || 0;
+      document.getElementById('rotationLabel').textContent = rot + '°';
+      document.getElementById('rotationRow').style.display = rot !== 0 ? 'flex' : 'none';
+    }
+
+
+    /* ================================================================
+     * ZOOM
+     * ================================================================ */
+
+    function applyScale(v) {
+      currentSlot().scale = Math.max(0.2, Math.min(3.0, v));
+      document.getElementById('scaleLabel').textContent = Math.round(currentSlot().scale * 100) + '%';
+      triggerBump(document.querySelector('.scale-pill'));
+      draw();
+    }
+
+    function resetView() {
+      pushHistory();
+      const s = currentSlot();
+      s.x = 0;
+      s.y = 0;
+      s.scale = 1;
+      s.rotation = 0;
+      updateIndicators();
+      draw();
+    }
+
+
+    /* ================================================================
+     * HISTÓRICO — snapshot completo do estado
+     * ================================================================ */
+
+    function pushHistory() {
+      state.history.push({
+        layout: state.layout,
+        layoutOffset: {
+          ...state.layoutOffset
+        },
+        activeSlot: state.activeSlot,
+        slots: state.slots.map(s => ({
+          img: s.img,
+          imgUrl: s.imgUrl,
+          x: s.x,
+          y: s.y,
+          scale: s.scale,
+          rotation: s.rotation,
+        })),
+      });
+      if (state.history.length > 20) state.history.shift();
+      syncUI();
+    }
+
+    function undo() {
+      if (!state.history.length) return;
+      const snap = state.history.pop();
+      // Revoke URLs for slots that will be removed
+      for (let i = snap.slots.length; i < state.slots.length; i++) {
+        if (state.slots[i].imgUrl) URL.revokeObjectURL(state.slots[i].imgUrl);
+      }
+      state.layout = snap.layout;
+      state.layoutOffset = snap.layoutOffset ? {
+        ...snap.layoutOffset
+      } : {
+        x: 0,
+        y: 0
+      };
+      state.activeSlot = snap.activeSlot;
+      state.slots = snap.slots.map(ss => ({
+        ...ss
+      }));
+      updateLayoutUI();
+      updateSlotDotsUI();
+      updateIndicators();
+      draw();
+      syncUI();
+    }
+
+
+    /* ================================================================
+     * SYNC UI
+     * ================================================================ */
+
+    function syncUI() {
+      const hasModel = !!state.model;
+      const hasAnyImg = state.slots.some(s => s.img);
+      const hasCurImg = !!currentSlot().img;
+      const hasHist = state.history.length > 0;
+      const multiSlot = state.slots.length > 1;
+      const isDivisor = state.layout.startsWith('DIVISOR');
+
+      document.getElementById('uploadBtn').disabled = !hasModel;
+      document.getElementById('downloadBtn').disabled = !hasAnyImg;
+      document.getElementById('btnUndo').disabled = !hasHist;
+      document.getElementById('btnFit').disabled = !hasCurImg;
+      document.getElementById('btnReset').disabled = !hasCurImg;
+      document.getElementById('btnRotate').disabled = !hasCurImg;
+      document.getElementById('btnZoomIn').disabled = !hasCurImg;
+      document.getElementById('btnZoomOut').disabled = !hasCurImg;
+
+      // Divisor dinâmico
+      const divisorControls = document.getElementById('divisorControls');
+      if (divisorControls) divisorControls.style.display = isDivisor ? 'flex' : 'none';
+      const divisorIdx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      const btnDA = document.getElementById('btnDivisorAdd');
+      const btnDR = document.getElementById('btnDivisorRemove');
+      if (btnDA) btnDA.disabled = divisorIdx >= DIVISOR_SEQUENCE.length - 1;
+      if (btnDR) btnDR.disabled = divisorIdx <= 0;
+
+      // Nudge panel: visível no Step 3 apenas para Retrato e 3-Fotos
+      const nudgePanel = document.getElementById('nudgePanel');
+      const showNudge = currentStep === 3 && !isDivisor;
+      if (nudgePanel) nudgePanel.style.display = showNudge ? 'flex' : 'none';
+      ['btnNudgeUp', 'btnNudgeDown', 'btnNudgeLeft', 'btnNudgeRight'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.disabled = !hasCurImg;
+      });
+
+      // Slot indicator visibility
+      const ind = document.getElementById('slotIndicator');
+      const sel3 = document.getElementById('slotSelectorStep3');
+      if (ind) ind.style.display = multiSlot ? 'flex' : 'none';
+      if (sel3) sel3.style.display = multiSlot ? 'flex' : 'none';
+
+      // Upload label
+      const emptyIdx = state.slots.findIndex(s => !s.img);
+      const lbl = document.getElementById('uploadBtnLabel');
+      if (lbl) lbl.textContent = multiSlot && emptyIdx !== -1 ?
+        `Foto ${emptyIdx + 1} de ${state.slots.length}` :
+        'Faça upload aqui';
+
+      const hint = document.getElementById('canvasHint');
+      hint.style.display = (currentStep === 3 && hasCurImg) ? 'block' : 'none';
+    }
+
+
+    /* ================================================================
+     * TOOLBAR — handlers
+     * ================================================================ */
+
+    document.getElementById('btnUndo').onclick = undo;
+    document.getElementById('btnFit').onclick = resetView;
+    document.getElementById('btnReset').onclick = resetView;
+
+    document.getElementById('btnRotate').onclick = () => {
+      pushHistory();
+      const s = currentSlot();
+      s.rotation = (s.rotation + 90) % 360;
+      updateIndicators();
+      triggerBump(document.querySelector('.rotation-pill'));
+      draw();
+    };
+
+    document.getElementById('btnZoomIn').onclick = () => {
+      pushHistory();
+      applyScale(currentSlot().scale + 0.1);
+    };
+
+    document.getElementById('btnZoomOut').onclick = () => {
+      pushHistory();
+      applyScale(currentSlot().scale - 0.1);
+    };
+
+
+    /* ================================================================
+     * LAYOUT — seletor de grid
+     * ================================================================ */
+
+    function setLayout(name) {
+      const oldSlots = state.slots;
+      const grid = CUSTOM_GRIDS[name];
+      const count = grid ? grid.length : 1;
+
+      // Revoke URLs for slots beyond new count
+      for (let i = count; i < oldSlots.length; i++) {
+        if (oldSlots[i] && oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
+      }
+
+      state.layout = name;
+      state.layoutOffset = {
+        x: 0,
+        y: 0
+      };
+      state.history = [];
+      state.slots = Array.from({
+        length: count
+      }, (_, i) => ({
+        img: oldSlots[i] ? oldSlots[i].img : null,
+        imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0,
+      }));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+
+      updateLayoutUI();
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    function updateLayoutUI() {
+      document.querySelectorAll('.layout-btn').forEach(btn => {
+        const match = btn.dataset.layout === state.layout ||
+          (btn.dataset.layout === 'DIVISOR-1' && state.layout.startsWith('DIVISOR'));
+        btn.classList.toggle('active', match);
+      });
+    }
+
+    document.getElementById('layoutGrid').addEventListener('click', e => {
+      const btn = e.target.closest('.layout-btn');
+      if (!btn) return;
+      setLayout(btn.dataset.layout);
+    });
+
+
+    /* ================================================================
+     * SLOT DOTS — botões de seleção de slot ativo
+     * ================================================================ */
+
+    function updateSlotDotsUI() {
+      ['slotDots', 'slotDotsStep3'].forEach(id => {
+        const container = document.getElementById(id);
+        if (!container) return;
+        container.innerHTML = '';
+        state.slots.forEach((s, i) => {
+          const dot = document.createElement('button');
+          dot.className = 'slot-dot' +
+            (i === state.activeSlot ? ' active' : '') +
+            (s.img ? ' has-img' : '');
+          dot.title = `Foto ${i + 1}`;
+          dot.textContent = s.img ? '✓' : String(i + 1);
+          dot.addEventListener('click', () => {
+            state.activeSlot = i;
+            updateSlotDotsUI();
+            updateIndicators();
+            draw();
+            syncUI();
+          });
+          container.appendChild(dot);
+        });
+      });
+    }
+
+
+    /* ================================================================
+     * TOAST — notificação genérica
+     * ================================================================ */
+
+    _toastTimer = null;
+
+    function showToast(msg) {
+      let toast = document.getElementById('dpiToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'dpiToast';
+        toast.className = 'dpi-toast';
+        toast.innerHTML = '<span id="dpiToastMsg"></span>';
+        document.body.appendChild(toast);
+      }
+      document.getElementById('dpiToastMsg').textContent = msg;
+      toast.classList.add('visible');
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => toast.classList.remove('visible'), 5500);
+    }
+
+
+    /* ================================================================
+     * DPI — verificação 300 DPI para impressão
+     * ================================================================ */
+
+    function checkDpi(img, rect) {
+      // Para impressão a 300 DPI, a imagem precisa de ~4× os pixels lógicos do slot
+      if (img.naturalWidth < rect.w * 4 || img.naturalHeight < rect.h * 4) {
+        showToast('⚠️ Resolução baixa — pode ficar pixelado na impressão a 300 DPI.');
+      }
+    }
+
+
+    /* ================================================================
+     * CÂMERA — aviso de sobreposição com zona da câmera traseira
+     * ================================================================ */
+
+    function checkCameraOverlap(rect, m) {
+      const fc = m._facaCenter;
+      if (!fc) return;
+      const x0 = fc.x - fc.w / 2;
+      const y0 = fc.y - fc.h / 2;
+      const normX = (rect.x - x0) / fc.w;
+      const normY = (rect.y - y0) / fc.h;
+      // Camera zone: top portion of faca space (y < 0.20)
+      if (normY < 0.20) {
+        showToast('⚠️ Foto pode sobrepor a câmera traseira neste layout.');
+      }
+    }
+
+
+    /* ================================================================
+     * DIVISOR DINÂMICO — ciclar entre 2 / 4 / 6 slots
+     * ================================================================ */
+
+    function addDivisorSlots() {
+      const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      if (idx < 0 || idx >= DIVISOR_SEQUENCE.length - 1) return;
+      pushHistory();
+      const nextLayout = DIVISOR_SEQUENCE[idx + 1];
+      const oldSlots = state.slots;
+      const count = CUSTOM_GRIDS[nextLayout].length;
+      state.layout = nextLayout;
+      state.layoutOffset = {
+        x: 0,
+        y: 0
+      };
+      state.slots = Array.from({
+        length: count
+      }, (_, i) => ({
+        img: oldSlots[i] ? oldSlots[i].img : null,
+        imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0,
+      }));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+      updateLayoutUI();
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    function removeDivisorSlots() {
+      const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
+      if (idx <= 0) return;
+      pushHistory();
+      const prevLayout = DIVISOR_SEQUENCE[idx - 1];
+      const oldSlots = state.slots;
+      const count = CUSTOM_GRIDS[prevLayout].length;
+      // Revoke URLs for removed slots
+      for (let i = count; i < oldSlots.length; i++) {
+        if (oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
+      }
+      state.layout = prevLayout;
+      state.layoutOffset = {
+        x: 0,
+        y: 0
+      };
+      state.slots = Array.from({
+        length: count
+      }, (_, i) => ({
+        img: oldSlots[i] ? oldSlots[i].img : null,
+        imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
+        x: oldSlots[i] ? oldSlots[i].x : 0,
+        y: oldSlots[i] ? oldSlots[i].y : 0,
+        scale: oldSlots[i] ? oldSlots[i].scale : 1,
+        rotation: oldSlots[i] ? oldSlots[i].rotation : 0,
+      }));
+      state.activeSlot = Math.min(state.activeSlot, count - 1);
+      updateLayoutUI();
+      updateSlotDotsUI();
+      draw();
+      syncUI();
+    }
+
+    document.getElementById('btnDivisorAdd').onclick = addDivisorSlots;
+    document.getElementById('btnDivisorRemove').onclick = removeDivisorSlots;
+
+    /* ================================================================
+     * NUDGE — micro-ajuste de posição (1px por clique)
+     * ================================================================ */
+
+    function nudgeImage(dx, dy) {
+      if (!state.model) return;
+      pushHistory();
+      state.layoutOffset.x += dx;
+      state.layoutOffset.y += dy;
+      draw();
+    }
+
+    document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -1);
+    document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 1);
+    document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-1, 0);
+    document.getElementById('btnNudgeRight').onclick = () => nudgeImage(1, 0);
+
+
+    /* ================================================================
+     * CARREGAMENTO E INICIALIZAÇÃO DA APP
+     * ================================================================ */
+
+    function addModelOption(m) {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.name;
+      sel.appendChild(opt);
+    }
+
+    async function initApp() {
+      if (MODELS.length > 0) return;
+      try {
+        let resp = await fetch('/api/models').catch(() => null);
+        if (!resp || !resp.ok) resp = await fetch('models.json');
+        if (!resp.ok) throw new Error('Falha ao carregar modelos');
+        const models = await resp.json();
+
+        for (const m of models) {
+          const model = {
+            id: m.id ?? m.name.toLowerCase().replace(/\s+/g, '-'),
+            name: m.name,
+            mockupPath: m.mockupImageUrl,
+            facaMaskPath: null,
+            facaCircles: [],
+            fw: m.frameWidth ?? 500,
+            fh: m.frameHeight ?? 1000,
+            _mockupImg: null,
+          };
+
+          // Carregar SVG da máscara para extrair path outline + circles
+          if (m.screenMaskPath) {
+            try {
+              const svgResp = await fetch(m.screenMaskPath);
+              if (svgResp.ok) {
+                const svgText = await svgResp.text();
+                // Extrair o d="" do <path> principal (outline da capinha)
+                const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
+                if (pathMatch) model.facaMaskPath = pathMatch[1];
+
+                const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
+                model.facaCircles = circleMatches.map(cm => {
+                  const a = cm[1];
+                  return {
+                    cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
+                    cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
+                    r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
+                  };
+                }).filter(c => c.r > 0);
+              }
+            } catch (e) {
+              console.warn('[Mobifans] SVG não encontrado:', m.screenMaskPath);
+            }
+          }
+
+          MODELS.push(model);
+          addModelOption(model);
+        }
+
+        dropdownState.hierarchy = organizeModelsByBrandAndSeries();
+        renderBrands();
+
+      } catch (err) {
+        console.error('[Mobifans] Erro ao carregar modelos:', err);
+      } finally {
+        finishLoading();
+      }
+    }
+
+    initApp();
+
+
+    /* ================================================================
+     * HANDLER DE MUDANÇA DE MODELO
+     * ================================================================ */
+
+    sel.addEventListener('change', async () => {
+      // Revoke all existing image object URLs before switching model
+      state.slots.forEach(s => {
+        if (s.imgUrl) URL.revokeObjectURL(s.imgUrl);
+      });
+
+      const found = MODELS.find(m => m.id === sel.value);
+
+      if (!found) {
+        state.model = null;
+        canvas.style.display = 'none';
+        document.getElementById('emptyState').style.display = 'flex';
+        syncUI();
+        return;
+      }
+
+      loadingEl.classList.add('visible');
+      document.getElementById('emptyState').style.display = 'none';
+
+      state.model = found;
+      state.layout = 'RETRATO';
+      state.layoutOffset = { x: 0, y: 0 };
+      state.slots = [{
+        img: null,
+        imgUrl: null,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0
+      }];
+      state.activeSlot = 0;
+      state.history = [];
+
+      updateIndicators();
+      updateLayoutUI();
+      updateSlotDotsUI();
+
+      initCanvas(found);
+      canvas.style.display = 'block';
+      canvas.classList.add('entering');
+      canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), {
+        once: true
+      });
+
+      await loadModelImages(found);
+      initCanvas(found);
+
+      loadingEl.classList.remove('visible');
+      draw();
+      syncUI();
+    });
+
+
+    /* ================================================================
+     * UPLOAD DA ARTE
+     * ================================================================ */
+
+    document.getElementById('uploadBtn').onclick = () => fileInput.click();
+
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Preenche o primeiro slot vazio; se todos cheios, substitui o ativo
+      let targetIdx = state.slots.findIndex(s => !s.img);
+      if (targetIdx === -1) targetIdx = state.activeSlot;
+
+      const slot = state.slots[targetIdx];
+
+      // Revoke previous URL for this slot
+      if (slot.imgUrl) {
+        URL.revokeObjectURL(slot.imgUrl);
+        slot.imgUrl = null;
+      }
+
+      const imgUrl = URL.createObjectURL(file);
+      const img = new Image();
+
+      img.onload = () => {
+        slot.img = img;
+        slot.imgUrl = imgUrl;
+        slot.x = 0;
+        slot.y = 0;
+        slot.scale = 1;
+        slot.rotation = 0;
+
+        state.activeSlot = targetIdx;
+        state.history = [];
+
+        updateIndicators();
+        updateSlotDotsUI();
+
+        if (state.model && state.model._facaCenter) {
+          const rects = getSlotRects(state.model, state.layout);
+          const r = rects[targetIdx];
+          if (r) {
+            checkDpi(img, r);
+            checkCameraOverlap(r, state.model);
+          }
+        }
+
+        const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
+        document.getElementById('uploadName').textContent = name;
+        const uploadStatus = document.getElementById('uploadStatus');
+        uploadStatus.style.display = 'flex';
+        uploadStatus.classList.remove('animating');
+        void uploadStatus.offsetWidth;
+        uploadStatus.classList.add('animating');
+        uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), {
+          once: true
+        });
+
+        draw();
+        syncUI();
+      };
+
+      img.onerror = () => URL.revokeObjectURL(imgUrl);
+      img.src = imgUrl;
+      e.target.value = '';
+    });
+
+
+    /* ================================================================
+     * DOWNLOAD — exportar preview em alta resolução (4×)
+     * ================================================================ */
+
+    document.getElementById('downloadBtn').onclick = () => {
+      if (!state.model || !state.slots.some(s => s.img)) return;
+      const m = state.model;
+      const SC = 4;
+      const dlCanvas = document.createElement('canvas');
+      dlCanvas.width = m.fw * SC;
+      dlCanvas.height = m.fh * SC;
+      const dlCtx = dlCanvas.getContext('2d');
+      renderAllLayers(dlCtx, m, state, SC, true); // exportMode=true: all slots at 100% opacity
+      dlCanvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `preview-capinha-${m.id}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    };
+
+
+    /* ================================================================
+     * INICIALIZAÇÃO
+     * ================================================================ */
+
+    function finishLoading() {
+      const loader = document.getElementById('loader-screen');
+      if (!loader) return;
+      loader.classList.add('loader-hidden');
+      setTimeout(() => loader.remove(), 550);
+    }
+
     /* ═══════════════════════════════════════════════════════════════════════
        FEATURE PAUSED — QR Upload / WebSocket Client (v1.8)
        Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
@@ -3112,774 +3766,6 @@
                     if (typeof checkCameraOverlap === 'function') checkCameraOverlap();
                     draw();
                     syncUI();
-                }
-                if (!currentSlot().img) return;
-                touchDragging = true;
-                dragOrigin = {
-                    x: t.clientX,
-                    y: t.clientY
-                };
-                posOrigin = {
-                    x: currentSlot().x,
-                    y: currentSlot().y
-                };
-            } else if (e.touches.length === 2) {
-                e.preventDefault();
-                touchDragging = false;
-                const dx = e.touches[0].clientX - e.touches[1].clientX;
-                const dy = e.touches[0].clientY - e.touches[1].clientY;
-                lastPinchDist = Math.hypot(dx, dy);
-                pinchScaleBase = currentSlot().scale;
-            }
-        }, {
-            passive: false
-        });
-
-        canvas.addEventListener('touchmove', e => {
-            if (!state.slots.some(s => s.img)) return;
-            e.preventDefault();
-            if (e.touches.length === 1 && touchDragging) {
-                const {
-                    dx,
-                    dy
-                } = cssToLogical(
-                    e.touches[0].clientX - dragOrigin.x,
-                    e.touches[0].clientY - dragOrigin.y
-                );
-                currentSlot().x = posOrigin.x + dx;
-                currentSlot().y = posOrigin.y + dy;
-                draw();
-            } else if (e.touches.length === 2 && lastPinchDist > 0) {
-                const dx = e.touches[0].clientX - e.touches[1].clientX;
-                const dy = e.touches[0].clientY - e.touches[1].clientY;
-                applyScale(pinchScaleBase * (Math.hypot(dx, dy) / lastPinchDist));
-            }
-        }, {
-            passive: false
-        });
-
-        canvas.addEventListener('touchend', e => {
-            if (e.touches.length === 0) {
-                if (touchDragging) pushHistory();
-                touchDragging = false;
-                lastPinchDist = 0;
-            }
-        });
-
-
-        /* ================================================================
-         * WHEEL — zoom com scroll
-         * ================================================================ */
-
-        canvas.addEventListener('wheel', e => {
-            if (!currentSlot().img) return;
-            e.preventDefault();
-            applyScale(currentSlot().scale + (e.deltaY > 0 ? -0.06 : 0.06));
-        }, {
-            passive: false
-        });
-
-
-        /* ================================================================
-         * MOTION HELPERS
-         * ================================================================ */
-
-        function triggerBump(el) {
-            if (!el) return;
-            el.classList.remove('pill-bump');
-            void el.offsetWidth;
-            el.classList.add('pill-bump');
-            el.addEventListener('animationend', () => el.classList.remove('pill-bump'), {
-                once: true
-            });
-        }
-
-
-        /* ================================================================
-         * INDICADORES — sincroniza pills com o slot ativo
-         * ================================================================ */
-
-        function updateIndicators() {
-            const s = currentSlot();
-            document.getElementById('scaleLabel').textContent = Math.round((s.scale || 1) * 100) + '%';
-            const rot = s.rotation || 0;
-            document.getElementById('rotationLabel').textContent = rot + '°';
-            document.getElementById('rotationRow').style.display = rot !== 0 ? 'flex' : 'none';
-        }
-
-
-        /* ================================================================
-         * ZOOM
-         * ================================================================ */
-
-        function applyScale(v) {
-            currentSlot().scale = Math.max(0.2, Math.min(3.0, v));
-            document.getElementById('scaleLabel').textContent = Math.round(currentSlot().scale * 100) + '%';
-            triggerBump(document.querySelector('.scale-pill'));
-            draw();
-        }
-
-        function resetView() {
-            pushHistory();
-            const s = currentSlot();
-            s.x = 0;
-            s.y = 0;
-            s.scale = 1;
-            s.rotation = 0;
-            updateIndicators();
-            draw();
-        }
-
-
-        /* ================================================================
-         * HISTÓRICO — snapshot completo do estado
-         * ================================================================ */
-
-        function pushHistory() {
-            state.history.push({
-                layout: state.layout,
-                layoutOffset: {
-                    ...state.layoutOffset
-                },
-                activeSlot: state.activeSlot,
-                slots: state.slots.map(s => ({
-                    img: s.img,
-                    imgUrl: s.imgUrl,
-                    x: s.x,
-                    y: s.y,
-                    scale: s.scale,
-                    rotation: s.rotation,
-                })),
-            });
-            if (state.history.length > 20) state.history.shift();
-            syncUI();
-        }
-
-        function undo() {
-            if (!state.history.length) return;
-            const snap = state.history.pop();
-            // Revoke URLs for slots that will be removed
-            for (let i = snap.slots.length; i < state.slots.length; i++) {
-                if (state.slots[i].imgUrl) URL.revokeObjectURL(state.slots[i].imgUrl);
-            }
-            state.layout = snap.layout;
-            state.layoutOffset = snap.layoutOffset ? {
-                ...snap.layoutOffset
-            } : {
-                x: 0,
-                y: 0
-            };
-            state.activeSlot = snap.activeSlot;
-            state.slots = snap.slots.map(ss => ({
-                ...ss
-            }));
-            updateLayoutUI();
-            updateSlotDotsUI();
-            updateIndicators();
-            draw();
-            syncUI();
-        }
-
-
-        /* ================================================================
-         * SYNC UI
-         * ================================================================ */
-
-        function syncUI() {
-            const hasModel = !!state.model;
-            const hasAnyImg = state.slots.some(s => s.img);
-            const hasCurImg = !!currentSlot().img;
-            const hasHist = state.history.length > 0;
-            const multiSlot = state.slots.length > 1;
-            const isDivisor = state.layout.startsWith('DIVISOR');
-
-            document.getElementById('uploadBtn').disabled = !hasModel;
-            document.getElementById('downloadBtn').disabled = !hasAnyImg;
-            document.getElementById('btnUndo').disabled = !hasHist;
-            document.getElementById('btnFit').disabled = !hasCurImg;
-            document.getElementById('btnReset').disabled = !hasCurImg;
-            document.getElementById('btnRotate').disabled = !hasCurImg;
-            document.getElementById('btnZoomIn').disabled = !hasCurImg;
-            document.getElementById('btnZoomOut').disabled = !hasCurImg;
-
-            // Divisor dinâmico
-            const divisorControls = document.getElementById('divisorControls');
-            if (divisorControls) divisorControls.style.display = isDivisor ? 'flex' : 'none';
-            const divisorIdx = DIVISOR_SEQUENCE.indexOf(state.layout);
-            const btnDA = document.getElementById('btnDivisorAdd');
-            const btnDR = document.getElementById('btnDivisorRemove');
-            if (btnDA) btnDA.disabled = divisorIdx >= DIVISOR_SEQUENCE.length - 1;
-            if (btnDR) btnDR.disabled = divisorIdx <= 0;
-
-            // Nudge panel: visível no Step 3 apenas para Retrato e 3-Fotos
-            const nudgePanel = document.getElementById('nudgePanel');
-            const showNudge = currentStep === 3 && !isDivisor;
-            if (nudgePanel) nudgePanel.style.display = showNudge ? 'flex' : 'none';
-            ['btnNudgeUp', 'btnNudgeDown', 'btnNudgeLeft', 'btnNudgeRight'].forEach(id => {
-                const b = document.getElementById(id);
-                if (b) b.disabled = !hasCurImg;
-            });
-
-            // Slot indicator visibility
-            const ind = document.getElementById('slotIndicator');
-            const sel3 = document.getElementById('slotSelectorStep3');
-            if (ind) ind.style.display = multiSlot ? 'flex' : 'none';
-            if (sel3) sel3.style.display = multiSlot ? 'flex' : 'none';
-
-            // Upload label
-            const emptyIdx = state.slots.findIndex(s => !s.img);
-            const lbl = document.getElementById('uploadBtnLabel');
-            if (lbl) lbl.textContent = multiSlot && emptyIdx !== -1 ?
-                `Foto ${emptyIdx + 1} de ${state.slots.length}` :
-                'Faça upload aqui';
-
-            const hint = document.getElementById('canvasHint');
-            hint.style.display = (currentStep === 3 && hasCurImg) ? 'block' : 'none';
-        }
-
-
-        /* ================================================================
-         * TOOLBAR — handlers
-         * ================================================================ */
-
-        document.getElementById('btnUndo').onclick = undo;
-        document.getElementById('btnFit').onclick = resetView;
-        document.getElementById('btnReset').onclick = resetView;
-
-        document.getElementById('btnRotate').onclick = () => {
-            pushHistory();
-            const s = currentSlot();
-            s.rotation = (s.rotation + 90) % 360;
-            updateIndicators();
-            triggerBump(document.querySelector('.rotation-pill'));
-            draw();
-        };
-
-        document.getElementById('btnZoomIn').onclick = () => {
-            pushHistory();
-            applyScale(currentSlot().scale + 0.1);
-        };
-
-        document.getElementById('btnZoomOut').onclick = () => {
-            pushHistory();
-            applyScale(currentSlot().scale - 0.1);
-        };
-
-
-        /* ================================================================
-         * LAYOUT — seletor de grid
-         * ================================================================ */
-
-        function setLayout(name) {
-            const oldSlots = state.slots;
-            const grid = CUSTOM_GRIDS[name];
-            const count = grid ? grid.length : 1;
-
-            // Revoke URLs for slots beyond new count
-            for (let i = count; i < oldSlots.length; i++) {
-                if (oldSlots[i] && oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
-            }
-
-            state.layout = name;
-            state.layoutOffset = {
-                x: 0,
-                y: 0
-            };
-            state.history = [];
-            state.slots = Array.from({
-                length: count
-            }, (_, i) => ({
-                img: oldSlots[i] ? oldSlots[i].img : null,
-                imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
-                x: 0,
-                y: 0,
-                scale: 1,
-                rotation: 0,
-            }));
-            state.activeSlot = Math.min(state.activeSlot, count - 1);
-
-            updateLayoutUI();
-            updateSlotDotsUI();
-            draw();
-            syncUI();
-        }
-
-        function updateLayoutUI() {
-            document.querySelectorAll('.layout-btn').forEach(btn => {
-                const match = btn.dataset.layout === state.layout ||
-                    (btn.dataset.layout === 'DIVISOR-1' && state.layout.startsWith('DIVISOR'));
-                btn.classList.toggle('active', match);
-            });
-        }
-
-        document.getElementById('layoutGrid').addEventListener('click', e => {
-            const btn = e.target.closest('.layout-btn');
-            if (!btn) return;
-            setLayout(btn.dataset.layout);
-        });
-
-
-        /* ================================================================
-         * SLOT DOTS — botões de seleção de slot ativo
-         * ================================================================ */
-
-        function updateSlotDotsUI() {
-            ['slotDots', 'slotDotsStep3'].forEach(id => {
-                const container = document.getElementById(id);
-                if (!container) return;
-                container.innerHTML = '';
-                state.slots.forEach((s, i) => {
-                    const dot = document.createElement('button');
-                    dot.className = 'slot-dot' +
-                        (i === state.activeSlot ? ' active' : '') +
-                        (s.img ? ' has-img' : '');
-                    dot.title = `Foto ${i + 1}`;
-                    dot.textContent = s.img ? '✓' : String(i + 1);
-                    dot.addEventListener('click', () => {
-                        state.activeSlot = i;
-                        updateSlotDotsUI();
-                        updateIndicators();
-                        draw();
-                        syncUI();
-                    });
-                    container.appendChild(dot);
-                });
-            });
-        }
-
-
-        /* ================================================================
-         * TOAST — notificação genérica
-         * ================================================================ */
-
-        _toastTimer = null;
-
-        function showToast(msg) {
-            let toast = document.getElementById('dpiToast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'dpiToast';
-                toast.className = 'dpi-toast';
-                toast.innerHTML = '<span id="dpiToastMsg"></span>';
-                document.body.appendChild(toast);
-            }
-            document.getElementById('dpiToastMsg').textContent = msg;
-            toast.classList.add('visible');
-            clearTimeout(_toastTimer);
-            _toastTimer = setTimeout(() => toast.classList.remove('visible'), 5500);
-        }
-
-
-        /* ================================================================
-         * DPI — verificação 300 DPI para impressão
-         * ================================================================ */
-
-        function checkDpi(img, rect) {
-            // Para impressão a 300 DPI, a imagem precisa de ~4× os pixels lógicos do slot
-            if (img.naturalWidth < rect.w * 4 || img.naturalHeight < rect.h * 4) {
-                showToast('⚠️ Resolução baixa — pode ficar pixelado na impressão a 300 DPI.');
-            }
-        }
-
-
-        /* ================================================================
-         * CÂMERA — aviso de sobreposição com zona da câmera traseira
-         * ================================================================ */
-
-        function checkCameraOverlap(rect, m) {
-            const fc = m._facaCenter;
-            if (!fc) return;
-            const x0 = fc.x - fc.w / 2;
-            const y0 = fc.y - fc.h / 2;
-            const normX = (rect.x - x0) / fc.w;
-            const normY = (rect.y - y0) / fc.h;
-            // Camera zone: top portion of faca space (y < 0.20)
-            if (normY < 0.20) {
-                showToast('⚠️ Foto pode sobrepor a câmera traseira neste layout.');
-            }
-        }
-
-
-        /* ================================================================
-         * DIVISOR DINÂMICO — ciclar entre 2 / 4 / 6 slots
-         * ================================================================ */
-
-        function addDivisorSlots() {
-            const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
-            if (idx < 0 || idx >= DIVISOR_SEQUENCE.length - 1) return;
-            pushHistory();
-            const nextLayout = DIVISOR_SEQUENCE[idx + 1];
-            const oldSlots = state.slots;
-            const count = CUSTOM_GRIDS[nextLayout].length;
-            state.layout = nextLayout;
-            state.layoutOffset = {
-                x: 0,
-                y: 0
-            };
-            state.slots = Array.from({
-                length: count
-            }, (_, i) => ({
-                img: oldSlots[i] ? oldSlots[i].img : null,
-                imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
-                x: 0,
-                y: 0,
-                scale: 1,
-                rotation: 0,
-            }));
-            state.activeSlot = Math.min(state.activeSlot, count - 1);
-            updateLayoutUI();
-            updateSlotDotsUI();
-            draw();
-            syncUI();
-        }
-
-        function removeDivisorSlots() {
-            const idx = DIVISOR_SEQUENCE.indexOf(state.layout);
-            if (idx <= 0) return;
-            pushHistory();
-            const prevLayout = DIVISOR_SEQUENCE[idx - 1];
-            const oldSlots = state.slots;
-            const count = CUSTOM_GRIDS[prevLayout].length;
-            // Revoke URLs for removed slots
-            for (let i = count; i < oldSlots.length; i++) {
-                if (oldSlots[i].imgUrl) URL.revokeObjectURL(oldSlots[i].imgUrl);
-            }
-            state.layout = prevLayout;
-            state.layoutOffset = {
-                x: 0,
-                y: 0
-            };
-            state.slots = Array.from({
-                length: count
-            }, (_, i) => ({
-                img: oldSlots[i] ? oldSlots[i].img : null,
-                imgUrl: oldSlots[i] ? oldSlots[i].imgUrl : null,
-                x: oldSlots[i] ? oldSlots[i].x : 0,
-                y: oldSlots[i] ? oldSlots[i].y : 0,
-                scale: oldSlots[i] ? oldSlots[i].scale : 1,
-                rotation: oldSlots[i] ? oldSlots[i].rotation : 0,
-            }));
-            state.activeSlot = Math.min(state.activeSlot, count - 1);
-            updateLayoutUI();
-            updateSlotDotsUI();
-            draw();
-            syncUI();
-        }
-
-        document.getElementById('btnDivisorAdd').onclick = addDivisorSlots;
-        document.getElementById('btnDivisorRemove').onclick = removeDivisorSlots;
-
-        /* ================================================================
-         * NUDGE — micro-ajuste de posição (1px por clique)
-         * ================================================================ */
-
-        function nudgeImage(dx, dy) {
-            if (!state.model) return;
-            pushHistory();
-            state.layoutOffset.x += dx;
-            state.layoutOffset.y += dy;
-            draw();
-        }
-
-        document.getElementById('btnNudgeUp').onclick = () => nudgeImage(0, -1);
-        document.getElementById('btnNudgeDown').onclick = () => nudgeImage(0, 1);
-        document.getElementById('btnNudgeLeft').onclick = () => nudgeImage(-1, 0);
-        document.getElementById('btnNudgeRight').onclick = () => nudgeImage(1, 0);
-
-
-        /* ================================================================
-         * CARREGAMENTO E INICIALIZAÇÃO DA APP
-         * ================================================================ */
-
-        function addModelOption(m) {
-            const opt = document.createElement('option');
-            opt.value = m.id;
-            opt.textContent = m.name;
-            sel.appendChild(opt);
-        }
-
-        async function initApp() {
-            if (MODELS.length > 0) return;
-            try {
-                let resp = await fetch('/api/models').catch(() => null);
-                if (!resp || !resp.ok) resp = await fetch('models.json');
-                if (!resp.ok) throw new Error('Falha ao carregar modelos');
-                const models = await resp.json();
-
-                for (const m of models) {
-                    const model = {
-                        id: m.id ?? m.name.toLowerCase().replace(/\s+/g, '-'),
-                        name: m.name,
-                        mockupPath: m.mockupImageUrl,
-                        facaMaskPath: null,
-                        facaCircles: [],
-                        fw: m.frameWidth ?? 500,
-                        fh: m.frameHeight ?? 1000,
-                        _mockupImg: null,
-                    };
-
-                    // Carregar SVG da máscara para extrair path outline + circles
-                    if (m.screenMaskPath) {
-                        try {
-                            const svgResp = await fetch(m.screenMaskPath);
-                            if (svgResp.ok) {
-                                const svgText = await svgResp.text();
-                                // Extrair o d="" do <path> principal (outline da capinha)
-                                const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
-                                if (pathMatch) model.facaMaskPath = pathMatch[1];
-
-                                const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
-                                model.facaCircles = circleMatches.map(cm => {
-                                    const a = cm[1];
-                                    return {
-                                        cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
-                                        cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
-                                        r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
-                                    };
-                                }).filter(c => c.r > 0);
-                            }
-                        } catch (e) {
-                            console.warn('[Mobifans] SVG não encontrado:', m.screenMaskPath);
-                        }
-                    }
-
-                    MODELS.push(model);
-                    addModelOption(model);
-                }
-
-                dropdownState.hierarchy = organizeModelsByBrandAndSeries();
-                renderBrands();
-
-            } catch (err) {
-                console.error('[Mobifans] Erro ao carregar modelos:', err);
-            } finally {
-                finishLoading();
-            }
-        }
-
-        initApp();
-
-
-        /* ================================================================
-         * HANDLER DE MUDANÇA DE MODELO
-         * ================================================================ */
-
-        sel.addEventListener('change', async () => {
-            // Revoke all existing image object URLs before switching model
-            state.slots.forEach(s => {
-                if (s.imgUrl) URL.revokeObjectURL(s.imgUrl);
-            });
-
-            const found = MODELS.find(m => m.id === sel.value);
-
-            if (!found) {
-                state.model = null;
-                canvas.style.display = 'none';
-                document.getElementById('emptyState').style.display = 'flex';
-                syncUI();
-                return;
-            }
-
-            loadingEl.classList.add('visible');
-            document.getElementById('emptyState').style.display = 'none';
-
-            state.model = found;
-            state.layout = 'RETRATO';
-            state.layoutOffset = { x: 0, y: 0 };
-            state.slots = [{
-                img: null,
-                imgUrl: null,
-                x: 0,
-                y: 0,
-                scale: 1,
-                rotation: 0
-            }];
-            state.activeSlot = 0;
-            state.history = [];
-
-            updateIndicators();
-            updateLayoutUI();
-            updateSlotDotsUI();
-
-            initCanvas(found);
-            canvas.style.display = 'block';
-            canvas.classList.add('entering');
-            canvas.addEventListener('animationend', () => canvas.classList.remove('entering'), {
-                once: true
-            });
-
-            await loadModelImages(found);
-            initCanvas(found);
-
-            loadingEl.classList.remove('visible');
-            draw();
-            syncUI();
-        });
-
-
-        /* ================================================================
-         * UPLOAD DA ARTE
-         * ================================================================ */
-
-        document.getElementById('uploadBtn').onclick = () => fileInput.click();
-
-        fileInput.addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            // Preenche o primeiro slot vazio; se todos cheios, substitui o ativo
-            let targetIdx = state.slots.findIndex(s => !s.img);
-            if (targetIdx === -1) targetIdx = state.activeSlot;
-
-            const slot = state.slots[targetIdx];
-
-            // Revoke previous URL for this slot
-            if (slot.imgUrl) {
-                URL.revokeObjectURL(slot.imgUrl);
-                slot.imgUrl = null;
-            }
-
-            const imgUrl = URL.createObjectURL(file);
-            const img = new Image();
-
-            img.onload = () => {
-                slot.img = img;
-                slot.imgUrl = imgUrl;
-                slot.x = 0;
-                slot.y = 0;
-                slot.scale = 1;
-                slot.rotation = 0;
-
-                state.activeSlot = targetIdx;
-                state.history = [];
-
-                updateIndicators();
-                updateSlotDotsUI();
-
-                if (state.model && state.model._facaCenter) {
-                    const rects = getSlotRects(state.model, state.layout);
-                    const r = rects[targetIdx];
-                    if (r) {
-                        checkDpi(img, r);
-                        checkCameraOverlap(r, state.model);
-                    }
-                }
-
-                const name = file.name.length > 26 ? file.name.slice(0, 24) + '…' : file.name;
-                document.getElementById('uploadName').textContent = name;
-                const uploadStatus = document.getElementById('uploadStatus');
-                uploadStatus.style.display = 'flex';
-                uploadStatus.classList.remove('animating');
-                void uploadStatus.offsetWidth;
-                uploadStatus.classList.add('animating');
-                uploadStatus.addEventListener('animationend', () => uploadStatus.classList.remove('animating'), {
-                    once: true
-                });
-
-                draw();
-                syncUI();
-            };
-
-            img.onerror = () => URL.revokeObjectURL(imgUrl);
-            img.src = imgUrl;
-            e.target.value = '';
-        });
-
-
-        /* ================================================================
-         * DOWNLOAD — exportar preview em alta resolução (4×)
-         * ================================================================ */
-
-        document.getElementById('downloadBtn').onclick = () => {
-            if (!state.model || !state.slots.some(s => s.img)) return;
-            const m = state.model;
-            const SC = 4;
-            const dlCanvas = document.createElement('canvas');
-            dlCanvas.width = m.fw * SC;
-            dlCanvas.height = m.fh * SC;
-            const dlCtx = dlCanvas.getContext('2d');
-            renderAllLayers(dlCtx, m, state, SC, true); // exportMode=true: all slots at 100% opacity
-            dlCanvas.toBlob(blob => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `preview-capinha-${m.id}.png`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 'image/png');
-        };
-
-
-        /* ================================================================
-         * INICIALIZAÇÃO
-         * ================================================================ */
-
-        function finishLoading() {
-            const loader = document.getElementById('loader-screen');
-            if (!loader) return;
-            loader.classList.add('loader-hidden');
-            setTimeout(() => loader.remove(), 550);
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════════
-           FEATURE PAUSED — QR Upload / WebSocket Client (v1.8)
-           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
-           Para reativar: descomente este bloco (+ CSS e HTML correspondentes acima).
-           Também reativar: server/index.ts → qrRouter, WebSocket upgrade handler.
-        ════════════════════════════════════════════════════════════════════════
-
-        let qrWs = null;
-
-        document.getElementById('qrTriggerBtn').onclick = async () => {
-            const btn = document.getElementById('qrTriggerBtn');
-            btn.disabled = true;
-            btn.textContent = 'Gerando QR…';
-
-            try {
-                const res = await fetch('/api/session', { method: 'POST' });
-                if (!res.ok) throw new Error('Erro ao criar sessão');
-                const { sessionId, qrSvg, url } = await res.json();
-
-                document.getElementById('qrCode').innerHTML = qrSvg;
-                document.getElementById('qrUrl').textContent = url;
-                document.getElementById('qrPanel').style.display = 'flex';
-                btn.style.display = 'none';
-
-                const wsUrl = `ws://${location.host}/ws?sessionId=${sessionId}`;
-                qrWs = new WebSocket(wsUrl);
-
-                qrWs.onmessage = (e) => {
-                    let parsed;
-                    try { parsed = JSON.parse(e.data); } catch { return; }
-                    if (parsed.type !== 'image') return;
-
-                    const img = new Image();
-                    img.onload = () => {
-                        const slot = currentSlot();
-                        pushHistory();
-                        slot.img = img;
-                        slot.scale = 1;
-                        slot.x = 0;
-                        slot.y = 0;
-                        slot.rotation = 0;
-                        if (typeof checkDpi === 'function') checkDpi(img, state.model);
-                        if (typeof checkCameraOverlap === 'function') checkCameraOverlap();
-                        draw();
-                        syncUI();
-                        closeQrPanel();
-                        showToast('Foto recebida do celular!');
-                    };
-                    img.onerror = () => {
-                        console.error('[QR] Falha ao carregar imagem recebida via WebSocket');
-                        closeQrPanel();
-                        showToast('Erro ao carregar a foto. Tenta novamente.');
-                    };
-                    img.src = parsed.data;
-                };
-
-                qrWs.onerror = () => {
                     closeQrPanel();
                     showToast('Foto recebida do celular!');
                 };
@@ -3893,26 +3779,38 @@
 
             qrWs.onerror = () => {
                 closeQrPanel();
-                showToast('Erro de conexão com o servidor.');
+                showToast('Foto recebida do celular!');
             };
+            img.onerror = () => {
+                console.error('[QR] Falha ao carregar imagem recebida via WebSocket');
+                closeQrPanel();
+                showToast('Erro ao carregar a foto. Tenta novamente.');
+            };
+            img.src = parsed.data;
+        };
 
-        } catch (err) {
+        qrWs.onerror = () => {
             closeQrPanel();
-            showToast('Não foi possível gerar o QR.');
-        }
-    };
+            showToast('Erro de conexão com o servidor.');
+        };
 
-    function closeQrPanel() {
-        document.getElementById('qrPanel').style.display = 'none';
-        const btn = document.getElementById('qrTriggerBtn');
-        btn.style.display = '';
-        btn.disabled = !state.model;
-        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 20h3M20 17v3"/></svg> Enviar do Celular via QR`;
-        if (qrWs && qrWs.readyState <= 1) { qrWs.close(); }
-        qrWs = null;
+    } catch (err) {
+        closeQrPanel();
+        showToast('Não foi possível gerar o QR.');
     }
+};
 
-    ═══ END FEATURE PAUSED ═══ */
+function closeQrPanel() {
+    document.getElementById('qrPanel').style.display = 'none';
+    const btn = document.getElementById('qrTriggerBtn');
+    btn.style.display = '';
+    btn.disabled = !state.model;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 20h3M20 17v3"/></svg> Enviar do Celular via QR`;
+    if (qrWs && qrWs.readyState <= 1) { qrWs.close(); }
+    qrWs = null;
+}
+
+═══ END FEATURE PAUSED ═══ */
 
     syncUI();
     showStep(1);
