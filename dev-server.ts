@@ -1,11 +1,9 @@
 import "dotenv/config";
 import * as http from "http";
-import { createServer, createWebSocketServer } from "./server/index";
+import { createServer } from "./server/index";
 
 const app = createServer();
 const httpServer = http.createServer(app);
-
-createWebSocketServer(httpServer);
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
 httpServer.listen(port, "0.0.0.0", () => {

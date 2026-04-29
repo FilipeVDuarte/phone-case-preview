@@ -549,127 +549,6 @@
       gap: 6px;
     }
 
-    /* ═══════════════════════════════════════════════════════════════════════
-           FEATURE PAUSED — QR Upload / Conexão Mobile via QR Code (v1.8)
-           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
-           Para reativar: descomente este bloco completo (CSS + HTML + JS abaixo).
-        ════════════════════════════════════════════════════════════════════════ */
-    /*
-        .qr-divider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--gray-400);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .qr-divider::before,
-        .qr-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--gray-200);
-        }
-
-        .qr-trigger-btn {
-            width: 100%;
-            padding: 11px 14px;
-            border: 2px solid var(--gray-300);
-            border-radius: 10px;
-            background: var(--gray-50);
-            font-family: var(--font);
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--black);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: border-color 0.15s, background 0.15s;
-        }
-
-        .qr-trigger-btn:hover {
-            border-color: var(--ocean);
-            background: #f0f1ff;
-        }
-
-        .qr-trigger-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .qr-panel {
-            border: 2px solid var(--gray-200);
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            background: var(--gray-50);
-        }
-
-        .qr-panel svg {
-            width: 148px;
-            height: 148px;
-            border-radius: 8px;
-            border: 3px solid var(--black);
-            box-shadow: 3px 3px 0 0 var(--black);
-            display: block;
-        }
-
-        .qr-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--black);
-        }
-
-        .qr-url {
-            font-size: 10px;
-            color: var(--gray-500);
-            font-family: monospace;
-            word-break: break-all;
-            text-align: center;
-        }
-
-        .qr-waiting {
-            font-size: 12px;
-            color: var(--gray-500);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .qr-waiting::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--ocean);
-            animation: qr-pulse 1.2s ease-in-out infinite;
-        }
-
-        @keyframes qr-pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.7); }
-        }
-
-        .qr-cancel-btn {
-            font-size: 11px;
-            color: var(--gray-500);
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-family: var(--font);
-            text-decoration: underline;
-            padding: 0;
-        }
-        */
-
     /* ── WIZARD TOOLBAR (Step 3) ── */
     .wizard-toolbar {
       display: flex;
@@ -1318,6 +1197,116 @@
     ══════════════════════════════════════ -->
     <aside class="panel-right">
 
+<body>
+
+  <!-- Splash Screen -->
+  <div id="loader-screen">
+    <div class="loader-card">
+      <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5" />
+        <rect x="21" y="11" width="22" height="37" rx="2" fill="var(--gray-200)" />
+        <circle cx="32" cy="53" r="2.5" fill="#000" />
+      </svg>
+      <p>Carregando modelos...</p>
+    </div>
+  </div>
+
+  <!-- Hidden elements for JS compatibility -->
+  <select id="modelSelect">
+    <option value="">— Seleciona o modelo —</option>
+  </select>
+  <button id="btnReset" style="display:none"></button>
+
+  <div class="workspace">
+
+    <!-- ══════════════════════════════════════
+         PAINEL 1: ESQUERDO (Informativo)
+    ══════════════════════════════════════ -->
+    <aside class="panel-left">
+
+      <div class="logo-area">
+        <object data="svg/Logo_Preview.svg" type="image/svg+xml" height="48" aria-label="Mobifans">Mobifans</object>
+      </div>
+
+      <h1 class="app-title">Personaliza<br>Capinha</h1>
+
+      <div class="how-to-use">
+        <strong>Como Usar</strong>
+        1. Seleciona o modelo do celular<br>
+        2. Faz upload da tua imagem<br>
+        3. Arrasta e ajusta o zoom<br>
+        4. Baixa a preview pronta
+      </div>
+
+    </aside>
+
+
+    <!-- ══════════════════════════════════════
+         PAINEL 2: CENTRO (Visualização)
+    ══════════════════════════════════════ -->
+    <main class="panel-center">
+
+      <!-- Canvas area -->
+      <div class="canvas-area" id="canvasWrapper">
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+            <rect x="16" y="4" width="32" height="56" rx="7" stroke="#CBD5E1" stroke-width="2" />
+            <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
+            <circle cx="32" cy="53" r="2.5" fill="#CBD5E1" />
+          </svg>
+          <p>Seleciona um modelo<br>para começar</p>
+        </div>
+
+        <!-- Loading spinner -->
+        <div class="canvas-loading" id="canvasLoading">
+          <div class="spinner"></div>
+          Carregando mockup…
+        </div>
+
+        <!-- Canvas principal — 3 camadas:
+             0: mockup AVIF  |  1: arte do usuário (mascarada)  |  2: linha de corte -->
+        <canvas id="phoneCanvas"></canvas>
+
+      </div>
+
+      <!-- Floating hint -->
+      <div class="canvas-float-hint" id="canvasHint">Clique e Arraste para ajustar</div>
+
+      <!-- Stepper (inferior) -->
+      <div class="stepper" id="stepper">
+        <div class="step-item active" id="stepItem1">
+          <div class="step-num">1</div>
+          <div class="step-label">Modelo</div>
+        </div>
+        <div class="step-connector" id="stepConn1"></div>
+        <div class="step-item" id="stepItem2">
+          <div class="step-num">2</div>
+          <div class="step-label">Foto</div>
+        </div>
+        <div class="step-connector" id="stepConn2"></div>
+        <div class="step-item" id="stepItem3">
+          <div class="step-num">3</div>
+          <div class="step-label">Ajuste</div>
+        </div>
+        <div class="step-connector" id="stepConn3"></div>
+        <div class="step-item" id="stepItem4">
+          <div class="step-num">4</div>
+          <div class="step-label">Finalizar</div>
+        </div>
+      </div>
+
+    </main>
+
+      <!-- ── PASSO 1: Modelo ── -->
+      <div class="step-panel" id="stepPanel1">
+
+    <!-- ══════════════════════════════════════
+         PAINEL 3: DIREITO (Wizard)
+    ══════════════════════════════════════ -->
+    <aside class="panel-right">
+
       <!-- ── PASSO 1: Modelo ── -->
       <div class="step-panel" id="stepPanel1">
 
@@ -1416,26 +1405,6 @@
           <span id="uploadName">Imagem carregada</span>
         </div>
 
-        <!-- ═══ FEATURE PAUSED: QR Upload / Conexão Mobile v1.8 ═══
-                     Para reativar: descomente este bloco HTML (+ CSS e JS correspondentes).
-                <div class="qr-divider">ou</div>
-
-                <button class="qr-trigger-btn" id="qrTriggerBtn" disabled>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                        <path d="M14 14h3v3M17 20h3M20 17v3"/>
-                    </svg>
-                    Enviar do Celular via QR
-                </button>
-
-                <div class="qr-panel" id="qrPanel" style="display:none">
-                    <div id="qrCode"></div>
-                    <div class="qr-label">Escaneia com o teu celular</div>
-                    <div class="qr-url" id="qrUrl"></div>
-                    <div class="qr-waiting">Aguardando foto…</div>
-                    <button class="qr-cancel-btn" onclick="closeQrPanel()">Cancelar</button>
-                </div>
-                ═══ END FEATURE PAUSED ═══ -->
 
       </div>
 
@@ -2668,8 +2637,6 @@
       const isDivisor = state.layout.startsWith('DIVISOR');
 
       document.getElementById('uploadBtn').disabled = !hasModel;
-      // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
-      // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
       document.getElementById('downloadBtn').disabled = !hasAnyImg;
       document.getElementById('btnUndo').disabled = !hasHist;
       document.getElementById('btnFit').disabled = !hasCurImg;
@@ -3007,6 +2974,7 @@
                 model.facaCircles = circleMatches.map(cm => {
                   const a = cm[1];
                   return {
+                    //se não tiver carregando, verifique aqui, pois dá erro de sintaxe do JSON
                     cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
                     cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
                     r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
@@ -3197,85 +3165,6 @@
       loader.classList.add('loader-hidden');
       setTimeout(() => loader.remove(), 550);
     }
-
-    /* ═══════════════════════════════════════════════════════════════════════
-       FEATURE PAUSED — QR Upload / WebSocket Client (v1.8)
-       Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
-       Para reativar: descomente este bloco (+ CSS e HTML correspondentes acima).
-       Também reativar: server/index.ts → qrRouter, WebSocket upgrade handler.
-    ════════════════════════════════════════════════════════════════════════
-
-    let qrWs = null;
-
-    document.getElementById('qrTriggerBtn').onclick = async () => {
-        const btn = document.getElementById('qrTriggerBtn');
-        btn.disabled = true;
-        btn.textContent = 'Gerando QR…';
-
-        try {
-            const res = await fetch('/api/session', { method: 'POST' });
-            if (!res.ok) throw new Error('Erro ao criar sessão');
-            const { sessionId, qrSvg, url } = await res.json();
-
-            document.getElementById('qrCode').innerHTML = qrSvg;
-            document.getElementById('qrUrl').textContent = url;
-            document.getElementById('qrPanel').style.display = 'flex';
-            btn.style.display = 'none';
-
-            const wsUrl = `ws://${location.host}/ws?sessionId=${sessionId}`;
-            qrWs = new WebSocket(wsUrl);
-
-            qrWs.onmessage = (e) => {
-                let parsed;
-                try { parsed = JSON.parse(e.data); } catch { return; }
-                if (parsed.type !== 'image') return;
-
-                const img = new Image();
-                img.onload = () => {
-                    const slot = currentSlot();
-                    pushHistory();
-                    slot.img = img;
-                    slot.scale = 1;
-                    slot.x = 0;
-                    slot.y = 0;
-                    slot.rotation = 0;
-                    if (typeof checkDpi === 'function') checkDpi(img, state.model);
-                    if (typeof checkCameraOverlap === 'function') checkCameraOverlap();
-                    draw();
-                    syncUI();
-                    closeQrPanel();
-                    showToast('Foto recebida do celular!');
-                };
-                img.onerror = () => {
-                    console.error('[QR] Falha ao carregar imagem recebida via WebSocket');
-                    closeQrPanel();
-                    showToast('Erro ao carregar a foto. Tenta novamente.');
-                };
-                img.src = parsed.data;
-            };
-
-            qrWs.onerror = () => {
-                closeQrPanel();
-                showToast('Erro de conexão com o servidor.');
-            };
-
-        } catch (err) {
-            closeQrPanel();
-            showToast('Não foi possível gerar o QR.');
-        }
-    };
-
-    function closeQrPanel() {
-        document.getElementById('qrPanel').style.display = 'none';
-        const btn = document.getElementById('qrTriggerBtn');
-        btn.style.display = '';
-        btn.disabled = !state.model;
-        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 20h3M20 17v3"/></svg> Enviar do Celular via QR`;
-        if (qrWs && qrWs.readyState <= 1) { qrWs.close(); }
-        qrWs = null;
-    }
-
-    ═══ END FEATURE PAUSED ═══ */
 
     syncUI();
     showStep(1);
