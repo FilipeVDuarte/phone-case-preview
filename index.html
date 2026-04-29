@@ -2982,7 +2982,8 @@
 
         async function initApp() {
             try {
-                const resp = await fetch(import.meta.env.BASE_URL + 'models.json');
+                let resp = await fetch('/api/models').catch(() => null);
+                if (!resp || !resp.ok) resp = await fetch('models.json');
                 if (!resp.ok) throw new Error('Falha ao carregar modelos');
                 const models = await resp.json();
 
@@ -3200,9 +3201,7 @@
             const loader = document.getElementById('loader-screen');
             if (!loader) return;
             loader.classList.add('loader-hidden');
-            loader.addEventListener('transitionend', () => loader.remove(), {
-                once: true
-            });
+            setTimeout(() => loader.remove(), 550);
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
