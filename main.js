@@ -7,6 +7,7 @@
      *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
 
+const BASE_URL = import.meta.env.BASE_URL;
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const DISPLAY_H = 520;
 const FACA_SVG_W = 500;
@@ -1412,7 +1413,7 @@ async function initApp() {
         async function loadSvgMask(m, model) {
             if (!m.screenMaskPath) return;
             try {
-                const svgResp = await fetch(m.screenMaskPath);
+                const svgResp = await fetch(BASE_URL + m.screenMaskPath);
                 if (!svgResp.ok) return;
                 const svgText = await svgResp.text();
                 const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
@@ -1436,7 +1437,7 @@ async function initApp() {
             model: {
                 id: m.id ?? m.name.toLowerCase().replace(/\s+/g, '-'),
                 name: m.name,
-                mockupPath: m.mockupImageUrl,
+                mockupPath: BASE_URL + m.mockupImageUrl,
                 facaMaskPath: null,
                 facaCircles: [],
                 fw: m.frameWidth ?? 500,
