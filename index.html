@@ -127,353 +127,232 @@
     ══════════════════════════════════════ -->
     <aside class="panel-right">
 
-      <body>
-        <!-- Splash Screen -->
-        <div id="loader-screen">
-          <div class="loader-card">
-            <svg class="loader-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <rect x="16" y="4" width="32" height="56" rx="7" stroke="#000" stroke-width="2.5" />
-              <rect x="21" y="11" width="22" height="37" rx="2" fill="var(--gray-200)" />
-              <circle cx="32" cy="53" r="2.5" fill="#000" />
+      <!-- ── PASSO 1: Modelo ── -->
+      <div class="step-panel" id="stepPanel1">
+
+        <div class="panel-right-title">Escolhe o Modelo</div>
+
+        <!-- Badge do modelo selecionado -->
+        <div class="model-selected-badge" id="modelSelectedBadge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span id="modelSelectedName">—</span>
+        </div>
+
+        <!-- Layer Marca -->
+        <div class="inline-layer" id="layerBrand" style="display:flex;">
+          <div class="field-label">Marca</div>
+          <div class="brands-grid" id="brandsGrid"></div>
+        </div>
+
+        <!-- Layer Série -->
+        <div class="inline-layer" id="layerSeries" style="display:none;">
+          <button class="dropdown-back" id="backFromSeries">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6" />
             </svg>
-            <p>Carregando modelos...</p>
+            Voltar
+          </button>
+          <div class="field-label">Série</div>
+          <div class="series-scroll" id="seriesScroll"></div>
+        </div>
+
+        <!-- Layer Modelo -->
+        <div class="inline-layer" id="layerModel" style="display:none;">
+          <button class="dropdown-back" id="backFromModel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Voltar
+          </button>
+          <div class="field-label" id="modelLayerHeader">Modelo</div>
+          <div class="models-list" id="modelsList"></div>
+        </div>
+
+      </div>
+
+      <!-- ── PASSO 2: Foto ── -->
+      <div class="step-panel" id="stepPanel2" style="display:none;">
+
+        <div class="panel-right-title">Upload da Imagem</div>
+
+        <!-- Layout selector -->
+        <div class="field-label">Layout da Capinha</div>
+        <div class="layout-grid" id="layoutGrid">
+          <button class="layout-btn active" data-layout="RETRATO">Retrato</button>
+          <button class="layout-btn" data-layout="3-FOTOS">3 Fotos</button>
+          <button class="layout-btn" data-layout="DIVISOR-1">Divisor</button>
+        </div>
+
+        <!-- Slot indicator (visível quando layout > 1) -->
+        <div class="slot-indicator" id="slotIndicator" style="display:none;">
+          <div class="field-label">Foto ativa</div>
+          <div class="slot-dots" id="slotDots"></div>
+        </div>
+
+        <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
+        <div id="divisorControls" style="display:none;">
+          <div class="field-label">Número de fotos</div>
+          <div class="wizard-toolbar" style="gap:8px;">
+            <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
+              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
+            <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
+              style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
           </div>
         </div>
 
-        <!-- Hidden elements for JS compatibility -->
-        <select id="modelSelect">
-          <option value="">— Seleciona o modelo —</option>
-        </select>
-        <button id="btnReset" style="display:none"></button>
+        <div class="field-label">Tua imagem</div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none">
+        <button class="upload-btn" id="uploadBtn" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <span id="uploadBtnLabel">Faça upload aqui</span>
+        </button>
 
-        <div class="workspace">
+        <div class="upload-status" id="uploadStatus">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span id="uploadName">Imagem carregada</span>
+        </div>
 
-          <!-- ══════════════════════════════════════
-         PAINEL 1: ESQUERDO (Informativo)
-    ══════════════════════════════════════ -->
-          <aside class="panel-left">
+      </div>
 
-            <div class="logo-area">
-              <object data="svg/Logo_Preview.svg" type="image/svg+xml" height="48"
-                aria-label="Mobifans">Mobifans</object>
-            </div>
+      <!-- ── PASSO 3: Ajuste ── -->
+      <div class="step-panel" id="stepPanel3" style="display:none;">
 
-            <h1 class="app-title">Personaliza<br>Capinha</h1>
+        <div class="panel-right-title">Ajusta a Imagem</div>
 
-            <div class="how-to-use">
-              <strong>Como Usar</strong>
-              1. Seleciona o modelo do celular<br>
-              2. Faz upload da tua imagem<br>
-              3. Arrasta e ajusta o zoom<br>
-              4. Baixa a preview pronta
-            </div>
+        <div class="field-label">Ferramentas</div>
 
-          </aside>
+        <!-- Toolbar com 5 botões quadrados -->
+        <div class="wizard-toolbar">
 
+          <button class="wizard-tool-btn" id="btnUndo" title="Desfazer" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 14 4 9 9 4" />
+              <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
+            </svg>
+          </button>
 
-          <!-- ══════════════════════════════════════
-         PAINEL 2: CENTRO (Visualização)
-    ══════════════════════════════════════ -->
-          <main class="panel-center">
+          <button class="wizard-tool-btn" id="btnFit" title="Maximizar" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+            </svg>
+          </button>
 
-            <!-- Canvas area -->
-            <div class="canvas-area" id="canvasWrapper">
+          <button class="wizard-tool-btn" id="btnRotate" title="Rotacionar" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2v6h-6" />
+              <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
+            </svg>
+          </button>
 
-              <!-- Empty state -->
-              <div class="empty-state" id="emptyState">
-                <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
-                  <rect x="16" y="4" width="32" height="56" rx="7" stroke="#CBD5E1" stroke-width="2" />
-                  <rect x="21" y="11" width="22" height="37" rx="2" fill="#E2E8F0" />
-                  <circle cx="32" cy="53" r="2.5" fill="#CBD5E1" />
-                </svg>
-                <p>Seleciona um modelo<br>para começar</p>
-              </div>
+          <button class="wizard-tool-btn" id="btnZoomIn" title="Zoom +" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </button>
 
-              <!-- Loading spinner -->
-              <div class="canvas-loading" id="canvasLoading">
-                <div class="spinner"></div>
-                Carregando mockup…
-              </div>
+          <button class="wizard-tool-btn" id="btnZoomOut" title="Zoom −" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </button>
 
-              <!-- Canvas principal — 3 camadas:
-             0: mockup AVIF  |  1: arte do usuário (mascarada)  |  2: linha de corte -->
-              <canvas id="phoneCanvas"></canvas>
+        </div>
 
-            </div>
+        <!-- Seletor de slot ativo (visível quando layout > 1) -->
+        <div class="slot-selector-step3" id="slotSelectorStep3" style="display:none;">
+          <div class="field-label">Foto ativa</div>
+          <div class="slot-dots" id="slotDotsStep3"></div>
+        </div>
 
-            <!-- Floating hint -->
-            <div class="canvas-float-hint" id="canvasHint">Clique e Arraste para ajustar</div>
+        <!-- Ajuste Fino (nudge) -->
+        <div id="nudgePanel" style="display:none;">
+          <div class="field-label">Ajuste Fino</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
+            <div></div>
+            <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
+            <div></div>
+            <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda" disabled>←</button>
+            <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
+            <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita" disabled>→</button>
+          </div>
+        </div>
 
-            <!-- Stepper (inferior) -->
-            <div class="stepper" id="stepper">
-              <div class="step-item active" id="stepItem1">
-                <div class="step-num">1</div>
-                <div class="step-label">Modelo</div>
-              </div>
-              <div class="step-connector" id="stepConn1"></div>
-              <div class="step-item" id="stepItem2">
-                <div class="step-num">2</div>
-                <div class="step-label">Foto</div>
-              </div>
-              <div class="step-connector" id="stepConn2"></div>
-              <div class="step-item" id="stepItem3">
-                <div class="step-num">3</div>
-                <div class="step-label">Ajuste</div>
-              </div>
-              <div class="step-connector" id="stepConn3"></div>
-              <div class="step-item" id="stepItem4">
-                <div class="step-num">4</div>
-                <div class="step-label">Finalizar</div>
-              </div>
-            </div>
+        <!-- Indicators -->
+        <div class="indicators-row">
+          <div class="scale-pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <span id="scaleLabel">100%</span>
+          </div>
+          <div class="rotation-pill" id="rotationRow" style="display:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 2v6h-6" />
+              <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
+            </svg>
+            <span id="rotationLabel">0°</span>
+          </div>
+        </div>
 
-          </main>
+      </div>
 
+      <!-- ── PASSO 4: Finalizar ── -->
+      <div class="step-panel" id="stepPanel4" style="display:none;">
 
-          <!-- ══════════════════════════════════════
-         PAINEL 3: DIREITO (Wizard)
-    ══════════════════════════════════════ -->
-          <aside class="panel-right">
+        <div class="panel-right-title">Finalizar</div>
 
-            <!-- ── PASSO 1: Modelo ── -->
-            <div class="step-panel" id="stepPanel1">
+        <div class="model-name-display">
+          <div class="label">Modelo selecionado</div>
+          <div class="name" id="selectedModelDisplay">—</div>
+        </div>
 
-              <div class="panel-right-title">Escolhe o Modelo</div>
+        <button class="download-btn" id="downloadBtn" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Baixar Preview
+        </button>
 
-              <!-- Badge do modelo selecionado -->
-              <div class="model-selected-badge" id="modelSelectedBadge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                <span id="modelSelectedName">—</span>
-              </div>
+      </div>
 
-              <!-- Layer Marca -->
-              <div class="inline-layer" id="layerBrand" style="display:flex;">
-                <div class="field-label">Marca</div>
-                <div class="brands-grid" id="brandsGrid"></div>
-              </div>
+      <!-- ── NAVEGAÇÃO DO WIZARD ── -->
+      <div class="wizard-nav">
+        <button class="nav-btn nav-prev" id="btnPrev" disabled>Voltar</button>
+        <button class="nav-btn nav-next" id="btnNext">Próximo Passo</button>
+      </div>
 
-              <!-- Layer Série -->
-              <div class="inline-layer" id="layerSeries" style="display:none;">
-                <button class="dropdown-back" id="backFromSeries">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6" />
-                  </svg>
-                  Voltar
-                </button>
-                <div class="field-label">Série</div>
-                <div class="series-scroll" id="seriesScroll"></div>
-              </div>
+    </aside>
 
-              <!-- Layer Modelo -->
-              <div class="inline-layer" id="layerModel" style="display:none;">
-                <button class="dropdown-back" id="backFromModel">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6" />
-                  </svg>
-                  Voltar
-                </button>
-                <div class="field-label" id="modelLayerHeader">Modelo</div>
-                <div class="models-list" id="modelsList"></div>
-              </div>
-
-            </div>
-
-            <!-- ── PASSO 2: Foto ── -->
-            <div class="step-panel" id="stepPanel2" style="display:none;">
-
-              <div class="panel-right-title">Upload da Imagem</div>
-
-              <!-- Layout selector -->
-              <div class="field-label">Layout da Capinha</div>
-              <div class="layout-grid" id="layoutGrid">
-                <button class="layout-btn active" data-layout="RETRATO">Retrato</button>
-                <button class="layout-btn" data-layout="3-FOTOS">3 Fotos</button>
-                <button class="layout-btn" data-layout="DIVISOR-1">Divisor</button>
-              </div>
-
-              <!-- Slot indicator (visível quando layout > 1) -->
-              <div class="slot-indicator" id="slotIndicator" style="display:none;">
-                <div class="field-label">Foto ativa</div>
-                <div class="slot-dots" id="slotDots"></div>
-              </div>
-
-              <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
-              <div id="divisorControls" style="display:none;">
-                <div class="field-label">Número de fotos</div>
-                <div class="wizard-toolbar" style="gap:8px;">
-                  <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
-                    style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
-                  <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
-                    style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
-                </div>
-              </div>
-
-              <div class="field-label">Tua imagem</div>
-              <input type="file" id="fileInput" accept="image/*" style="display:none">
-              <button class="upload-btn" id="uploadBtn" disabled>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                <span id="uploadBtnLabel">Faça upload aqui</span>
-              </button>
-
-              <div class="upload-status" id="uploadStatus">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                <span id="uploadName">Imagem carregada</span>
-              </div>
-
-
-
-            </div>
-
-            <!-- ── PASSO 3: Ajuste ── -->
-            <div class="step-panel" id="stepPanel3" style="display:none;">
-
-              <div class="panel-right-title">Ajusta a Imagem</div>
-
-              <div class="field-label">Ferramentas</div>
-
-              <!-- Toolbar com 5 botões quadrados -->
-              <div class="wizard-toolbar">
-
-                <button class="wizard-tool-btn" id="btnUndo" title="Desfazer" disabled>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 14 4 9 9 4" />
-                    <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
-                  </svg>
-                </button>
-
-                <button class="wizard-tool-btn" id="btnFit" title="Maximizar" disabled>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                      d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                  </svg>
-                </button>
-
-                <button class="wizard-tool-btn" id="btnRotate" title="Rotacionar" disabled>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 2v6h-6" />
-                    <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
-                  </svg>
-                </button>
-
-                <button class="wizard-tool-btn" id="btnZoomIn" title="Zoom +" disabled>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    <line x1="11" y1="8" x2="11" y2="14" />
-                    <line x1="8" y1="11" x2="14" y2="11" />
-                  </svg>
-                </button>
-
-                <button class="wizard-tool-btn" id="btnZoomOut" title="Zoom −" disabled>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    <line x1="8" y1="11" x2="14" y2="11" />
-                  </svg>
-                </button>
-
-              </div>
-
-              <!-- Seletor de slot ativo (visível quando layout > 1) -->
-              <div class="slot-selector-step3" id="slotSelectorStep3" style="display:none;">
-                <div class="field-label">Foto ativa</div>
-                <div class="slot-dots" id="slotDotsStep3"></div>
-              </div>
-
-              <!-- Divisor dinâmico: só aparece quando layout é DIVISOR -->
-              <div id="divisorControls" style="display:none;">
-                <div class="field-label">Slots do Divisor</div>
-                <div class="wizard-toolbar" style="gap:8px;">
-                  <button class="wizard-tool-btn" id="btnDivisorAdd" title="Mais fotos"
-                    style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[+] Fotos</button>
-                  <button class="wizard-tool-btn" id="btnDivisorRemove" title="Menos fotos"
-                    style="flex:1;font-size:13px;font-weight:700;font-family:var(--font);">[-] Fotos</button>
-                </div>
-              </div>
-
-              <!-- Ajuste Fino (nudge) -->
-              <div id="nudgePanel" style="display:none;">
-                <div class="field-label">Ajuste Fino</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;">
-                  <div></div>
-                  <button class="wizard-tool-btn" id="btnNudgeUp" title="Mover para cima" disabled>↑</button>
-                  <div></div>
-                  <button class="wizard-tool-btn" id="btnNudgeLeft" title="Mover para esquerda" disabled>←</button>
-                  <button class="wizard-tool-btn" id="btnNudgeDown" title="Mover para baixo" disabled>↓</button>
-                  <button class="wizard-tool-btn" id="btnNudgeRight" title="Mover para direita" disabled>→</button>
-                </div>
-              </div>
-
-              <!-- Indicators -->
-              <div class="indicators-row">
-                <div class="scale-pill">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  <span id="scaleLabel">100%</span>
-                </div>
-                <div class="rotation-pill" id="rotationRow" style="display:none;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M21 2v6h-6" />
-                    <path d="M21 13a9 9 0 1 1-3-7.7L21 8" />
-                  </svg>
-                  <span id="rotationLabel">0°</span>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- ── PASSO 4: Finalizar ── -->
-            <div class="step-panel" id="stepPanel4" style="display:none;">
-
-              <div class="panel-right-title">Finalizar</div>
-
-              <div class="model-name-display">
-                <div class="label">Modelo selecionado</div>
-                <div class="name" id="selectedModelDisplay">—</div>
-              </div>
-
-              <button class="download-btn" id="downloadBtn" disabled>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Baixar Preview
-              </button>
-
-            </div>
-
-            <!-- ── NAVEGAÇÃO DO WIZARD ── -->
-            <div class="wizard-nav">
-              <button class="nav-btn nav-prev" id="btnPrev" disabled>Voltar</button>
-              <button class="nav-btn nav-next" id="btnNext">Próximo Passo</button>
-            </div>
-
-          </aside>
-
-        </div><!-- /.workspace -->
-        <div id="versionBadge">Versão atual: v1.6.5</div>
-      </body>
+  </div><!-- /.workspace -->
+  <div id="versionBadge">Versão atual: v1.6.5</div>
+</body>
 
 </html>
