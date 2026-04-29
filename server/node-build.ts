@@ -1,6 +1,6 @@
 import path from "node:path";
 import * as http from "node:http";
-import { createServer, createWebSocketServer } from "./index.js";
+import { createServer } from "./index.js";
 import * as express from "express";
 
 const app = createServer();
@@ -19,20 +19,10 @@ app.get("*", (req, res) => {
 });
 
 const httpServer = http.createServer(app);
-createWebSocketServer(httpServer);
 
 httpServer.listen(port, () => {
-  console.log(`🚀 Mobifans server running on port ${port}`);
-  console.log(`📱 Frontend: http://localhost:${port}`);
-  console.log(`🔧 API: http://localhost:${port}/api`);
+  console.log(`Mobifans server running on port ${port}`);
 });
 
-process.on("SIGTERM", () => {
-  console.log("🛑 Received SIGTERM, shutting down gracefully");
-  process.exit(0);
-});
-
-process.on("SIGINT", () => {
-  console.log("🛑 Received SIGINT, shutting down gracefully");
-  process.exit(0);
-});
+process.on("SIGTERM", () => process.exit(0));
+process.on("SIGINT", () => process.exit(0));

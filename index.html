@@ -549,127 +549,6 @@
       gap: 6px;
     }
 
-    /* ═══════════════════════════════════════════════════════════════════════
-           FEATURE PAUSED — QR Upload / Conexão Mobile via QR Code (v1.8)
-           Motivo: aguardando confirmação de Wi-Fi dedicado no quiosque físico.
-           Para reativar: descomente este bloco completo (CSS + HTML + JS abaixo).
-        ════════════════════════════════════════════════════════════════════════ */
-    /*
-        .qr-divider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--gray-400);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .qr-divider::before,
-        .qr-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--gray-200);
-        }
-
-        .qr-trigger-btn {
-            width: 100%;
-            padding: 11px 14px;
-            border: 2px solid var(--gray-300);
-            border-radius: 10px;
-            background: var(--gray-50);
-            font-family: var(--font);
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--black);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: border-color 0.15s, background 0.15s;
-        }
-
-        .qr-trigger-btn:hover {
-            border-color: var(--ocean);
-            background: #f0f1ff;
-        }
-
-        .qr-trigger-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .qr-panel {
-            border: 2px solid var(--gray-200);
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            background: var(--gray-50);
-        }
-
-        .qr-panel svg {
-            width: 148px;
-            height: 148px;
-            border-radius: 8px;
-            border: 3px solid var(--black);
-            box-shadow: 3px 3px 0 0 var(--black);
-            display: block;
-        }
-
-        .qr-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--black);
-        }
-
-        .qr-url {
-            font-size: 10px;
-            color: var(--gray-500);
-            font-family: monospace;
-            word-break: break-all;
-            text-align: center;
-        }
-
-        .qr-waiting {
-            font-size: 12px;
-            color: var(--gray-500);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .qr-waiting::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--ocean);
-            animation: qr-pulse 1.2s ease-in-out infinite;
-        }
-
-        @keyframes qr-pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.7); }
-        }
-
-        .qr-cancel-btn {
-            font-size: 11px;
-            color: var(--gray-500);
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-family: var(--font);
-            text-decoration: underline;
-            padding: 0;
-        }
-        */
-
     /* ── WIZARD TOOLBAR (Step 3) ── */
     .wizard-toolbar {
       display: flex;
@@ -1416,26 +1295,6 @@
           <span id="uploadName">Imagem carregada</span>
         </div>
 
-        <!-- ═══ FEATURE PAUSED: QR Upload / Conexão Mobile v1.8 ═══
-                     Para reativar: descomente este bloco HTML (+ CSS e JS correspondentes).
-                <div class="qr-divider">ou</div>
-
-                <button class="qr-trigger-btn" id="qrTriggerBtn" disabled>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                        <path d="M14 14h3v3M17 20h3M20 17v3"/>
-                    </svg>
-                    Enviar do Celular via QR
-                </button>
-
-                <div class="qr-panel" id="qrPanel" style="display:none">
-                    <div id="qrCode"></div>
-                    <div class="qr-label">Escaneia com o teu celular</div>
-                    <div class="qr-url" id="qrUrl"></div>
-                    <div class="qr-waiting">Aguardando foto…</div>
-                    <button class="qr-cancel-btn" onclick="closeQrPanel()">Cancelar</button>
-                </div>
-                ═══ END FEATURE PAUSED ═══ -->
 
       </div>
 
@@ -2670,8 +2529,6 @@
       const isDivisor = state.layout.startsWith('DIVISOR');
 
       document.getElementById('uploadBtn').disabled = !hasModel;
-      // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
-      // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
       document.getElementById('downloadBtn').disabled = !hasAnyImg;
       document.getElementById('btnUndo').disabled = !hasHist;
       document.getElementById('btnFit').disabled = !hasCurImg;
@@ -3437,8 +3294,6 @@
             const isDivisor = state.layout.startsWith('DIVISOR');
 
             document.getElementById('uploadBtn').disabled = !hasModel;
-            // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
-            // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
             document.getElementById('downloadBtn').disabled = !hasAnyImg;
             document.getElementById('btnUndo').disabled = !hasHist;
             document.getElementById('btnFit').disabled = !hasCurImg;
