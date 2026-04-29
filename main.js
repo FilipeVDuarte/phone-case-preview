@@ -7,7 +7,8 @@
      *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
 
-const BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env.BASE_URL : '/';
+// Troque o fetch('./models.json') por:
+const fallback = await fetch(`${BASE_URL}models.json`).catch(() => null);
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const DISPLAY_H = 520;
 const FACA_SVG_W = 500;
