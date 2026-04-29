@@ -1,5 +1,5 @@
 import { defineConfig, Plugin } from "vite";
-import { createServer, createWebSocketServer } from "./server/index";
+import { createServer } from "./server/index";
 
 export default defineConfig({
   base: process.env.GITHUB_ACTIONS ? '/phone-case-preview/' : '/',
@@ -18,20 +18,11 @@ export default defineConfig({
 });
 
 function expressPlugin(): Plugin {
-  let wsServerCreated = false;
   return {
     name: "express-plugin",
     apply: "serve",
     configureServer(server) {
-      const app = createServer();
-      server.middlewares.use(app);
-
-      server.httpServer?.once("listening", () => {
-        if (!wsServerCreated && server.httpServer) {
-          createWebSocketServer(server.httpServer);
-          wsServerCreated = true;
-        }
-      });
+      server.middlewares.use(createServer());
     },
   };
 }
