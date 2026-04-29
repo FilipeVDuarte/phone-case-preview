@@ -2,6 +2,7 @@ import { defineConfig, Plugin } from "vite";
 import { createServer, createWebSocketServer } from "./server/index";
 
 export default defineConfig({
+  base: process.env.GITHUB_ACTIONS ? '/phone-case-preview/' : '/',
   server: {
     host: "0.0.0.0",
     port: 8080,

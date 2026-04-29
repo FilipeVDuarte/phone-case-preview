@@ -48,7 +48,8 @@
       "Bash(ipconfig)",
       "Bash(taskkill /F /IM node.exe)",
       "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)",
-      "Bash(dir \"C:\\\\Users\\\\MARKETING\\\\Desktop\\\\Claude\\\\MKT\\\\phone-case-preview\" /b /a)"
+      "Bash(dir \"C:\\\\Users\\\\MARKETING\\\\Desktop\\\\Claude\\\\MKT\\\\phone-case-preview\" /b /a)",
+      "Bash(grep -v \"^\\\\s*//\")"
     ]
   }
 }
