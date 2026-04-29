@@ -23,14 +23,9 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.get("/api/models", handleGetModels);
 
-  app.get("*", (_req, res) => {
+  app.get("*", (req, res) => {
     res.sendFile(path.join(process.cwd(), "index.html"));
   });
 
   return app;
-}
-
-// Stub mantido para compatibilidade com dev-server.ts e node-build.ts
-export function createWebSocketServer(_httpServer: import("http").Server) {
-  // no-op — WebSocket desativado enquanto QR Upload (v1.8) está pausado
 }

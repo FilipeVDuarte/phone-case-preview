@@ -22,7 +22,8 @@ function expressPlugin(): Plugin {
     name: "express-plugin",
     apply: "serve",
     configureServer(server) {
-      server.middlewares.use(createServer());
+      const app = createServer();
+      server.middlewares.use(app);
     },
   };
 }

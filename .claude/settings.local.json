@@ -50,8 +50,11 @@
       "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)",
       "Bash(dir \"C:\\\\Users\\\\MARKETING\\\\Desktop\\\\Claude\\\\MKT\\\\phone-case-preview\" /b /a)",
       "Bash(grep -v \"^\\\\s*//\")",
-      "Bash(git checkout *)",
-      "Bash(git stash *)"
+      "Bash(GITHUB_ACTIONS=true pnpm build)",
+      "Bash(awk 'NR>=3050 && NR<=3100' /c/Users/MARKETING/Desktop/Claude/MKT/phone-case-preview/index.html)",
+      "Bash(awk -F: '$1>=3070 && $1<=3920')",
+      "Bash(git restore *)",
+      "Bash(git rm *)"
     ]
   }
 }
