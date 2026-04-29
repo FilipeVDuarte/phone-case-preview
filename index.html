@@ -2978,19 +2978,20 @@
 
     async function initApp() {
       try {
-        const resp = await fetch('/api/models');
+        let resp = await fetch('/api/models').catch(() => null);
+        if (!resp || !resp.ok) resp = await fetch('models.json');
         if (!resp.ok) throw new Error('Falha ao carregar modelos');
         const models = await resp.json();
 
         for (const m of models) {
           const model = {
-            id: m.id,
+            id: m.id ?? m.name.toLowerCase().replace(/\s+/g, '-'),
             name: m.name,
             mockupPath: m.mockupImageUrl,
             facaMaskPath: null,
             facaCircles: [],
-            fw: m.frameWidth,
-            fh: m.frameHeight,
+            fw: m.frameWidth ?? 500,
+            fh: m.frameHeight ?? 1000,
             _mockupImg: null,
           };
 
@@ -3596,7 +3597,7 @@
          * TOAST — notificação genérica
          * ================================================================ */
 
-        let _toastTimer = null;
+        _toastTimer = null;
 
         function showToast(msg) {
             let toast = document.getElementById('dpiToast');
@@ -3743,6 +3744,7 @@
         }
 
         async function initApp() {
+            if (MODELS.length > 0) return;
             try {
                 let resp = await fetch('/api/models').catch(() => null);
                 if (!resp || !resp.ok) resp = await fetch('models.json');
