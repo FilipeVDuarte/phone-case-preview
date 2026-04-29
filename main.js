@@ -6,7 +6,6 @@
      *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
      *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
-import STATIC_MODELS from './models.json';
 
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const DISPLAY_H = 520;
@@ -1399,15 +1398,42 @@ function addModelOption(m) {
 async function initApp() {
     try {
         let models;
-        const resp = await fetch('/api/models').catch(() => null);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        const resp = await fetch('/api/models', { signal: controller.signal }).catch(() => null);
+        clearTimeout(timeout);
         if (resp && resp.ok) {
             models = await resp.json();
         } else {
-            models = STATIC_MODELS;
+            const fallback = await fetch('./models.json').catch(() => null);
+            models = fallback && fallback.ok ? await fallback.json() : [];
         }
 
-        for (const m of models) {
-            const model = {
+        async function loadSvgMask(m, model) {
+            if (!m.screenMaskPath) return;
+            try {
+                const svgResp = await fetch(m.screenMaskPath);
+                if (!svgResp.ok) return;
+                const svgText = await svgResp.text();
+                const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
+                if (pathMatch) model.facaMaskPath = pathMatch[1];
+                const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
+                model.facaCircles = circleMatches.map(cm => {
+                    const a = cm[1];
+                    return {
+                        cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
+                        cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
+                        r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
+                    };
+                }).filter(c => c.r > 0);
+            } catch (e) {
+                console.warn('[Mobifans] SVG não encontrado:', m.screenMaskPath);
+            }
+        }
+
+        const modelObjects = models.map(m => ({
+            raw: m,
+            model: {
                 id: m.id ?? m.name.toLowerCase().replace(/\s+/g, '-'),
                 name: m.name,
                 mockupPath: m.mockupImageUrl,
@@ -1416,33 +1442,13 @@ async function initApp() {
                 fw: m.frameWidth ?? 500,
                 fh: m.frameHeight ?? 1000,
                 _mockupImg: null,
-            };
-
-            // Carregar SVG da máscara para extrair path outline + circles
-            if (m.screenMaskPath) {
-                try {
-                    const svgResp = await fetch(m.screenMaskPath);
-                    if (svgResp.ok) {
-                        const svgText = await svgResp.text();
-                        // Extrair o d="" do <path> principal (outline da capinha)
-                        const pathMatch = svgText.match(/<path[^>]*\sd="([^"]+)"/);
-                        if (pathMatch) model.facaMaskPath = pathMatch[1];
-
-                        const circleMatches = [...svgText.matchAll(/<circle([^>]*?)\/>/g)];
-                        model.facaCircles = circleMatches.map(cm => {
-                            const a = cm[1];
-                            return {
-                                cx: parseFloat(a.match(/cx="([^"]+)"/)?.[1] || 0),
-                                cy: parseFloat(a.match(/cy="([^"]+)"/)?.[1] || 0),
-                                r: parseFloat(a.match(/\br="([^"]+)"/)?.[1] || 0),
-                            };
-                        }).filter(c => c.r > 0);
-                    }
-                } catch (e) {
-                    console.warn('[Mobifans] SVG não encontrado:', m.screenMaskPath);
-                }
             }
+        }));
 
+        // Carrega todos os SVGs em paralelo
+        await Promise.all(modelObjects.map(({ raw, model }) => loadSvgMask(raw, model)));
+
+        for (const { model } of modelObjects) {
             MODELS.push(model);
             addModelOption(model);
         }
