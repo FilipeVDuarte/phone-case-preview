@@ -7,7 +7,7 @@
      *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
 
-const BASE_URL = import.meta.env.BASE_URL;
+const BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env.BASE_URL : '/';
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const DISPLAY_H = 520;
 const FACA_SVG_W = 500;
@@ -1090,8 +1090,6 @@ function syncUI() {
     const isDivisor = state.layout.startsWith('DIVISOR');
 
     document.getElementById('uploadBtn').disabled = !hasModel;
-    // [QR_PAUSED] const qrTriggerBtn = document.getElementById('qrTriggerBtn');
-    // [QR_PAUSED] if (qrTriggerBtn && qrTriggerBtn.style.display !== 'none') qrTriggerBtn.disabled = !hasModel;
     document.getElementById('downloadBtn').disabled = !hasAnyImg;
     document.getElementById('btnUndo').disabled = !hasHist;
     document.getElementById('btnFit').disabled = !hasCurImg;
@@ -1406,7 +1404,7 @@ async function initApp() {
         if (resp && resp.ok) {
             models = await resp.json();
         } else {
-            const fallback = await fetch('./models.json').catch(() => null);
+            const fallback = await fetch(BASE_URL + 'models.json').catch(() => null);
             models = fallback && fallback.ok ? await fallback.json() : [];
         }
 
