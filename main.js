@@ -6,6 +6,7 @@
      *   CAMADA 1 → Arte do usuário (recortada pelo path SVG da faca)
      *   CAMADA 2 → Overlay do mockup (bordas, câmeras)
      * ================================================================ */
+import STATIC_MODELS from './models.json';
 
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const DISPLAY_H = 520;
@@ -1397,10 +1398,13 @@ function addModelOption(m) {
 
 async function initApp() {
     try {
-        let resp = await fetch('/api/models').catch(() => null);
-        if (!resp || !resp.ok) resp = await fetch('models.json');
-        if (!resp.ok) throw new Error('Falha ao carregar modelos');
-        const models = await resp.json();
+        let models;
+        const resp = await fetch('/api/models').catch(() => null);
+        if (resp && resp.ok) {
+            models = await resp.json();
+        } else {
+            models = STATIC_MODELS;
+        }
 
         for (const m of models) {
             const model = {
