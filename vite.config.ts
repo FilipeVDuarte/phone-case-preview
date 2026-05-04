@@ -2,7 +2,7 @@ import { defineConfig, Plugin } from "vite";
 import { createServer } from "./server/index";
 
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? '/phone-case-preview/' : '/',
+  base: process.env.GITHUB_ACTIONS ? '/mobistudio/' : '/',
   server: {
     host: "0.0.0.0",
     port: 8080,
