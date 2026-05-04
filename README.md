@@ -1,4 +1,4 @@
-# 📱 Mobifans - Phone Case Previewer
+# 📱 Mobifans - [MobiStudio](https://filipevduarte.github.io/mobistudio/)
 
 Um personalizador interativo de capinhas de smartphone desenvolvido para a **Mobifans**. Este projeto permite que o usuário visualize em tempo real como uma imagem ou foto ficaria aplicada em diferentes modelos de aparelhos, oferecendo uma experiência de compra imersiva e personalizada.
 
